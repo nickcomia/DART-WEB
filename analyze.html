@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analyze Reviews – DART</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">
+        <span class="logo-dart">DART</span>
+        <span class="logo-sep">|</span>
+        <span class="logo-sub">Review Intelligence</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="analyze.html" class="active">Analyze</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="admin.html">Dashboard</a></li>
+        <li><a href="settings.html" class="nav-api-btn">API Key</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="page-title">Analyze Reviews</div>
+    <p class="page-subtitle">Paste a single review or add multiple reviews from any shopping platform to detect deceptive content.</p>
+
+    <!-- API key warning -->
+    <div id="apiKeyWarning" class="error-box" style="display:none; margin-bottom:20px;">
+      ⚠️ No API key set. <a href="settings.html" style="color:inherit;text-decoration:underline;">Set your Anthropic API key →</a>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="single">Single Review</button>
+      <button class="tab-btn" data-tab="batch">Batch Analysis</button>
+    </div>
+
+    <!-- ── SINGLE REVIEW ── -->
+    <div class="tab-panel active" id="tab-single">
+      <div class="form-group">
+        <label class="form-label">E-commerce Platform</label>
+        <select class="form-select" id="s-platform">
+          <option value="">Select platform...</option>
+          <option>Amazon</option>
+          <option>Shopee</option>
+          <option>Lazada</option>
+          <option>Zalora</option>
+          <option>eBay</option>
+          <option>Temu</option>
+          <option>AliExpress</option>
+          <option>Walmart</option>
+          <option>Google Reviews</option>
+          <option>Yelp</option>
+          <option>TripAdvisor</option>
+          <option>Facebook</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Review Text <span style="color:var(--danger)">*</span></label>
+        <textarea class="form-textarea" id="s-text" placeholder="Paste the review text here..." style="min-height:160px"></textarea>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group">
+          <label class="form-label">Star Rating</label>
+          <select class="form-select" id="s-stars">
+            <option value="">Unknown</option>
+            <option>1</option><option>2</option><option>3</option>
+            <option>4</option><option>5</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Reviewer Info (optional)</label>
+          <input class="form-input" id="s-reviewer" placeholder="e.g. Top Reviewer, 1 review..." />
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="s-analyze-btn" style="width:100%;justify-content:center">
+        🔍 Analyze Review
+      </button>
+
+      <div class="spinner-wrap" id="s-spinner">
+        <div class="spinner"></div>
+        <span>DART is analyzing the review…</span>
+      </div>
+      <div class="error-box" id="s-error"></div>
+
+      <!-- Result -->
+      <div class="result-box" id="s-result">
+        <div id="s-risk-badge" class="risk-badge"></div>
+        <div class="result-title" id="s-verdict"></div>
+        <div class="result-score-label" id="s-score-label"></div>
+        <div class="risk-score-bar"><div class="risk-score-fill" id="s-score-fill"></div></div>
+
+        <div class="findings-grid" id="s-findings-grid"></div>
+
+        <div class="result-section">
+          <h4>Detection Signals</h4>
+          <ul class="signal-list" id="s-signals"></ul>
+        </div>
+
+        <div class="result-section">
+          <h4>Analysis Summary</h4>
+          <p class="result-text" id="s-summary"></p>
+        </div>
+
+        <div class="result-section">
+          <h4>Recommendation</h4>
+          <p class="result-text" id="s-recommendation"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BATCH ANALYSIS ── -->
+    <div class="tab-panel" id="tab-batch">
+      <div class="form-group">
+        <label class="form-label">E-commerce Platform</label>
+        <select class="form-select" id="b-platform">
+          <option value="">Select platform...</option>
+          <option>Amazon</option>
+          <option>Shopee</option>
+          <option>Lazada</option>
+          <option>Zalora</option>
+          <option>eBay</option>
+          <option>Temu</option>
+          <option>AliExpress</option>
+          <option>Walmart</option>
+          <option>Google Reviews</option>
+          <option>Yelp</option>
+          <option>TripAdvisor</option>
+          <option>Facebook</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <label class="form-label">Reviews <span style="color:var(--text-dim);font-weight:400">(add up to 10)</span></label>
+      <div class="review-list" id="review-list">
+        <!-- populated by JS -->
+      </div>
+
+      <!-- Add review row -->
+      <div style="margin-top:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px">
+        <div class="form-label" style="margin-bottom:10px">Add a Review</div>
+        <div class="form-group">
+          <textarea class="form-textarea" id="new-review-text" placeholder="Paste review text..." style="min-height:80px"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:80px 1fr auto;gap:10px;align-items:end">
+          <div>
+            <label class="form-label">Stars</label>
+            <select class="form-select" id="new-review-stars">
+              <option value="">?</option>
+              <option>1</option><option>2</option><option>3</option>
+              <option>4</option><option>5</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Author (optional)</label>
+            <input class="form-input" id="new-review-author" placeholder="Reviewer name or info..." />
+          </div>
+          <button class="btn btn-ghost" id="add-review-btn" style="height:42px">+ Add</button>
+        </div>
+      </div>
+
+      <div class="form-hint" style="margin-top:8px" id="review-count-hint">0 reviews added. Add at least 2 to analyze.</div>
+
+      <button class="btn btn-primary" id="b-analyze-btn" style="width:100%;justify-content:center;margin-top:20px" disabled>
+        🔍 Analyze Batch
+      </button>
+
+      <div class="spinner-wrap" id="b-spinner">
+        <div class="spinner"></div>
+        <span>DART is analyzing the batch…</span>
+      </div>
+      <div class="error-box" id="b-error"></div>
+
+      <!-- Batch Result -->
+      <div class="result-box" id="b-result">
+        <div id="b-risk-badge" class="risk-badge"></div>
+        <div class="result-title" id="b-verdict"></div>
+        <div class="result-score-label" id="b-score-label"></div>
+        <div class="risk-score-bar"><div class="risk-score-fill" id="b-score-fill"></div></div>
+
+        <div class="findings-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))" id="b-summary-grid"></div>
+
+        <div class="result-section">
+          <h4>Pattern Summary</h4>
+          <p class="result-text" id="b-patterns"></p>
+        </div>
+
+        <div class="result-section">
+          <h4>Per-Review Breakdown</h4>
+          <div id="b-per-review"></div>
+        </div>
+
+        <div class="result-section">
+          <h4>Detection Signals</h4>
+          <ul class="signal-list" id="b-signals"></ul>
+        </div>
+
+        <div class="result-section">
+          <h4>Recommendation</h4>
+          <p class="result-text" id="b-recommendation"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="footer-logo">DART</span>
+      <span class="footer-copy">Deceptive Assessment and Review Tracking · BatStateU CICS · 2026</span>
+    </div>
+  </footer>
+
+  <script src="../js/nav.js"></script>
+  <script src="../js/dart-api.js"></script>
+  <script>
+    // ── Tab switching ──
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ── API key check ──
+    function checkApiKey() {
+      if (!DART_API.getApiKey()) {
+        document.getElementById('apiKeyWarning').style.display = 'block';
+      } else {
+        document.getElementById('apiKeyWarning').style.display = 'none';
+      }
+    }
+    checkApiKey();
+
+    // ── Helpers ──
+    function riskClass(level) {
+      if (level === 'HIGH') return 'risk-high';
+      if (level === 'MEDIUM') return 'risk-medium';
+      return 'risk-low';
+    }
+    function fillClass(level) {
+      if (level === 'HIGH') return 'fill-high';
+      if (level === 'MEDIUM') return 'fill-medium';
+      return 'fill-low';
+    }
+    function chipClass(level) {
+      if (level === 'HIGH') return 'chip-high';
+      if (level === 'MEDIUM') return 'chip-medium';
+      return 'chip-low';
+    }
+    function riskEmoji(level) {
+      if (level === 'HIGH') return '🚨';
+      if (level === 'MEDIUM') return '⚠️';
+      return '✅';
+    }
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.classList.add('visible');
+    }
+    function hideError(id) {
+      document.getElementById(id).classList.remove('visible');
+    }
+    function setSpinner(id, show) {
+      document.getElementById(id).classList.toggle('visible', show);
+    }
+
+    // Save to admin log
+    function saveToLog(entry) {
+      try {
+        const logs = JSON.parse(localStorage.getItem('dart_logs') || '[]');
+        logs.unshift({ ...entry, ts: new Date().toLocaleString() });
+        if (logs.length > 50) logs.pop();
+        localStorage.setItem('dart_logs', JSON.stringify(logs));
+      } catch (e) {}
+    }
+
+    // ── SINGLE REVIEW ──
+    document.getElementById('s-analyze-btn').addEventListener('click', async () => {
+      checkApiKey();
+      if (!DART_API.getApiKey()) return;
+
+      const text = document.getElementById('s-text').value.trim();
+      if (!text) { showError('s-error', 'Please paste a review text to analyze.'); return; }
+      hideError('s-error');
+
+      const opts = {
+        reviewText: text,
+        platform: document.getElementById('s-platform').value,
+        stars: document.getElementById('s-stars').value,
+        reviewerInfo: document.getElementById('s-reviewer').value
+      };
+
+      setSpinner('s-spinner', true);
+      document.getElementById('s-result').classList.remove('visible');
+      document.getElementById('s-analyze-btn').disabled = true;
+
+      try {
+        const res = await DART_API.analyzeSingleReview(opts);
+        renderSingleResult(res);
+        saveToLog({ mode: 'single', platform: opts.platform, riskLevel: res.riskLevel, score: res.deceptionScore, verdict: res.verdict });
+      } catch (err) {
+        if (err.message === 'NO_API_KEY' || err.message === 'INVALID_API_KEY') {
+          showError('s-error', '❌ Invalid or missing API key. Go to Settings → API Key to set it.');
+        } else {
+          showError('s-error', '❌ ' + err.message);
+        }
+      } finally {
+        setSpinner('s-spinner', false);
+        document.getElementById('s-analyze-btn').disabled = false;
+      }
+    });
+
+    function renderSingleResult(res) {
+      const level = (res.riskLevel || 'LOW').toUpperCase();
+      const score = Math.max(0, Math.min(100, res.deceptionScore || 0));
+
+      document.getElementById('s-risk-badge').className = 'risk-badge ' + riskClass(level);
+      document.getElementById('s-risk-badge').textContent = riskEmoji(level) + ' ' + level + ' RISK';
+      document.getElementById('s-verdict').textContent = res.verdict || '';
+      document.getElementById('s-score-label').textContent = 'Deception Score: ' + score + ' / 100';
+
+      const fill = document.getElementById('s-score-fill');
+      fill.className = 'risk-score-fill ' + fillClass(level);
+      fill.style.width = score + '%';
+
+      // Findings grid
+      const grid = document.getElementById('s-findings-grid');
+      grid.innerHTML = '';
+      if (res.findings) {
+        Object.entries(res.findings).forEach(([key, val]) => {
+          const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase());
+          const parts = (val || '').split(' – ');
+          const lvl = parts[0] || '';
+          const note = parts[1] || val || '';
+          const col = lvl === 'HIGH' ? 'var(--danger)' : lvl === 'MEDIUM' ? 'var(--warn)' : 'var(--safe)';
+          grid.innerHTML += `<div class="finding-item">
+            <div class="finding-label">${label}</div>
+            <div class="finding-value" style="color:${col}">${lvl}</div>
+            <div style="font-size:12px;color:var(--text-dim);margin-top:4px">${note}</div>
+          </div>`;
+        });
+      }
+
+      // Signals
+      const ul = document.getElementById('s-signals');
+      ul.innerHTML = '';
+      (res.signals || []).forEach(s => { ul.innerHTML += `<li>${s}</li>`; });
+
+      document.getElementById('s-summary').textContent = res.summary || '';
+      document.getElementById('s-recommendation').textContent = res.recommendation || '';
+
+      document.getElementById('s-result').classList.add('visible');
+    }
+
+    // ── BATCH ANALYSIS ──
+    let reviews = [];
+
+    function renderReviewList() {
+      const list = document.getElementById('review-list');
+      const hint = document.getElementById('review-count-hint');
+      const analyzeBtn = document.getElementById('b-analyze-btn');
+
+      list.innerHTML = reviews.map((r, i) => `
+        <div class="review-item">
+          <div class="review-item-text">
+            <strong>${r.author || 'Anonymous'}</strong>
+            ${r.text.length > 100 ? r.text.slice(0, 100) + '…' : r.text}
+          </div>
+          <div class="review-stars">${r.stars ? r.stars + '★' : '?★'}</div>
+          <button class="remove-btn" data-idx="${i}" title="Remove">×</button>
+        </div>
+      `).join('');
+
+      list.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          reviews.splice(parseInt(btn.dataset.idx), 1);
+          renderReviewList();
+        });
+      });
+
+      hint.textContent = reviews.length + ' review' + (reviews.length !== 1 ? 's' : '') + ' added.' +
+        (reviews.length < 2 ? ' Add at least 2 to analyze.' : '');
+      analyzeBtn.disabled = reviews.length < 2;
+    }
+
+    document.getElementById('add-review-btn').addEventListener('click', () => {
+      const text = document.getElementById('new-review-text').value.trim();
+      if (!text) return;
+      if (reviews.length >= 10) { alert('Maximum 10 reviews per batch.'); return; }
+      reviews.push({
+        text,
+        stars: document.getElementById('new-review-stars').value,
+        author: document.getElementById('new-review-author').value.trim()
+      });
+      document.getElementById('new-review-text').value = '';
+      document.getElementById('new-review-stars').value = '';
+      document.getElementById('new-review-author').value = '';
+      renderReviewList();
+    });
+
+    renderReviewList();
+
+    document.getElementById('b-analyze-btn').addEventListener('click', async () => {
+      checkApiKey();
+      if (!DART_API.getApiKey()) return;
+      if (reviews.length < 2) return;
+      hideError('b-error');
+
+      const platform = document.getElementById('b-platform').value;
+      setSpinner('b-spinner', true);
+      document.getElementById('b-result').classList.remove('visible');
+      document.getElementById('b-analyze-btn').disabled = true;
+
+      try {
+        const res = await DART_API.analyzeBatchReviews({ reviews, platform });
+        renderBatchResult(res);
+        saveToLog({ mode: 'batch', platform, riskLevel: res.overallRiskLevel, score: res.overallDeceptionScore, verdict: res.verdict, count: reviews.length });
+      } catch (err) {
+        if (err.message === 'NO_API_KEY' || err.message === 'INVALID_API_KEY') {
+          showError('b-error', '❌ Invalid or missing API key. Go to Settings → API Key to set it.');
+        } else {
+          showError('b-error', '❌ ' + err.message);
+        }
+      } finally {
+        setSpinner('b-spinner', false);
+        document.getElementById('b-analyze-btn').disabled = reviews.length < 2;
+      }
+    });
+
+    function renderBatchResult(res) {
+      const level = (res.overallRiskLevel || 'LOW').toUpperCase();
+      const score = Math.max(0, Math.min(100, res.overallDeceptionScore || 0));
+
+      document.getElementById('b-risk-badge').className = 'risk-badge ' + riskClass(level);
+      document.getElementById('b-risk-badge').textContent = riskEmoji(level) + ' ' + level + ' RISK';
+      document.getElementById('b-verdict').textContent = res.verdict || '';
+      document.getElementById('b-score-label').textContent = 'Overall Deception Score: ' + score + ' / 100';
+
+      const fill = document.getElementById('b-score-fill');
+      fill.className = 'risk-score-fill ' + fillClass(level);
+      fill.style.width = score + '%';
+
+      // Summary grid
+      const grid = document.getElementById('b-summary-grid');
+      grid.innerHTML = `
+        <div class="finding-item">
+          <div class="finding-label">Total Reviews</div>
+          <div class="finding-value">${reviews.length}</div>
+        </div>
+        <div class="finding-item">
+          <div class="finding-label">Suspicious</div>
+          <div class="finding-value" style="color:var(--danger)">${res.suspiciousCount ?? '—'}</div>
+        </div>
+        <div class="finding-item">
+          <div class="finding-label">Authentic</div>
+          <div class="finding-value" style="color:var(--safe)">${res.authenticCount ?? '—'}</div>
+        </div>
+        <div class="finding-item">
+          <div class="finding-label">Deception Score</div>
+          <div class="finding-value" style="color:${level === 'HIGH' ? 'var(--danger)' : level === 'MEDIUM' ? 'var(--warn)' : 'var(--safe)'}">${score}/100</div>
+        </div>
+      `;
+
+      document.getElementById('b-patterns').textContent = res.patternsSummary || '';
+
+      // Per-review breakdown
+      const prDiv = document.getElementById('b-per-review');
+      prDiv.innerHTML = '';
+      (res.perReview || []).forEach(r => {
+        const rl = (r.riskLevel || 'LOW').toUpperCase();
+        const rv = reviews[r.index - 1];
+        const previewText = rv ? (rv.text.length > 80 ? rv.text.slice(0, 80) + '…' : rv.text) : '';
+        prDiv.innerHTML += `
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+            <span style="font-family:var(--mono);font-size:12px;color:var(--text-dim);padding-top:2px;flex-shrink:0">#${r.index}</span>
+            <div style="flex:1">
+              <span class="risk-chip ${chipClass(rl)}">${rl}</span>
+              <span style="font-size:12px;color:var(--text-dim);margin-left:8px">Score: ${r.deceptionScore ?? '?'}/100</span>
+              <div style="font-size:13px;color:var(--text-muted);margin-top:4px">${previewText}</div>
+              ${(r.flags || []).map(f => `<span style="font-size:11px;color:var(--text-dim);display:inline-block;margin-top:4px;margin-right:6px">▸ ${f}</span>`).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      const ul = document.getElementById('b-signals');
+      ul.innerHTML = '';
+      (res.signals || []).forEach(s => { ul.innerHTML += `<li>${s}</li>`; });
+
+      document.getElementById('b-recommendation').textContent = res.recommendation || '';
+      document.getElementById('b-result').classList.add('visible');
+    }
+  </script>
+</body>
+</html>

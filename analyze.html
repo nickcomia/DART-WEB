@@ -1,579 +1,817 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Analyze Reviews – DART</title>
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analyze Reviews &ndash; DART</title>
+<style>
+/* DART v3 — Embedded CSS (self-contained per page) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+:root {
+  --bg:       #0c0e12;
+  --bg2:      #13161c;
+  --bg3:      #1a1e27;
+  --border:   rgba(255,255,255,0.07);
+  --bord2:    rgba(255,255,255,0.13);
+  --text:     #eef0f5;
+  --muted:    #848aa0;
+  --dim:      #454960;
+  --green:    #1fd98a;
+  --gdim:     rgba(31,217,138,0.10);
+  --gglow:    rgba(31,217,138,0.30);
+  --red:      #ff4f6d;
+  --rdim:     rgba(255,79,109,0.10);
+  --amber:    #f5a623;
+  --adim:     rgba(245,166,35,0.10);
+  --font:     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --r:        12px;
+  --rsm:      8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--font); }
+input, textarea, select { font-family: var(--font); }
+
+/* ── NAVBAR ── */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 64px;
+  background: rgba(12,14,18,0.85);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+}
+.nav-inner {
+  width: 100%; max-width: 1140px; margin: 0 auto;
+  padding: 0 28px;
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.logo-mark {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 15px; color: #0c0e12; letter-spacing: 0.5px;
+}
+.logo-name { font-size: 17px; font-weight: 800; letter-spacing: 1px; color: var(--text); }
+.logo-tag { font-size: 11px; color: var(--muted); font-weight: 400; margin-top: 1px; display: block; }
+
+/* Breadcrumb nav pills */
+.nav-crumbs {
+  display: flex; align-items: center; gap: 4px;
+  margin-left: auto;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 4px;
+}
+.crumb {
+  font-size: 13px; font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 100px;
+  color: var(--muted);
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.crumb:hover { color: var(--text); background: var(--bg3); }
+.crumb.active { background: var(--green); color: #0c0e12; font-weight: 600; }
+
+.nav-toggle {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer;
+  margin-left: auto; padding: 6px;
+}
+.nav-toggle span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.2s; }
+.nav-mobile {
+  display: none; flex-direction: column;
+  padding: 10px 20px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  position: fixed; top: 64px; left: 0; right: 0; z-index: 199;
+}
+.nav-mobile.open { display: flex; }
+.nav-mobile .crumb { width: 100%; border-radius: var(--rsm); margin-bottom: 2px; }
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  padding: 150px 28px 96px;
+  text-align: center;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(31,217,138,0.12) 0%, transparent 65%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg) 100%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(31,217,138,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31,217,138,0.04) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 75%);
+  pointer-events: none;
+}
+.hero-inner { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase;
+  color: var(--green);
+  background: var(--gdim);
+  border: 1px solid rgba(31,217,138,0.22);
+  padding: 5px 14px; border-radius: 100px;
+  margin-bottom: 28px;
+}
+.badge-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+.hero-title {
+  font-size: clamp(36px, 6.5vw, 68px);
+  font-weight: 800; line-height: 1.1; letter-spacing: -2px;
+  margin-bottom: 20px;
+}
+.hero-title em { font-style: normal; color: var(--green); }
+.hero-desc { font-size: 17px; color: var(--muted); max-width: 540px; margin: 0 auto 36px; line-height: 1.75; }
+
+.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 56px; }
+
+.hero-stats {
+  display: inline-flex; align-items: stretch;
+  background: var(--bg2); border: 1px solid var(--bord2);
+  border-radius: var(--r); overflow: hidden;
+}
+.hstat { padding: 20px 32px; text-align: center; border-right: 1px solid var(--border); }
+.hstat:last-child { border-right: none; }
+.hstat-n { display: block; font-size: 26px; font-weight: 800; color: var(--green); letter-spacing: -0.5px; margin-bottom: 3px; }
+.hstat-l { font-size: 12px; color: var(--muted); line-height: 1.4; display: block; max-width: 100px; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 12px 24px; border-radius: var(--rsm);
+  font-size: 15px; font-weight: 600;
+  cursor: pointer; border: none; transition: all 0.18s;
+  text-decoration: none; white-space: nowrap;
+}
+.btn-green { background: var(--green); color: #0c0e12; }
+.btn-green:hover { background: #3fffa8; box-shadow: 0 0 22px var(--gglow); transform: translateY(-1px); }
+.btn-outline { background: transparent; color: var(--text); border: 1px solid var(--bord2); }
+.btn-outline:hover { background: rgba(255,255,255,0.05); }
+.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg2); color: var(--text); }
+.btn-sm { padding: 8px 16px; font-size: 13px; }
+.btn-full { width: 100%; justify-content: center; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+.btn-red { background: var(--red); color: #fff; }
+
+/* ── SECTIONS ── */
+.section { padding: 80px 28px; }
+.section-alt { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.container { max-width: 1100px; margin: 0 auto; }
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+.s-title { font-size: clamp(24px, 4vw, 40px); font-weight: 800; letter-spacing: -0.8px; margin-bottom: 14px; }
+.s-desc { font-size: 16px; color: var(--muted); line-height: 1.75; max-width: 620px; margin-bottom: 48px; }
+
+/* Steps */
+.steps { display: flex; align-items: flex-start; gap: 0; }
+.step { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 28px; transition: border-color 0.2s; min-width: 0; }
+.step:hover { border-color: var(--bord2); }
+.step-num { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--green); margin-bottom: 12px; }
+.step-t { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.step-d { font-size: 13px; color: var(--muted); line-height: 1.65; }
+.step-arr { display: flex; align-items: center; justify-content: center; padding: 0 10px; padding-top: 40px; color: var(--dim); font-size: 20px; flex-shrink: 0; }
+
+/* Platforms */
+.plat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 22px; }
+.plat-card {
+  background: var(--bg); border: 1px solid var(--border); border-radius: var(--rsm);
+  padding: 16px 12px; text-align: center; transition: all 0.18s; cursor: default;
+}
+.plat-card:hover { border-color: var(--green); background: var(--gdim); }
+.plat-icon { font-size: 22px; display: block; margin-bottom: 6px; }
+.plat-name { font-size: 12px; color: var(--muted); font-weight: 500; }
+.plat-note {
+  font-size: 13px; color: var(--muted); line-height: 1.6;
+  background: var(--bg); border: 1px solid var(--border);
+  border-left: 3px solid var(--amber); border-radius: var(--rsm); padding: 12px 16px;
+}
+.plat-note strong { color: var(--amber); }
+
+/* Layers */
+.layers { display: flex; flex-direction: column; gap: 14px; }
+.layer {
+  display: flex; align-items: flex-start; gap: 20px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 24px 26px;
+  transition: border-color 0.2s;
+}
+.layer:hover { border-color: var(--bord2); }
+.layer-icon {
+  width: 48px; height: 48px; flex-shrink: 0; border-radius: var(--rsm);
+  background: var(--bg); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.layer h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.layer p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+/* CTA */
+.cta-section { text-align: center; }
+.cta-section h2 { font-size: clamp(22px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.6px; margin-bottom: 12px; }
+.cta-section p { color: var(--muted); margin-bottom: 28px; font-size: 15px; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+/* ── FOOTER ── */
+.footer { border-top: 1px solid var(--border); padding: 24px 28px; }
+.footer-in {
+  max-width: 1140px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.foot-logo { display: flex; align-items: center; gap: 10px; }
+.foot-copy { font-size: 12px; color: var(--dim); }
+.foot-links { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--muted); }
+.foot-links a:hover { color: var(--green); }
+
+/* ── PAGE SHELL (inner pages) ── */
+.page-shell { padding: 100px 28px 80px; }
+.page-wrap { max-width: 860px; margin: 0 auto; }
+.page-title { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; margin-bottom: 6px; }
+.page-sub { font-size: 15px; color: var(--muted); margin-bottom: 36px; }
+
+/* Breadcrumb trail */
+.bread {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--dim); margin-bottom: 24px;
+}
+.bread a { color: var(--muted); }
+.bread a:hover { color: var(--green); }
+.bread-sep { color: var(--dim); }
+
+/* ── TABS ── */
+.tabs {
+  display: flex; gap: 3px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--rsm);
+  padding: 4px; width: fit-content; margin-bottom: 28px;
+}
+.tab-btn {
+  padding: 8px 20px; border-radius: 6px; border: none;
+  background: transparent; color: var(--muted);
+  font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s;
+}
+.tab-btn.on { background: var(--bg3); color: var(--text); }
+.tab-panel { display: none; }
+.tab-panel.on { display: block; }
+
+/* ── FORM ── */
+.fg { margin-bottom: 18px; }
+.fl { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 7px; letter-spacing: 0.3px; text-transform: uppercase; }
+.fi, .ft, .fs {
+  width: 100%;
+  background: var(--bg2); border: 1px solid var(--bord2); border-radius: var(--rsm);
+  padding: 11px 14px; color: var(--text); font-size: 14px;
+  transition: border-color 0.15s, box-shadow 0.15s; outline: none;
+  appearance: none;
+}
+.fi:focus, .ft:focus, .fs:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px var(--gdim);
+}
+.fi::placeholder, .ft::placeholder { color: var(--dim); }
+.ft { resize: vertical; min-height: 110px; line-height: 1.6; }
+.fhint { font-size: 12px; color: var(--dim); margin-top: 5px; line-height: 1.5; }
+
+.url-row { display: flex; gap: 10px; }
+.url-row .fi { flex: 1; font-size: 14px; padding: 13px 16px; }
+.url-row .btn { flex-shrink: 0; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* ── PRODUCT CARD ── */
+.product-card {
+  display: flex; gap: 20px; align-items: flex-start;
+  background: var(--bg2); border: 1px solid var(--bord2); border-radius: var(--r);
+  padding: 20px; margin-bottom: 24px;
+}
+.prod-img {
+  width: 110px; height: 110px; flex-shrink: 0;
+  border-radius: var(--rsm); object-fit: cover;
+  background: var(--bg3); border: 1px solid var(--border);
+}
+.prod-img-ph {
+  width: 110px; height: 110px; flex-shrink: 0;
+  border-radius: var(--rsm); background: var(--bg3);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+}
+.prod-plat {
+  display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--green); background: var(--gdim);
+  border: 1px solid rgba(31,217,138,0.2); padding: 3px 10px; border-radius: 100px;
+  margin-bottom: 8px;
+}
+.prod-name { font-size: 16px; font-weight: 700; margin-bottom: 6px; line-height: 1.35; }
+.prod-meta { font-size: 13px; color: var(--muted); }
+.prod-stars { color: var(--amber); }
+
+/* ── REVIEW ITEMS (manual) ── */
+.rev-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.rev-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--rsm); padding: 12px 14px;
+}
+.rev-n { font-size: 11px; color: var(--dim); font-weight: 600; padding-top: 2px; flex-shrink: 0; width: 22px; }
+.rev-body { flex: 1; min-width: 0; }
+.rev-author { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.rev-preview { font-size: 13px; color: var(--muted); }
+.rev-stars-badge { font-size: 12px; color: var(--amber); flex-shrink: 0; }
+.rev-rm { background: none; border: none; color: var(--dim); font-size: 18px; cursor: pointer; padding: 0 2px; line-height: 1; transition: color 0.15s; }
+.rev-rm:hover { color: var(--red); }
+
+.add-box {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 18px; margin-bottom: 18px;
+}
+.add-box-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+.add-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.add-row > div { min-width: 0; }
+.add-row .btn { flex-shrink: 0; height: 42px; }
+
+/* ── RESULT BOX ── */
+.result-box {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 28px; margin-top: 28px;
+  display: none; animation: fadeup 0.3s ease;
+}
+.result-box.show { display: block; }
+@keyframes fadeup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+.risk-banner {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 20px; border-radius: var(--rsm); border: 1px solid; margin-bottom: 22px;
+}
+.rb-low  { background: var(--gdim); border-color: rgba(31,217,138,0.25); }
+.rb-med  { background: var(--adim); border-color: rgba(245,166,35,0.25); }
+.rb-high { background: var(--rdim); border-color: rgba(255,79,109,0.25); }
+.rb-emoji { font-size: 26px; flex-shrink: 0; }
+.rb-level { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px; }
+.rb-verdict { font-size: 14px; font-weight: 600; }
+.col-green { color: var(--green); }
+.col-amber { color: var(--amber); }
+.col-red   { color: var(--red); }
+
+.score-wrap { margin-bottom: 22px; }
+.score-hd { display: flex; justify-content: space-between; margin-bottom: 7px; font-size: 13px; }
+.score-hd span:first-child { color: var(--muted); font-weight: 500; }
+.score-hd span:last-child { font-weight: 700; font-variant-numeric: tabular-nums; }
+.score-bar { height: 7px; background: var(--bg3); border-radius: 100px; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 100px; transition: width 0.9s cubic-bezier(0.2,0.8,0.3,1); }
+.sf-low  { background: var(--green); }
+.sf-med  { background: var(--amber); }
+.sf-high { background: var(--red); }
+
+.findings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 10px; margin-bottom: 22px; }
+.fc { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--rsm); padding: 12px 14px; }
+.fc-name { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 5px; }
+.fc-level { font-size: 13px; font-weight: 700; }
+.fc-note { font-size: 11px; color: var(--dim); margin-top: 3px; line-height: 1.4; }
+
+.rs { margin-bottom: 20px; }
+.rs:last-child { margin-bottom: 0; }
+.rs-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--dim); margin-bottom: 9px; padding-bottom: 7px; border-bottom: 1px solid var(--border); }
+.rs-text { font-size: 14px; color: var(--muted); line-height: 1.75; }
+
+.sig-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.sig-list li { font-size: 13px; color: var(--muted); padding-left: 16px; position: relative; line-height: 1.5; }
+.sig-list li::before { content: '▸'; position: absolute; left: 0; color: var(--green); font-size: 10px; top: 3px; }
+
+.pr-list { display: flex; flex-direction: column; gap: 8px; }
+.pr-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 10px 14px; background: var(--bg3); border-radius: var(--rsm); border: 1px solid var(--border);
+}
+.pr-n { font-size: 11px; color: var(--dim); font-weight: 600; flex-shrink: 0; padding-top: 2px; }
+.pr-body { flex: 1; min-width: 0; }
+.pr-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+.pr-preview { font-size: 12px; color: var(--dim); }
+.pr-flags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+.flag { font-size: 11px; color: var(--muted); background: var(--bg2); border: 1px solid var(--border); border-radius: 100px; padding: 2px 8px; }
+
+.chip { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; padding: 2px 9px; border-radius: 100px; }
+.chip-low  { background: var(--gdim); color: var(--green); border: 1px solid rgba(31,217,138,0.22); }
+.chip-med  { background: var(--adim); color: var(--amber); border: 1px solid rgba(245,166,35,0.22); }
+.chip-high { background: var(--rdim); color: var(--red);   border: 1px solid rgba(255,79,109,0.22); }
+
+/* ── SPINNER / ERROR ── */
+.spinner-wrap { display: none; align-items: center; gap: 12px; padding: 16px 0; color: var(--muted); font-size: 14px; }
+.spinner-wrap.show { display: flex; }
+.spin { width: 20px; height: 20px; border: 2px solid var(--bord2); border-top-color: var(--green); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+.err-msg { display: none; background: var(--rdim); border: 1px solid rgba(255,79,109,0.25); border-radius: var(--rsm); padding: 12px 16px; font-size: 14px; color: var(--red); margin-top: 14px; line-height: 1.5; }
+.err-msg.show { display: block; }
+.err-msg a { color: var(--red); text-decoration: underline; }
+
+.warn-bar { display: none; background: var(--adim); border: 1px solid rgba(245,166,35,0.25); border-radius: var(--rsm); padding: 12px 16px; font-size: 14px; color: var(--amber); margin-bottom: 20px; }
+.warn-bar.show { display: block; }
+.warn-bar a { color: var(--amber); text-decoration: underline; }
+
+/* ── SETTINGS ── */
+.scard { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 26px; margin-bottom: 16px; }
+.scard h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.scard p { font-size: 14px; color: var(--muted); margin-bottom: 18px; line-height: 1.65; }
+.scard p:last-child { margin-bottom: 0; }
+.key-row { display: flex; gap: 10px; }
+.key-row .fi { flex: 1; font-size: 12px; letter-spacing: 0.5px; }
+.key-st { font-size: 13px; margin-top: 9px; display: none; }
+.key-st.ok { display: block; color: var(--green); }
+.key-st.err { display: block; color: var(--red); }
+.key-btns { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 12px; font-family: monospace; }
+
+/* ── ABOUT ── */
+.about-hero { text-align: center; padding: 110px 28px 56px; border-bottom: 1px solid var(--border); }
+.about-hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; }
+.about-hero p { font-size: 16px; color: var(--muted); max-width: 580px; margin: 0 auto; line-height: 1.7; }
+.about-body { max-width: 800px; margin: 0 auto; padding: 52px 28px 80px; }
+.about-body h2 { font-size: 20px; font-weight: 700; margin-top: 40px; margin-bottom: 12px; padding-top: 18px; border-top: 1px solid var(--border); }
+.about-body h2:first-child { margin-top: 0; border-top: none; padding-top: 0; }
+.about-body p { font-size: 15px; color: var(--muted); line-height: 1.78; margin-bottom: 12px; }
+.about-body ul { font-size: 15px; color: var(--muted); line-height: 1.85; padding-left: 20px; margin-bottom: 12px; }
+.prop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.prop-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--rsm); padding: 14px 16px; }
+.prop-card strong { display: block; font-size: 14px; margin-bottom: 3px; }
+.prop-card span { font-size: 12px; color: var(--dim); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 680px) {
+  .nav-crumbs { display: none; }
+  .nav-toggle { display: flex; }
+  .hero { padding: 120px 20px 72px; }
+  .hero-stats { flex-direction: column; border-radius: var(--r); }
+  .hstat { border-right: none; border-bottom: 1px solid var(--border); }
+  .hstat:last-child { border-bottom: none; }
+  .steps { flex-direction: column; }
+  .step-arr { display: none; }
+  .two-col { grid-template-columns: 1fr; }
+  .url-row { flex-direction: column; }
+  .url-row .btn { width: 100%; justify-content: center; }
+  .product-card { flex-direction: column; }
+  .prod-img, .prod-img-ph { width: 100%; height: 160px; }
+  .add-row { flex-direction: column; }
+  .add-row .btn { width: 100%; }
+}
+
+</style>
 </head>
 <body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <div class="logo-mark">D</div>
+      <div><span class="logo-name">DART</span><span class="logo-tag">Review Intelligence</span></div>
+    </a>
+    <nav class="nav-crumbs">
+      <a href="../index.html" class="crumb">Home</a>
+      <a href="about.html" class="crumb ">About</a>
+      <a href="analyze.html" class="crumb active">Analyze</a>
+    </nav>
+    <button class="nav-toggle" id="T"><span></span><span></span><span></span></button>
+  </div>
+  <div class="nav-mobile" id="M">
+    <a href="../index.html" class="crumb">Home</a>
+    <a href="about.html" class="crumb ">About</a>
+    <a href="analyze.html" class="crumb active">Analyze</a>
+  </div>
+</nav>
 
-  <nav class="navbar">
-    <div class="nav-container">
-      <a href="../index.html" class="nav-logo">
-        <span class="logo-text">DART</span>
-        <span class="logo-divider">|</span>
-        <span class="logo-sub">Review Intelligence</span>
-      </a>
-      <ul class="nav-links">
-        <li><a href="../index.html" class="nav-link">Home</a></li>
-        <li><a href="about.html" class="nav-link">About</a></li>
-        <li><a href="analyze.html" class="nav-link nav-link-cta">Analyze</a></li>
-      </ul>
-      <button class="nav-toggle" id="navToggle" aria-label="Open menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-    <div class="nav-mobile" id="navMobile">
-      <a href="../index.html" class="nav-link">Home</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="analyze.html" class="nav-link active">Analyze</a>
-    </div>
+<div class="page-shell">
+<div class="page-wrap">
+
+  <nav class="bread">
+    <a href="../index.html">Home</a>
+    <span class="bread-sep">&rsaquo;</span>
+    <span>Analyze</span>
   </nav>
 
-  <div class="page-shell">
-    <div class="page-wrap">
+  <h1 class="page-title">Analyze Reviews</h1>
+  <p class="page-sub">Paste a product URL for automatic analysis, or enter review text manually.</p>
 
-      <!-- Breadcrumb -->
-      <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="../index.html">Home</a>
-        <span class="breadcrumb-sep">›</span>
-        <span class="breadcrumb-current">Analyze</span>
-      </nav>
+  <div class="warn-bar" id="keyWarn">
+    &#9888; No API key configured. <a href="settings.html">Set your Anthropic API key &rarr;</a>
+  </div>
 
-      <h1 class="page-title">Analyze Reviews</h1>
-      <p class="page-subtitle">Paste a product URL for automatic detection, or enter review text manually.</p>
+  <div class="tabs">
+    <button class="tab-btn on" data-tab="url">&#x1F517; Product URL</button>
+    <button class="tab-btn" data-tab="manual">&#x270F; Manual Review</button>
+  </div>
 
-      <!-- API key missing warning -->
-      <div class="error-msg show" id="keyWarning" style="display:none">
-        ⚠️ No API key configured.
-        <a href="settings.html">Set your Anthropic API key →</a>
+  <!-- URL TAB -->
+  <div class="tab-panel on" id="tab-url">
+    <div class="fg">
+      <label class="fl">Product Page URL</label>
+      <div class="url-row">
+        <input class="fi" type="url" id="urlIn" placeholder="https://shopee.ph/product/... or any supported platform" autocomplete="off">
+        <button class="btn btn-green" id="urlBtn">Analyze &rarr;</button>
       </div>
+      <p class="fhint">Supported: Amazon, Shopee, Lazada, Temu, AliExpress, eBay, Walmart, Yelp, TripAdvisor, and more.<br>
+      <strong style="color:var(--amber)">Tip:</strong> If the URL fails (some platforms block scraping), use the Manual Review tab.</p>
+    </div>
 
-      <!-- Tabs -->
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="url">🔗 Product URL</button>
-        <button class="tab-btn" data-tab="manual">✏️ Manual Review</button>
-      </div>
+    <div class="spinner-wrap" id="urlSpin"><div class="spin"></div><span id="urlSpinMsg">Fetching product page&hellip;</span></div>
+    <div class="err-msg" id="urlErr"></div>
 
-      <!-- ══════════════════════════════
-           TAB 1 — URL Analysis
-      ══════════════════════════════ -->
-      <div class="tab-panel active" id="tab-url">
-
-        <div class="form-group">
-          <label class="form-label">Product Page URL</label>
-          <div class="url-row">
-            <input
-              class="form-input"
-              type="url"
-              id="urlInput"
-              placeholder="https://www.shopee.ph/product/... or any supported platform"
-              autocomplete="off"
-            />
-            <button class="btn btn-primary" id="urlAnalyzeBtn">Analyze →</button>
-          </div>
-          <p class="form-hint">
-            Paste a product page URL from Amazon, Shopee, Lazada, Temu, AliExpress, eBay, Walmart, TripAdvisor, Yelp, and more.
-            <br>
-            <strong style="color:var(--amber)">Note:</strong> Some platforms block automated access. If the URL fails, use the Manual Review tab.
-          </p>
+    <!-- Product card -->
+    <div id="prodWrap" style="display:none">
+      <div class="product-card">
+        <div class="prod-img-ph" id="prodPh">&#x1F6D2;</div>
+        <img class="prod-img" id="prodImg" src="" alt="Product" style="display:none">
+        <div>
+          <span class="prod-plat" id="prodPlat"></span>
+          <div class="prod-name" id="prodName"></div>
+          <div class="prod-meta"><span class="prod-stars" id="prodStars"></span><span id="prodCount"></span></div>
         </div>
-
-        <div class="spinner-wrap" id="urlSpinner">
-          <div class="spinner"></div>
-          <span id="urlSpinnerMsg">Fetching product page…</span>
-        </div>
-        <div class="error-msg" id="urlError"></div>
-
-        <!-- Product card (shown after fetch) -->
-        <div id="productCardWrap" style="display:none">
-          <div class="product-card" id="productCard">
-            <div class="product-img-placeholder" id="productImgPlaceholder">🛒</div>
-            <img class="product-img" id="productImg" src="" alt="Product" style="display:none" />
-            <div class="product-info">
-              <span class="product-platform" id="productPlatform">Platform</span>
-              <div class="product-name" id="productName">Product name</div>
-              <div class="product-meta">
-                <span class="product-rating" id="productRating"></span>
-                <span id="productReviewCount"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- URL result -->
-        <div class="result-box" id="urlResult">
-          <div class="risk-banner" id="urlRiskBanner">
-            <span class="risk-emoji" id="urlRiskEmoji"></span>
-            <div>
-              <div class="risk-level-label" id="urlRiskLevel"></div>
-              <div class="risk-verdict" id="urlVerdict"></div>
-            </div>
-          </div>
-
-          <div class="score-wrap">
-            <div class="score-header">
-              <span class="score-title">Overall Deception Score</span>
-              <span class="score-value" id="urlScoreVal"></span>
-            </div>
-            <div class="score-bar"><div class="score-fill" id="urlScoreFill" style="width:0%"></div></div>
-          </div>
-
-          <div class="findings-grid" id="urlFindingsGrid"></div>
-
-          <div class="result-section">
-            <div class="result-section-title">Pattern Analysis</div>
-            <p class="result-text" id="urlPatterns"></p>
-          </div>
-
-          <div class="result-section">
-            <div class="result-section-title">Per-Review Breakdown</div>
-            <div class="per-review-list" id="urlPerReview"></div>
-          </div>
-
-          <div class="result-section">
-            <div class="result-section-title">Detection Signals</div>
-            <ul class="signal-list" id="urlSignals"></ul>
-          </div>
-
-          <div class="result-section">
-            <div class="result-section-title">Consumer Recommendation</div>
-            <p class="result-text" id="urlRecommendation"></p>
-          </div>
-        </div>
-      </div>
-
-      <!-- ══════════════════════════════
-           TAB 2 — Manual Review Entry
-      ══════════════════════════════ -->
-      <div class="tab-panel" id="tab-manual">
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
-          <div class="form-group" style="margin-bottom:0">
-            <label class="form-label">Platform</label>
-            <select class="form-select" id="manPlatform">
-              <option value="">Select…</option>
-              <option>Amazon</option>
-              <option>Shopee</option>
-              <option>Lazada</option>
-              <option>Zalora</option>
-              <option>eBay</option>
-              <option>Temu</option>
-              <option>AliExpress</option>
-              <option>Walmart</option>
-              <option>Google Reviews</option>
-              <option>Yelp</option>
-              <option>TripAdvisor</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin-bottom:0">
-            <label class="form-label">Product / Business Name (optional)</label>
-            <input class="form-input" id="manProduct" placeholder="e.g. Sony WH-1000XM5" />
-          </div>
-        </div>
-
-        <!-- Add reviews -->
-        <div class="form-label" style="margin-bottom:8px">
-          Reviews to Analyze
-          <span style="color:var(--text-dim);font-weight:400;margin-left:6px" id="manCount">(0 added — add at least 1)</span>
-        </div>
-        <div class="review-list" id="manReviewList"></div>
-
-        <!-- Add form -->
-        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px">
-          <div class="form-label" style="margin-bottom:12px">Add a Review</div>
-          <div class="form-group">
-            <textarea class="form-textarea" id="newText" placeholder="Paste the review text here…" style="min-height:90px"></textarea>
-          </div>
-          <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
-            <div style="width:90px">
-              <label class="form-label">Stars</label>
-              <select class="form-select" id="newStars">
-                <option value="">?</option>
-                <option>1</option><option>2</option><option>3</option>
-                <option>4</option><option>5</option>
-              </select>
-            </div>
-            <div style="flex:1;min-width:160px">
-              <label class="form-label">Reviewer Name (optional)</label>
-              <input class="form-input" id="newAuthor" placeholder="e.g. verified_buyer" />
-            </div>
-            <button class="btn btn-outline" id="addReviewBtn" style="flex-shrink:0">+ Add Review</button>
-          </div>
-        </div>
-
-        <button class="btn btn-primary" id="manAnalyzeBtn" disabled style="width:100%;justify-content:center">
-          🔍 Analyze Reviews
-        </button>
-
-        <div class="spinner-wrap" id="manSpinner">
-          <div class="spinner"></div>
-          <span>Analyzing with DART AI…</span>
-        </div>
-        <div class="error-msg" id="manError"></div>
-
-        <!-- Manual result -->
-        <div class="result-box" id="manResult">
-          <div class="risk-banner" id="manRiskBanner">
-            <span class="risk-emoji" id="manRiskEmoji"></span>
-            <div>
-              <div class="risk-level-label" id="manRiskLevel"></div>
-              <div class="risk-verdict" id="manVerdict"></div>
-            </div>
-          </div>
-
-          <div class="score-wrap">
-            <div class="score-header">
-              <span class="score-title">Overall Deception Score</span>
-              <span class="score-value" id="manScoreVal"></span>
-            </div>
-            <div class="score-bar"><div class="score-fill" id="manScoreFill" style="width:0%"></div></div>
-          </div>
-
-          <div class="findings-grid" id="manFindingsGrid"></div>
-
-          <div class="result-section">
-            <div class="result-section-title">Pattern Analysis</div>
-            <p class="result-text" id="manPatterns"></p>
-          </div>
-
-          <div class="result-section">
-            <div class="result-section-title">Per-Review Breakdown</div>
-            <div class="per-review-list" id="manPerReview"></div>
-          </div>
-
-          <div class="result-section">
-            <div class="result-section-title">Detection Signals</div>
-            <ul class="signal-list" id="manSignals"></ul>
-          </div>
-
-          <div class="result-section">
-            <div class="result-section-title">Consumer Recommendation</div>
-            <p class="result-text" id="manRecommendation"></p>
-          </div>
-        </div>
-      </div>
-    </div><!-- /page-wrap -->
-  </div><!-- /page-shell -->
-
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div class="footer-logo">
-        <span class="logo-text">DART</span>
-        <span class="footer-tagline">Deceptive Assessment and Review Tracking</span>
-      </div>
-      <div class="footer-right">
-        <span>BatStateU · CICS · 2026</span>
-        <span class="footer-sep">·</span>
-        <a href="about.html">About</a>
-        <span class="footer-sep">·</span>
-        <a href="settings.html">Settings</a>
       </div>
     </div>
-  </footer>
 
-  <script src="../js/nav.js"></script>
-  <script src="../js/dart-api.js"></script>
-  <script>
+    <!-- URL result -->
+    <div class="result-box" id="urlRes">
+      <div class="risk-banner" id="urlBanner">
+        <span class="rb-emoji" id="urlEmoji"></span>
+        <div><div class="rb-level" id="urlLevel"></div><div class="rb-verdict" id="urlVerdict"></div></div>
+      </div>
+      <div class="score-wrap">
+        <div class="score-hd"><span>Overall Deception Score</span><span id="urlScoreN"></span></div>
+        <div class="score-bar"><div class="score-fill" id="urlFill" style="width:0%"></div></div>
+      </div>
+      <div class="findings-grid" id="urlFindings"></div>
+      <div class="rs"><div class="rs-title">Pattern Analysis</div><p class="rs-text" id="urlPatterns"></p></div>
+      <div class="rs"><div class="rs-title">Per-Review Breakdown</div><div class="pr-list" id="urlPR"></div></div>
+      <div class="rs"><div class="rs-title">Detection Signals</div><ul class="sig-list" id="urlSigs"></ul></div>
+      <div class="rs"><div class="rs-title">Consumer Recommendation</div><p class="rs-text" id="urlRec"></p></div>
+    </div>
+  </div>
 
-    /* ── API key check ── */
-    (function () {
-      if (!DART.getKey()) {
-        const w = document.getElementById('keyWarning');
-        w.style.display = 'block';
-        w.classList.add('show');
-      }
-    })();
+  <!-- MANUAL TAB -->
+  <div class="tab-panel" id="tab-manual">
+    <div class="two-col" style="margin-bottom:18px">
+      <div class="fg" style="margin-bottom:0">
+        <label class="fl">Platform</label>
+        <select class="fs" id="manPlat">
+          <option value="">Select&hellip;</option>
+          <option>Amazon</option><option>Shopee</option><option>Lazada</option>
+          <option>Zalora</option><option>eBay</option><option>Temu</option>
+          <option>AliExpress</option><option>Walmart</option><option>Google Reviews</option>
+          <option>Yelp</option><option>TripAdvisor</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fg" style="margin-bottom:0">
+        <label class="fl">Product / Business Name (optional)</label>
+        <input class="fi" id="manProd" placeholder="e.g. Sony WH-1000XM5">
+      </div>
+    </div>
 
-    /* ── Tab switching ── */
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-      });
-    });
+    <label class="fl" style="margin-bottom:8px">
+      Reviews to Analyze <span style="color:var(--dim);font-weight:400" id="manCount">&mdash; add at least 1</span>
+    </label>
+    <div class="rev-list" id="revList"></div>
 
-    /* ── Helpers ── */
-    function riskBannerClass(level) {
-      return level === 'HIGH' ? 'risk-banner risk-banner-high'
-           : level === 'MEDIUM' ? 'risk-banner risk-banner-med'
-           : 'risk-banner risk-banner-low';
+    <div class="add-box">
+      <div class="add-box-title">Add a Review</div>
+      <div class="fg"><textarea class="ft" id="newTxt" placeholder="Paste the review text here&hellip;" style="min-height:80px"></textarea></div>
+      <div class="add-row">
+        <div style="width:88px"><label class="fl">Stars</label>
+          <select class="fs" id="newStars"><option value="">?</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+        </div>
+        <div style="flex:1"><label class="fl">Author (optional)</label>
+          <input class="fi" id="newAuthor" placeholder="Reviewer name&hellip;">
+        </div>
+        <button class="btn btn-outline btn-sm" id="addBtn" style="margin-top:20px">+ Add</button>
+      </div>
+    </div>
+
+    <button class="btn btn-green btn-full" id="manBtn" disabled>&#x1F50D; Analyze Reviews</button>
+
+    <div class="spinner-wrap" id="manSpin"><div class="spin"></div><span>Analyzing with DART AI&hellip;</span></div>
+    <div class="err-msg" id="manErr"></div>
+
+    <!-- Manual result -->
+    <div class="result-box" id="manRes">
+      <div class="risk-banner" id="manBanner">
+        <span class="rb-emoji" id="manEmoji"></span>
+        <div><div class="rb-level" id="manLevel"></div><div class="rb-verdict" id="manVerdict"></div></div>
+      </div>
+      <div class="score-wrap">
+        <div class="score-hd"><span>Overall Deception Score</span><span id="manScoreN"></span></div>
+        <div class="score-bar"><div class="score-fill" id="manFill" style="width:0%"></div></div>
+      </div>
+      <div class="findings-grid" id="manFindings"></div>
+      <div class="rs"><div class="rs-title">Pattern Analysis</div><p class="rs-text" id="manPatterns"></p></div>
+      <div class="rs"><div class="rs-title">Per-Review Breakdown</div><div class="pr-list" id="manPR"></div></div>
+      <div class="rs"><div class="rs-title">Detection Signals</div><ul class="sig-list" id="manSigs"></ul></div>
+      <div class="rs"><div class="rs-title">Consumer Recommendation</div><p class="rs-text" id="manRec"></p></div>
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
+</div><!-- /page-shell -->
+
+<footer class="footer">
+  <div class="footer-in">
+    <div class="foot-logo">
+      <div class="logo-mark">D</div>
+      <span class="foot-copy">Deceptive Assessment and Review Tracking &middot; BatStateU CICS &middot; 2026</span>
+    </div>
+    <div class="foot-links">
+      <a href="../index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="analyze.html">Analyze</a>
+      <a href="settings.html">Settings</a>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){var T=document.getElementById('T'),M=document.getElementById('M');if(T&&M)T.addEventListener('click',function(){M.classList.toggle('open');});})();
+</script>
+<script src="../js/dart-api.js"></script>
+<script>
+// ── Key check ──
+if(!DART.getKey()){document.getElementById('keyWarn').classList.add('show');}
+
+// ── Tabs ──
+document.querySelectorAll('.tab-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('on');});
+    document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on');
+    document.getElementById('tab-'+b.dataset.tab).classList.add('on');
+  });
+});
+
+// ── Helpers ──
+function levelClass(l){return l==='HIGH'?'col-red':l==='MEDIUM'?'col-amber':'col-green';}
+function bannerClass(l){return 'risk-banner '+(l==='HIGH'?'rb-high':l==='MEDIUM'?'rb-med':'rb-low');}
+function fillClass(l){return 'score-fill '+(l==='HIGH'?'sf-high':l==='MEDIUM'?'sf-med':'sf-low');}
+function chipClass(l){return 'chip '+(l==='HIGH'?'chip-high':l==='MEDIUM'?'chip-med':'chip-low');}
+function emoji(l){return l==='HIGH'?'&#x1F6A8;':l==='MEDIUM'?'&#x26A0;&#xFE0F;':'&#x2705;';}
+function levelColor(l){return l==='HIGH'?'var(--red)':l==='MEDIUM'?'var(--amber)':'var(--green)';}
+
+function showErr(id,msg){var e=document.getElementById(id);e.innerHTML=msg;e.classList.add('show');}
+function hideErr(id){document.getElementById(id).classList.remove('show');}
+function showSpin(id,msg){document.getElementById(id).classList.add('show');var m=document.getElementById(id+'Msg');if(m&&msg)m.textContent=msg;}
+function hideSpin(id){document.getElementById(id).classList.remove('show');}
+
+function renderFindings(id, f){
+  var g=document.getElementById(id); g.innerHTML='';
+  if(!f) return;
+  var labels={'sentimentManipulation':'Sentiment Manipulation','aiGeneratedLikelihood':'AI-Generated Likelihood','keywordStuffing':'Keyword Stuffing','linguisticUniformity':'Linguistic Uniformity'};
+  Object.entries(f).forEach(function(kv){
+    var parts=(kv[1]||'').split(' – ');
+    var lvl=(parts[0]||'').trim().toUpperCase();
+    var note=parts[1]||kv[1]||'';
+    g.innerHTML+='<div class="fc"><div class="fc-name">'+(labels[kv[0]]||kv[0])+'</div><div class="fc-level" style="color:'+levelColor(lvl)+'">'+lvl+'</div><div class="fc-note">'+note+'</div></div>';
+  });
+}
+
+function renderPR(id, arr, src){
+  var w=document.getElementById(id); w.innerHTML='';
+  (arr||[]).forEach(function(r){
+    var l=(r.riskLevel||'LOW').toUpperCase();
+    var sv=src&&src[r.index-1];
+    var prev=sv?(sv.text.length>80?sv.text.slice(0,80)+'&hellip;':sv.text):'';
+    var flags=(r.flags||[]).map(function(f){return '<span class="flag">'+f+'</span>';}).join('');
+    w.innerHTML+='<div class="pr-item"><span class="pr-n">#'+r.index+'</span><div class="pr-body"><div class="pr-meta"><span class="'+chipClass(l)+'">'+l+'</span><span style="font-size:12px;color:var(--dim)">'+r.deceptionScore+'/100</span></div>'+(prev?'<div class="pr-preview">'+prev+'</div>':'')+(flags?'<div class="pr-flags">'+flags+'</div>':'')+'</div></div>';
+  });
+}
+
+function renderSigs(id, sigs){
+  var ul=document.getElementById(id); ul.innerHTML='';
+  (sigs||[]).forEach(function(s){ul.innerHTML+='<li>'+s+'</li>';});
+}
+
+function applyResult(prefix, analysis, src){
+  var l=(analysis.overallRiskLevel||analysis.riskLevel||'LOW').toUpperCase();
+  var score=Math.max(0,Math.min(100,analysis.overallDeceptionScore||analysis.deceptionScore||0));
+  document.getElementById(prefix+'Banner').className=bannerClass(l);
+  document.getElementById(prefix+'Emoji').innerHTML=emoji(l);
+  document.getElementById(prefix+'Level').className='rb-level '+levelClass(l);
+  document.getElementById(prefix+'Level').textContent=l+' RISK';
+  document.getElementById(prefix+'Verdict').textContent=analysis.verdict||'';
+  document.getElementById(prefix+'ScoreN').textContent=score+' / 100';
+  var fill=document.getElementById(prefix+'Fill');
+  fill.className=fillClass(l);
+  setTimeout(function(){fill.style.width=score+'%';},80);
+  renderFindings(prefix+'Findings',analysis.findings);
+  var pEl=document.getElementById(prefix+'Patterns');
+  if(pEl) pEl.textContent=analysis.patternsSummary||analysis.summary||'';
+  renderPR(prefix+'PR',analysis.perReview,src);
+  renderSigs(prefix+'Sigs',analysis.signals);
+  document.getElementById(prefix+'Rec').textContent=analysis.recommendation||'';
+  document.getElementById(prefix+'Res').classList.add('show');
+}
+
+// ── URL analysis ──
+var urlBtn=document.getElementById('urlBtn');
+urlBtn.addEventListener('click',async function(){
+  if(!DART.getKey()){showErr('urlErr','No API key. <a href="settings.html">Set it here &rarr;</a>');return;}
+  var url=document.getElementById('urlIn').value.trim();
+  if(!url){showErr('urlErr','Please enter a product URL.');return;}
+  try{new URL(url);}catch(_){showErr('urlErr','Invalid URL. Make sure it starts with https://');return;}
+  hideErr('urlErr');
+  document.getElementById('urlRes').classList.remove('show');
+  document.getElementById('prodWrap').style.display='none';
+  urlBtn.disabled=true;
+  showSpin('urlSpin','Fetching product page…');
+  try{
+    showSpin('urlSpin','Fetching product page via proxy…');
+    var result=await DART.analyzeURL(url);
+    hideSpin('urlSpin');
+    var pd=result.productData, pl=result.platform;
+    document.getElementById('prodWrap').style.display='block';
+    document.getElementById('prodPlat').textContent=pl.name;
+    document.getElementById('prodName').textContent=pd.productName||'Product';
+    document.getElementById('prodStars').textContent=pd.overallRating?'★'.repeat(Math.round(pd.overallRating))+' '+pd.overallRating:'';
+    document.getElementById('prodCount').textContent=pd.reviewCount?' · '+pd.reviewCount.toLocaleString()+' reviews':'';
+    if(pd.productImage){
+      var img=document.getElementById('prodImg');
+      img.src=pd.productImage;
+      img.style.display='block';
+      document.getElementById('prodPh').style.display='none';
+      img.onerror=function(){img.style.display='none';document.getElementById('prodPh').style.display='flex';};
     }
-    function riskLevelClass(level) {
-      return level === 'HIGH' ? 'risk-level-label risk-high-color'
-           : level === 'MEDIUM' ? 'risk-level-label risk-med-color'
-           : 'risk-level-label risk-low-color';
-    }
-    function fillClass(level) {
-      return level === 'HIGH' ? 'score-fill fill-high'
-           : level === 'MEDIUM' ? 'score-fill fill-med'
-           : 'score-fill fill-low';
-    }
-    function chipClass(level) {
-      return level === 'HIGH' ? 'chip chip-high'
-           : level === 'MEDIUM' ? 'chip chip-med'
-           : 'chip chip-low';
-    }
-    function riskEmoji(level) {
-      return level === 'HIGH' ? '🚨' : level === 'MEDIUM' ? '⚠️' : '✅';
-    }
-    function levelColor(level) {
-      return level === 'HIGH' ? 'var(--red)' : level === 'MEDIUM' ? 'var(--amber)' : 'var(--green)';
-    }
-    function showError(id, msg) {
-      const el = document.getElementById(id);
-      el.innerHTML = msg;
-      el.classList.add('show');
-    }
-    function hideError(id) { document.getElementById(id).classList.remove('show'); }
-    function showSpinner(id, msg) {
-      document.getElementById(id).classList.add('show');
-      const m = document.getElementById(id + 'Msg');
-      if (m && msg) m.textContent = msg;
-    }
-    function hideSpinner(id) { document.getElementById(id).classList.remove('show'); }
+    applyResult('url',result.analysis,pd.reviews);
+  }catch(err){
+    hideSpin('urlSpin');
+    var msg=err.message==='NO_API_KEY'||err.message==='INVALID_API_KEY'
+      ?'Invalid or missing API key. <a href="settings.html">Update here &rarr;</a>'
+      :'&#x274C; '+err.message;
+    showErr('urlErr',msg);
+  }finally{urlBtn.disabled=false;}
+});
 
-    function renderFindingsGrid(containerId, findings) {
-      const grid = document.getElementById(containerId);
-      grid.innerHTML = '';
-      if (!findings) return;
-      const labels = {
-        sentimentManipulation: 'Sentiment Manipulation',
-        aiGeneratedLikelihood: 'AI-Generated Likelihood',
-        keywordStuffing: 'Keyword Stuffing',
-        linguisticUniformity: 'Linguistic Uniformity',
-      };
-      Object.entries(findings).forEach(([key, val]) => {
-        const parts = (val || '').split(' – ');
-        const lvl = (parts[0] || '').toUpperCase().replace(/\s/g,'');
-        const note = parts[1] || val || '';
-        grid.innerHTML += `
-          <div class="finding-card">
-            <div class="finding-name">${labels[key] || key}</div>
-            <div class="finding-level" style="color:${levelColor(lvl)}">${lvl || '—'}</div>
-            <div class="finding-note">${note}</div>
-          </div>`;
-      });
-    }
+document.getElementById('urlIn').addEventListener('keydown',function(e){if(e.key==='Enter')urlBtn.click();});
 
-    function renderPerReview(containerId, perReview, sourceReviews) {
-      const wrap = document.getElementById(containerId);
-      wrap.innerHTML = '';
-      (perReview || []).forEach(r => {
-        const lvl = (r.riskLevel || 'LOW').toUpperCase();
-        const src = sourceReviews && sourceReviews[r.index - 1];
-        const preview = src ? (src.text.length > 90 ? src.text.slice(0, 90) + '…' : src.text) : '';
-        const flags = (r.flags || []).map(f => `<span class="flag-chip">${f}</span>`).join('');
-        wrap.innerHTML += `
-          <div class="per-review-item">
-            <span class="per-review-num">#${r.index}</span>
-            <div class="per-review-body">
-              <div class="per-review-meta">
-                <span class="${chipClass(lvl)}">${lvl}</span>
-                <span style="font-size:12px;color:var(--text-dim)">Score: ${r.deceptionScore ?? '?'}/100</span>
-              </div>
-              ${preview ? `<div class="per-review-text">${preview}</div>` : ''}
-              ${flags ? `<div class="per-review-flags">${flags}</div>` : ''}
-            </div>
-          </div>`;
-      });
-    }
+// ── Manual reviews ──
+var manRevs=[];
+function renderManList(){
+  var list=document.getElementById('revList');
+  var countEl=document.getElementById('manCount');
+  var btn=document.getElementById('manBtn');
+  list.innerHTML=manRevs.map(function(r,i){
+    return '<div class="rev-item"><span class="rev-n">#'+(i+1)+'</span><div class="rev-body">'+(r.author?'<div class="rev-author">'+r.author+'</div>':'')+'<div class="rev-preview">'+(r.text.length>100?r.text.slice(0,100)+'&hellip;':r.text)+'</div></div><span class="rev-stars-badge">'+(r.stars?r.stars+'&#9733;':'?')+'</span><button class="rev-rm" data-i="'+i+'">&times;</button></div>';
+  }).join('');
+  list.querySelectorAll('.rev-rm').forEach(function(b){
+    b.addEventListener('click',function(){manRevs.splice(parseInt(b.dataset.i),1);renderManList();});
+  });
+  var n=manRevs.length;
+  countEl.textContent=n===0?'— add at least 1':'('+n+' review'+(n>1?'s':'')+' added)';
+  btn.disabled=n===0;
+}
+renderManList();
 
-    function renderSignals(containerId, signals) {
-      const ul = document.getElementById(containerId);
-      ul.innerHTML = '';
-      (signals || []).forEach(s => { ul.innerHTML += `<li>${s}</li>`; });
-    }
+document.getElementById('addBtn').addEventListener('click',function(){
+  var txt=document.getElementById('newTxt').value.trim();
+  if(!txt){alert('Please enter review text.');return;}
+  if(manRevs.length>=10){alert('Maximum 10 reviews per analysis.');return;}
+  manRevs.push({text:txt,stars:document.getElementById('newStars').value,author:document.getElementById('newAuthor').value.trim()});
+  document.getElementById('newTxt').value='';
+  document.getElementById('newStars').value='';
+  document.getElementById('newAuthor').value='';
+  renderManList();
+});
 
-    function applyResultToIDs(prefix, analysis, sourceReviews) {
-      const level = (analysis.overallRiskLevel || analysis.riskLevel || 'LOW').toUpperCase();
-      const score = Math.max(0, Math.min(100, analysis.overallDeceptionScore || analysis.deceptionScore || 0));
-      const verdict = analysis.verdict || '';
-
-      document.getElementById(prefix + 'RiskBanner').className = riskBannerClass(level);
-      document.getElementById(prefix + 'RiskEmoji').textContent = riskEmoji(level);
-      document.getElementById(prefix + 'RiskLevel').className = riskLevelClass(level);
-      document.getElementById(prefix + 'RiskLevel').textContent = level + ' RISK';
-      document.getElementById(prefix + 'Verdict').textContent = verdict;
-
-      document.getElementById(prefix + 'ScoreVal').textContent = score + ' / 100';
-      const fill = document.getElementById(prefix + 'ScoreFill');
-      fill.className = fillClass(level);
-      setTimeout(() => { fill.style.width = score + '%'; }, 80);
-
-      renderFindingsGrid(prefix + 'FindingsGrid', analysis.findings);
-
-      // Patterns or summary
-      const patternsEl = document.getElementById(prefix + 'Patterns');
-      if (patternsEl) patternsEl.textContent = analysis.patternsSummary || analysis.summary || '';
-
-      renderPerReview(prefix + 'PerReview', analysis.perReview, sourceReviews);
-      renderSignals(prefix + 'Signals', analysis.signals);
-      document.getElementById(prefix + 'Recommendation').textContent = analysis.recommendation || '';
-
-      document.getElementById(prefix + 'Result').classList.add('show');
-    }
-
-    /* ════════════════════════
-       URL TAB
-    ════════════════════════ */
-    document.getElementById('urlAnalyzeBtn').addEventListener('click', async () => {
-      if (!DART.getKey()) {
-        showError('urlError', '⚠️ No API key set. <a href="settings.html">Configure it here →</a>');
-        return;
-      }
-      const url = document.getElementById('urlInput').value.trim();
-      if (!url) { showError('urlError', 'Please enter a product URL.'); return; }
-      try { new URL(url); } catch (_) { showError('urlError', 'That doesn\'t look like a valid URL. Make sure to include https://'); return; }
-
-      hideError('urlError');
-      document.getElementById('urlResult').classList.remove('show');
-      document.getElementById('productCardWrap').style.display = 'none';
-      document.getElementById('urlAnalyzeBtn').disabled = true;
-
-      showSpinner('urlSpinner', 'Fetching product page…');
-
-      try {
-        showSpinner('urlSpinner', 'Fetching product page via proxy…');
-
-        const { platform, productData, analysis } = await DART.analyzeURL(url);
-
-        hideSpinner('urlSpinner');
-
-        // Show product card
-        document.getElementById('productCardWrap').style.display = 'block';
-        document.getElementById('productPlatform').textContent = platform.name;
-        document.getElementById('productName').textContent = productData.productName || 'Product';
-
-        const ratingStr = productData.overallRating ? '★'.repeat(Math.round(productData.overallRating)) + ' ' + productData.overallRating : '';
-        document.getElementById('productRating').textContent = ratingStr;
-        document.getElementById('productReviewCount').textContent = productData.reviewCount ? ' · ' + productData.reviewCount.toLocaleString() + ' reviews' : '';
-
-        // Product image
-        if (productData.productImage) {
-          const img = document.getElementById('productImg');
-          img.src = productData.productImage;
-          img.style.display = 'block';
-          document.getElementById('productImgPlaceholder').style.display = 'none';
-          img.onerror = () => {
-            img.style.display = 'none';
-            document.getElementById('productImgPlaceholder').style.display = 'flex';
-          };
-        }
-
-        applyResultToIDs('url', analysis, productData.reviews);
-
-      } catch (err) {
-        hideSpinner('urlSpinner');
-        const msg = err.message === 'NO_API_KEY' || err.message === 'INVALID_API_KEY'
-          ? '❌ Invalid or missing API key. <a href="settings.html">Update it here →</a>'
-          : '❌ ' + err.message;
-        showError('urlError', msg);
-      } finally {
-        document.getElementById('urlAnalyzeBtn').disabled = false;
-      }
-    });
-
-    /* Enter key triggers URL analysis */
-    document.getElementById('urlInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') document.getElementById('urlAnalyzeBtn').click();
-    });
-
-    /* ════════════════════════
-       MANUAL TAB
-    ════════════════════════ */
-    let manReviews = [];
-
-    function renderManualList() {
-      const list = document.getElementById('manReviewList');
-      const countEl = document.getElementById('manCount');
-      const analyzeBtn = document.getElementById('manAnalyzeBtn');
-
-      list.innerHTML = manReviews.map((r, i) => `
-        <div class="review-item">
-          <span class="review-num">#${i + 1}</span>
-          <div class="review-body">
-            ${r.author ? `<div class="review-author">${r.author}</div>` : ''}
-            <div class="review-text-preview">${r.text.length > 120 ? r.text.slice(0, 120) + '…' : r.text}</div>
-          </div>
-          <span class="review-stars">${r.stars ? r.stars + '★' : '?'}</span>
-          <button class="review-remove" data-i="${i}" title="Remove">×</button>
-        </div>`).join('');
-
-      list.querySelectorAll('.review-remove').forEach(b => {
-        b.addEventListener('click', () => {
-          manReviews.splice(parseInt(b.dataset.i), 1);
-          renderManualList();
-        });
-      });
-
-      const n = manReviews.length;
-      countEl.textContent = n === 0
-        ? '(0 added — add at least 1)'
-        : `(${n} review${n > 1 ? 's' : ''} added)`;
-      analyzeBtn.disabled = n === 0;
-    }
-
-    document.getElementById('addReviewBtn').addEventListener('click', () => {
-      const text = document.getElementById('newText').value.trim();
-      if (!text) { alert('Please enter review text.'); return; }
-      if (manReviews.length >= 10) { alert('Maximum 10 reviews per analysis.'); return; }
-      manReviews.push({
-        text,
-        stars: document.getElementById('newStars').value,
-        author: document.getElementById('newAuthor').value.trim()
-      });
-      document.getElementById('newText').value = '';
-      document.getElementById('newStars').value = '';
-      document.getElementById('newAuthor').value = '';
-      renderManualList();
-    });
-
-    renderManualList();
-
-    document.getElementById('manAnalyzeBtn').addEventListener('click', async () => {
-      if (!DART.getKey()) {
-        showError('manError', '⚠️ No API key set. <a href="settings.html">Configure it here →</a>');
-        return;
-      }
-      if (manReviews.length === 0) return;
-      hideError('manError');
-      document.getElementById('manResult').classList.remove('show');
-      document.getElementById('manAnalyzeBtn').disabled = true;
-      showSpinner('manSpinner', 'Analyzing with DART AI…');
-
-      try {
-        const platform = document.getElementById('manPlatform').value || 'Unknown';
-        const product = document.getElementById('manProduct').value || 'Unknown Product';
-        const analysis = await DART.analyzeReviews(manReviews, platform, product);
-
-        DART.addLog({
-          mode: 'manual',
-          platform,
-          product,
-          riskLevel: analysis.overallRiskLevel,
-          score: analysis.overallDeceptionScore,
-          verdict: analysis.verdict,
-        });
-
-        applyResultToIDs('man', analysis, manReviews);
-      } catch (err) {
-        const msg = err.message === 'NO_API_KEY' || err.message === 'INVALID_API_KEY'
-          ? '❌ Invalid or missing API key. <a href="settings.html">Update it here →</a>'
-          : '❌ ' + err.message;
-        showError('manError', msg);
-      } finally {
-        hideSpinner('manSpinner');
-        document.getElementById('manAnalyzeBtn').disabled = manReviews.length === 0;
-      }
-    });
-
-  </script>
+document.getElementById('manBtn').addEventListener('click',async function(){
+  if(!DART.getKey()){showErr('manErr','No API key. <a href="settings.html">Set it here &rarr;</a>');return;}
+  if(manRevs.length===0) return;
+  hideErr('manErr');
+  document.getElementById('manRes').classList.remove('show');
+  this.disabled=true;
+  showSpin('manSpin','Analyzing with DART AI…');
+  try{
+    var platform=document.getElementById('manPlat').value||'Unknown';
+    var product=document.getElementById('manProd').value||'Unknown Product';
+    var analysis=await DART.analyzeReviews(manRevs,platform,product);
+    DART.addLog({mode:'manual',platform:platform,product:product,riskLevel:analysis.overallRiskLevel,score:analysis.overallDeceptionScore,verdict:analysis.verdict});
+    hideSpin('manSpin');
+    applyResult('man',analysis,manRevs);
+  }catch(err){
+    hideSpin('manSpin');
+    var msg=err.message==='NO_API_KEY'||err.message==='INVALID_API_KEY'
+      ?'Invalid or missing API key. <a href="settings.html">Update here &rarr;</a>'
+      :'&#x274C; '+err.message;
+    showErr('manErr',msg);
+  }finally{this.disabled=manRevs.length===0;}
+});
+</script>
 </body>
 </html>

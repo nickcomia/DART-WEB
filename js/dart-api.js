@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /**
  * DART v3 – Anthropic API Client
  */
@@ -175,6 +174,3 @@ Return ONLY valid JSON:
 
   return { getKey, analyzeURL, analyzeReviews, analyzeSingle, addLog, getLogs, detectPlatform };
 })();
-=======
-
->>>>>>> 72bfd42a6c9c3c32f0cc2ad0933297a7c92f9e74

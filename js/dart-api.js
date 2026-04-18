@@ -1,8 +1,8 @@
 /**
- * DART v3 – Anthropic API Client
+ * DART v3 – Groq API Client
  */
 const DART = (function () {
-  const getKey = () => localStorage.getItem('dart_api_key') || '';
+  const getKey = () => localStorage.getItem('dart_api_key') || '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';
 
   function getLogs() {
     try { return JSON.parse(localStorage.getItem('dart_logs') || '[]'); } catch(_){ return []; }
@@ -14,19 +14,17 @@ const DART = (function () {
     localStorage.setItem('dart_logs', JSON.stringify(logs));
   }
 
-  async function callClaude(prompt, maxTokens) {
+  async function callGroq(prompt, maxTokens) {
     const apiKey = getKey();
     if (!apiKey) throw new Error('NO_API_KEY');
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Authorization': 'Bearer ' + apiKey
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'llama-3.3-70b-versatile',
         max_tokens: maxTokens || 1500,
         messages: [{ role: 'user', content: prompt }]
       })
@@ -37,7 +35,7 @@ const DART = (function () {
       throw new Error(e.error?.message || 'API error ' + res.status);
     }
     const data = await res.json();
-    return parseJSON(data.content.map(b => b.text || '').join(''));
+    return parseJSON(data.choices[0].message.content);
   }
 
   function parseJSON(text) {
@@ -61,7 +59,7 @@ const DART = (function () {
 
   async function extractFromHTML(html, platformName, url) {
     const snippet = html.slice(0, 14000);
-    return callClaude(`You are a web scraping AI. Extract from this ${platformName} product page HTML:
+    return callGroq(`You are a web scraping AI. Extract from this ${platformName} product page HTML:
 1. Product name
 2. Main product image URL (full https URL)
 3. Overall star rating (number)
@@ -86,7 +84,7 @@ ${snippet}
 
   async function analyzeReviews(reviews, platform, productName) {
     const block = reviews.map((r,i)=>`Review ${i+1} [${r.stars||'?'}★] by "${r.author||'Anonymous'}": "${r.text}"`).join('\n\n');
-    const result = await callClaude(`You are DART (Deceptive Assessment and Review Tracking). Analyze these ${reviews.length} reviews from ${platform} for "${productName||'this product'}".
+    const result = await callGroq(`You are DART (Deceptive Assessment and Review Tracking). Analyze these ${reviews.length} reviews from ${platform} for "${productName||'this product'}".
 
 ${block}
 
@@ -112,7 +110,7 @@ Return ONLY valid JSON:
   }
 
   async function analyzeSingle(opts) {
-    const result = await callClaude(`You are DART. Analyze this single product review:
+    const result = await callGroq(`You are DART. Analyze this single product review:
 Platform: ${opts.platform||'Unknown'}
 Stars: ${opts.stars||'?'}
 Reviewer: ${opts.reviewer||'Unknown'}
@@ -164,6 +162,7 @@ Return ONLY valid JSON:
     { id:'yelp',        name:'Yelp',        re:/yelp\./i },
     { id:'tripadvisor', name:'TripAdvisor', re:/tripadvisor/i },
   ];
+
   function detectPlatform(url) {
     try {
       const h = new URL(url).hostname;

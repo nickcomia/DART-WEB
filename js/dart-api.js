@@ -2,7 +2,7 @@
  * DART v3 – Groq API Client
  */
 const DART = (function () {
-  const getKey = () => localStorage.getItem('dart_api_key') || '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';
+  const getKey = () => localStorage.getItem('dart_api_key') || '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';
 
   function getLogs() {
     try { return JSON.parse(localStorage.getItem('dart_logs') || '[]'); } catch(_){ return []; }

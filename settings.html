@@ -4,131 +4,146 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Settings – DART</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="index.html" class="nav-logo">
-        <span class="logo-dart">DART</span>
-        <span class="logo-sep">|</span>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo">
+        <span class="logo-text">DART</span>
+        <span class="logo-divider">|</span>
         <span class="logo-sub">Review Intelligence</span>
       </a>
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="analyze.html">Analyze</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="admin.html">Dashboard</a></li>
-        <li><a href="settings.html" class="nav-api-btn active">API Key</a></li>
+        <li><a href="../index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="analyze.html" class="nav-link nav-link-cta">Analyze</a></li>
       </ul>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
     </div>
+    <div class="nav-mobile" id="navMobile">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="analyze.html" class="nav-link">Analyze</a>
+      <a href="settings.html" class="nav-link active">Settings</a>
+    </div>
   </nav>
 
-  <div class="settings-wrap">
-    <div class="page-title">Settings</div>
-    <p class="page-subtitle">Configure your Anthropic API key to enable AI-powered review analysis.</p>
+  <div class="page-shell">
+    <div class="page-wrap" style="max-width:640px">
 
-    <div class="settings-card">
-      <h3>🔑 Anthropic API Key</h3>
-      <p>
-        DART uses the Anthropic Claude API to perform deep NLP-based review analysis.
-        Your API key is stored <strong>only in your browser's local storage</strong> and is never sent to any server other than Anthropic's own API.
-        <br><br>
-        Get your API key from <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent)">console.anthropic.com →</a>
-      </p>
-      <div class="api-key-row">
-        <input class="form-input" type="password" id="apiKeyInput" placeholder="sk-ant-..." autocomplete="off" />
-        <button class="btn btn-primary" id="saveKeyBtn">Save</button>
+      <nav class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Settings</span>
+      </nav>
+
+      <h1 class="page-title">Settings</h1>
+      <p class="page-subtitle">Configure your Anthropic API key to enable AI-powered review analysis.</p>
+
+      <!-- API Key card -->
+      <div class="settings-card">
+        <h3>🔑 Anthropic API Key</h3>
+        <p>
+          DART uses Claude (by Anthropic) to perform deep NLP-based review analysis.
+          Your API key is stored <strong>only in your browser's local storage</strong> — it is never
+          sent to any server other than Anthropic's own API endpoint.
+          <br><br>
+          Get a free API key at:
+          <a href="https://console.anthropic.com" target="_blank" rel="noopener" style="color:var(--green)">
+            console.anthropic.com →
+          </a>
+        </p>
+        <div class="key-row">
+          <input class="form-input" type="password" id="apiKeyInput" placeholder="sk-ant-api03-…" autocomplete="off" spellcheck="false" />
+          <button class="btn btn-primary" id="saveBtn">Save</button>
+        </div>
+        <div class="key-status" id="keyStatus"></div>
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+          <button class="btn btn-ghost" id="showBtn" style="font-size:13px">👁 Show / Hide</button>
+          <button class="btn btn-ghost" id="clearBtn" style="font-size:13px;color:var(--red);border-color:rgba(255,83,112,0.25)">🗑 Clear Key</button>
+        </div>
       </div>
-      <div class="status-msg" id="statusMsg"></div>
-      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-ghost" id="showKeyBtn" style="font-size:13px">👁 Show Key</button>
-        <button class="btn btn-ghost" id="clearKeyBtn" style="font-size:13px;color:var(--danger);border-color:rgba(255,77,109,0.3)">🗑 Clear Key</button>
+
+      <!-- How it works -->
+      <div class="settings-card">
+        <h3>ℹ️ How the AI works</h3>
+        <p>When you analyze a product URL or paste review text, DART:</p>
+        <ul style="color:var(--text-muted);font-size:14px;padding-left:20px;line-height:1.85;margin-bottom:0">
+          <li>Fetches the product page via a free CORS proxy (allorigins.win)</li>
+          <li>Uses Claude AI to extract product name, image, and review text</li>
+          <li>Runs NLP analysis detecting sentiment manipulation, AI-generated patterns, keyword stuffing, and linguistic uniformity</li>
+          <li>Returns a 0–100 deception score with LOW / MEDIUM / HIGH risk classification</li>
+          <li>Provides per-review breakdown and actionable consumer recommendation</li>
+        </ul>
       </div>
-    </div>
 
-    <div class="settings-card">
-      <h3>ℹ️ How It Works</h3>
-      <p>
-        When you analyze a review, DART sends the review text to Claude (claude-sonnet-4-20250514) via the Anthropic API.
-        The AI model applies multi-layer analysis:
-      </p>
-      <ul style="color:var(--text-muted);padding-left:20px;font-size:14px;line-height:1.9;margin-bottom:0">
-        <li><strong style="color:var(--text)">NLP Text Analysis</strong> – sentiment manipulation, AI-generated patterns, keyword stuffing</li>
-        <li><strong style="color:var(--text)">Linguistic Uniformity</strong> – unnatural repetition and structure detection</li>
-        <li><strong style="color:var(--text)">Behavioral Signals</strong> – reviewer profile patterns and contextual red flags</li>
-        <li><strong style="color:var(--text)">Unified Risk Score</strong> – 0–100 deception probability with LOW/MEDIUM/HIGH classification</li>
-      </ul>
-    </div>
+      <!-- Privacy -->
+      <div class="settings-card">
+        <h3>🔒 Privacy</h3>
+        <p style="margin-bottom:0">
+          Your API key is stored only in <code style="background:var(--bg-input);padding:2px 7px;border-radius:5px;font-size:12px">localStorage</code> in your browser.
+          Review text is sent directly from your browser to <strong>api.anthropic.com</strong> — no other server sees it.
+          All analysis logs are stored locally in your browser only and can be cleared at any time.
+        </p>
+      </div>
 
-    <div class="settings-card">
-      <h3>📋 Privacy Notice</h3>
-      <p style="margin-bottom:0">
-        Your API key is stored only in <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:12px">localStorage</code> in your browser.
-        Review text you submit is sent directly from your browser to Anthropic's API (api.anthropic.com).
-        DART does not store, log, or transmit your data to any third-party service.
-        All analysis logs are stored locally in your browser only.
-      </p>
     </div>
   </div>
 
   <footer class="footer">
     <div class="container footer-inner">
-      <span class="footer-logo">DART</span>
-      <span class="footer-copy">Deceptive Assessment and Review Tracking · BatStateU CICS · 2026</span>
+      <div class="footer-logo">
+        <span class="logo-text">DART</span>
+        <span class="footer-tagline">Deceptive Assessment and Review Tracking</span>
+      </div>
+      <div class="footer-right">
+        <span>BatStateU · CICS · 2026</span>
+      </div>
     </div>
   </footer>
 
-  <script src="nav.js"></script>
+  <script src="../js/nav.js"></script>
   <script>
     const input = document.getElementById('apiKeyInput');
-    const saveBtn = document.getElementById('saveKeyBtn');
-    const showBtn = document.getElementById('showKeyBtn');
-    const clearBtn = document.getElementById('clearKeyBtn');
-    const statusMsg = document.getElementById('statusMsg');
+    const status = document.getElementById('keyStatus');
 
     // Load existing key
-    const existing = localStorage.getItem('dart_api_key') || '';
-    if (existing) input.value = existing;
+    const stored = localStorage.getItem('dart_api_key') || '';
+    if (stored) input.value = stored;
 
-    saveBtn.addEventListener('click', () => {
+    document.getElementById('saveBtn').addEventListener('click', () => {
       const key = input.value.trim();
       if (!key) {
-        statusMsg.className = 'status-msg err';
-        statusMsg.textContent = '⚠️ Please enter an API key.';
+        status.className = 'key-status err';
+        status.textContent = '⚠️ Please enter an API key.';
         return;
       }
       if (!key.startsWith('sk-ant-')) {
-        statusMsg.className = 'status-msg err';
-        statusMsg.textContent = '⚠️ API key should start with "sk-ant-". Please check and try again.';
+        status.className = 'key-status err';
+        status.textContent = '⚠️ API key should start with "sk-ant-". Please check and try again.';
         return;
       }
       localStorage.setItem('dart_api_key', key);
-      statusMsg.className = 'status-msg ok';
-      statusMsg.textContent = '✅ API key saved successfully.';
+      status.className = 'key-status ok';
+      status.textContent = '✅ API key saved successfully.';
     });
 
-    showBtn.addEventListener('click', () => {
-      if (input.type === 'password') {
-        input.type = 'text';
-        showBtn.textContent = '🙈 Hide Key';
-      } else {
-        input.type = 'password';
-        showBtn.textContent = '👁 Show Key';
-      }
+    document.getElementById('showBtn').addEventListener('click', () => {
+      input.type = input.type === 'password' ? 'text' : 'password';
     });
 
-    clearBtn.addEventListener('click', () => {
-      if (!confirm('Are you sure you want to remove your API key?')) return;
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      if (!confirm('Remove the saved API key?')) return;
       localStorage.removeItem('dart_api_key');
       input.value = '';
-      statusMsg.className = 'status-msg ok';
-      statusMsg.textContent = '🗑 API key cleared.';
+      status.className = 'key-status ok';
+      status.textContent = '🗑 API key cleared.';
     });
   </script>
 </body>

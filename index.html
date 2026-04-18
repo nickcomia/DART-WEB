@@ -4,125 +4,255 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DART – Deceptive Assessment and Review Tracking</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <!-- NAV -->
-  <nav class="nav">
-    <div class="nav-inner">
+
+  <!-- ═══════════════════════════════
+       NAVBAR
+  ═══════════════════════════════ -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <!-- Logo -->
       <a href="index.html" class="nav-logo">
-        <span class="logo-dart">DART</span>
-        <span class="logo-sep">|</span>
+        <span class="logo-text">DART</span>
+        <span class="logo-divider">|</span>
         <span class="logo-sub">Review Intelligence</span>
       </a>
+
+      <!-- Breadcrumb nav -->
       <ul class="nav-links">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="analyze.html">Analyze</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="admin.html">Dashboard</a></li>
-        <li><a href="settings.html" class="nav-api-btn">API Key</a></li>
+        <li><a href="index.html" class="nav-link active">Home</a></li>
+        <li><a href="pages/about.html" class="nav-link">About</a></li>
+        <li><a href="pages/analyze.html" class="nav-link nav-link-cta">Analyze</a></li>
       </ul>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
+
+      <!-- Mobile toggle -->
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
     </div>
+
+    <!-- Mobile menu -->
+    <div class="nav-mobile" id="navMobile">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="pages/about.html" class="nav-link">About</a>
+      <a href="pages/analyze.html" class="nav-link">Analyze</a>
+    </div>
   </nav>
 
-  <!-- HERO -->
-  <header class="hero">
-    <div class="hero-bg">
-      <div class="grid-lines"></div>
-    </div>
-    <div class="hero-content">
+  <!-- ═══════════════════════════════
+       HERO
+  ═══════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-inner">
       <div class="hero-badge">AI-Powered Detection System</div>
       <h1 class="hero-title">
         Exposing fake reviews<br />
         <span class="hero-accent">before they cost you.</span>
       </h1>
       <p class="hero-desc">
-        DART analyzes product reviews from any e-commerce platform using NLP,
-        behavioral analytics, and multi-layer AI to surface deceptive content in real time.
+        DART analyzes product reviews from any e-commerce platform using
+        NLP, behavioral analytics, and multi-layer AI to surface deceptive
+        content in real time.
       </p>
       <div class="hero-actions">
-        <a href="analyze.html" class="btn btn-primary">Analyze Reviews</a>
-        <a href="about.html" class="btn btn-ghost">Learn More</a>
+        <a href="pages/analyze.html" class="btn btn-primary">Start Analyzing →</a>
+        <a href="#platforms" class="btn btn-outline">Supported Platforms</a>
       </div>
+
+      <!-- Stats strip -->
       <div class="hero-stats">
-        <div class="stat"><span class="stat-num">30%</span><span class="stat-label">of online reviews are estimated to be fake</span></div>
-        <div class="stat-div"></div>
-        <div class="stat"><span class="stat-num">$152B</span><span class="stat-label">in global spending influenced by fake reviews</span></div>
-        <div class="stat-div"></div>
-        <div class="stat"><span class="stat-num">3-Layer</span><span class="stat-label">NLP + Behavioral + Image analysis</span></div>
-      </div>
-    </div>
-  </header>
-
-  <!-- HOW IT WORKS -->
-  <section class="section how">
-    <div class="container">
-      <div class="section-label">How DART Works</div>
-      <h2 class="section-title">Three layers of AI detection</h2>
-      <div class="cards">
-        <div class="card">
-          <div class="card-icon">🔤</div>
-          <h3>NLP Text Analysis</h3>
-          <p>Transformer-based models detect manipulated sentiment, AI-generated phrasing, keyword stuffing, and unnatural language uniformity across review text.</p>
+        <div class="stat-item">
+          <span class="stat-number">30%</span>
+          <span class="stat-label">of online reviews estimated fake</span>
         </div>
-        <div class="card">
-          <div class="card-icon">📊</div>
-          <h3>Behavioral Analytics</h3>
-          <p>Reviewer credibility profiles built from posting frequency, temporal clusters, rating patterns, account age, and cross-account behavioral similarities.</p>
+        <div class="stat-sep"></div>
+        <div class="stat-item">
+          <span class="stat-number">$152B</span>
+          <span class="stat-label">in spending influenced yearly</span>
         </div>
-        <div class="card">
-          <div class="card-icon">🛡️</div>
-          <h3>Unified Risk Scoring</h3>
-          <p>All signals are synthesized into a single deception probability score — Low, Medium, or High — with human-readable justifications and moderation guidance.</p>
+        <div class="stat-sep"></div>
+        <div class="stat-item">
+          <span class="stat-number">3-Layer</span>
+          <span class="stat-label">NLP · Behavioral · AI scoring</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PLATFORMS -->
-  <section class="section platforms">
+  <!-- ═══════════════════════════════
+       HOW IT WORKS
+  ═══════════════════════════════ -->
+  <section class="section">
     <div class="container">
-      <div class="section-label">Supported Platforms</div>
+      <p class="section-eyebrow">How It Works</p>
+      <h2 class="section-title">Paste a link. Get the truth.</h2>
+      <p class="section-desc">
+        Simply paste a product URL from any supported shopping platform. DART fetches the product details,
+        extracts the reviews, and runs them through multi-layer AI analysis — no setup required.
+      </p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3 class="step-title">Paste the URL</h3>
+          <p class="step-desc">Copy the product page link from any supported e-commerce platform and paste it into DART.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3 class="step-title">AI Analyzes</h3>
+          <p class="step-desc">DART fetches reviews and runs NLP, behavioral, and linguistic analysis powered by Claude AI.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3 class="step-title">See Results</h3>
+          <p class="step-desc">Get a risk score, per-review breakdown, detected signals, and a consumer recommendation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       SUPPORTED PLATFORMS
+  ═══════════════════════════════ -->
+  <section class="section section-dark" id="platforms">
+    <div class="container">
+      <p class="section-eyebrow">Supported Platforms</p>
       <h2 class="section-title">Works across all major marketplaces</h2>
+      <p class="section-desc">
+        DART supports review analysis across all major e-commerce and review platforms.
+        Paste a product link or manually enter review text for any platform.
+      </p>
+
       <div class="platform-grid">
-        <div class="platform-chip">Amazon</div>
-        <div class="platform-chip">Shopee</div>
-        <div class="platform-chip">Lazada</div>
-        <div class="platform-chip">Zalora</div>
-        <div class="platform-chip">eBay</div>
-        <div class="platform-chip">Temu</div>
-        <div class="platform-chip">AliExpress</div>
-        <div class="platform-chip">Walmart</div>
-        <div class="platform-chip">Google Reviews</div>
-        <div class="platform-chip">Yelp</div>
-        <div class="platform-chip">TripAdvisor</div>
-        <div class="platform-chip">+ any platform</div>
+        <div class="platform-card">
+          <span class="platform-icon">🛒</span>
+          <span class="platform-name">Amazon</span>
+        </div>
+        <div class="platform-card">
+          <span class="platform-icon">🛍️</span>
+          <span class="platform-name">Shopee</span>
+        </div>
+        <div class="platform-card">
+          <span class="platform-icon">📦</span>
+          <span class="platform-name">Lazada</span>
+        </div>
+        <div class="platform-card">
+          <span class="platform-icon">👗</span>
+          <span class="platform-name">Zalora</span>
+        </div>
+        <div class="platform-card">
+          <span class="platform-icon">🏷️</span>
+          <span class="platform-name">eBay</span>
+        </div>
+        <div class="platform-card">
+          <span class="platform-icon">📱</span>
+          <span class="platform-name">Temu</span>
+        </div>
+        <div class="platform-card">
+          <span class="platform-icon">🌐</span>
+          <span class="platform-name">AliExpress</span>
+        </div>
+        <div class="platform-card">
+          <span class="platform-icon">🏪</span>
+          <span class="platform-name">Walmart</span>
+        </div>
+        <div class="platform-card">
+          <span class="platform-icon">⭐</span>
+          <span class="platform-name">Google Reviews</span>
+        </div>
+        <div class="platform-card">
+          <span class="platform-icon">🍽️</span>
+          <span class="platform-name">Yelp</span>
+        </div>
+        <div class="platform-card">
+          <span class="platform-icon">✈️</span>
+          <span class="platform-name">TripAdvisor</span>
+        </div>
+        <div class="platform-card platform-card-plus">
+          <span class="platform-icon">+</span>
+          <span class="platform-name">Any Platform</span>
+        </div>
+      </div>
+
+      <div class="platform-note">
+        <strong>Note:</strong> Due to browser security restrictions (CORS), direct URL scraping requires a backend proxy.
+        The Analyze page also supports <strong>manual review entry</strong> — paste any review text directly for instant AI analysis without a URL.
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="section cta-section">
+  <!-- ═══════════════════════════════
+       DETECTION LAYERS
+  ═══════════════════════════════ -->
+  <section class="section">
+    <div class="container">
+      <p class="section-eyebrow">Detection Engine</p>
+      <h2 class="section-title">Three layers of AI intelligence</h2>
+
+      <div class="layers">
+        <div class="layer">
+          <div class="layer-icon">🔤</div>
+          <div class="layer-body">
+            <h3>NLP Text Analysis</h3>
+            <p>Transformer-based models detect sentiment manipulation, AI-generated phrasing, keyword stuffing, and unnatural linguistic uniformity across review text.</p>
+          </div>
+        </div>
+        <div class="layer">
+          <div class="layer-icon">📊</div>
+          <div class="layer-body">
+            <h3>Behavioral Analytics</h3>
+            <p>Reviewer credibility profiles built from posting frequency, temporal clusters, rating distribution asymmetry, and cross-account behavioral similarities.</p>
+          </div>
+        </div>
+        <div class="layer">
+          <div class="layer-icon">🛡️</div>
+          <div class="layer-body">
+            <h3>Unified Risk Scoring</h3>
+            <p>All signals synthesized into a single 0–100 deception probability score — LOW, MEDIUM, or HIGH — with human-readable justifications and consumer guidance.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       CTA
+  ═══════════════════════════════ -->
+  <section class="section section-cta">
     <div class="container cta-inner">
       <h2>Ready to detect deceptive reviews?</h2>
-      <p>Paste any product review text and get an instant AI-powered analysis.</p>
-      <a href="analyze.html" class="btn btn-primary">Start Analyzing →</a>
+      <p>Paste a product link or review text and get an instant AI-powered analysis — free, private, no account needed.</p>
+      <a href="pages/analyze.html" class="btn btn-primary btn-lg">Start Analyzing →</a>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ═══════════════════════════════
+       FOOTER
+  ═══════════════════════════════ -->
   <footer class="footer">
     <div class="container footer-inner">
-      <span class="footer-logo">DART</span>
-      <span class="footer-copy">Deceptive Assessment and Review Tracking · BatStateU CICS · 2026</span>
+      <div class="footer-logo">
+        <span class="logo-text">DART</span>
+        <span class="footer-tagline">Deceptive Assessment and Review Tracking</span>
+      </div>
+      <div class="footer-right">
+        <span>BatStateU · CICS · 2026</span>
+        <span class="footer-sep">·</span>
+        <a href="pages/about.html">About</a>
+        <span class="footer-sep">·</span>
+        <a href="pages/analyze.html">Analyze</a>
+      </div>
     </div>
   </footer>
 
-  <script src="nav.js"></script>
+  <script src="js/nav.js"></script>
 </body>
 </html>

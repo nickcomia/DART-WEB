@@ -501,14 +501,14 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
   <nav class="bread"><a href="../index.html">Home</a><span class="bread-sep">&rsaquo;</span><span>Settings</span></nav>
 
   <h1 class="page-title">Settings</h1>
-  <p class="page-sub">Configure your Anthropic API key to enable AI-powered review analysis.</p>
+  <p class="page-sub">Configure your Groq API key to enable AI-powered review analysis.</p>
 
   <div class="scard">
-    <h3>&#x1F511; Anthropic API Key</h3>
-    <p>DART uses Claude (by Anthropic) to perform deep NLP-based review analysis. Your API key is stored <strong>only in your browser&apos;s local storage</strong> &mdash; never sent anywhere except Anthropic&apos;s own API.<br><br>
-    Get your free API key at: <a href="https://console.anthropic.com" target="_blank" rel="noopener" style="color:var(--green)">console.anthropic.com &rarr;</a></p>
+    <h3>&#x1F511; Groq API Key</h3>
+    <p>DART uses Groq AI (LLaMA 3.3 70B) to perform deep NLP-based review analysis. Your API key is stored <strong>only in your browser&apos;s local storage</strong> &mdash; never sent anywhere except Anthropic&apos;s own API.<br><br>
+    Get your free API key at: <a href="https://console.groq.com/keys" target="_blank" rel="noopener" style="color:var(--green)">console.groq.com/keys &rarr;</a></p>
     <div class="key-row">
-      <input class="fi" type="password" id="keyIn" placeholder="sk-ant-api03-&hellip;" autocomplete="off" spellcheck="false">
+      <input class="fi" type="password" id="keyIn" placeholder="gsk_&hellip;" autocomplete="off" spellcheck="false">
       <button class="btn btn-green" id="saveBtn">Save</button>
     </div>
     <div class="key-st" id="keySt"></div>
@@ -532,7 +532,7 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
 
   <div class="scard">
     <h3>&#x1F512; Privacy</h3>
-    <p>Your API key is stored only in <code>localStorage</code> in your browser. Review text is sent directly from your browser to <strong>api.anthropic.com</strong> &mdash; no other server sees it. All analysis logs are stored locally and can be cleared any time.</p>
+    <p>Your API key is stored only in <code>localStorage</code> in your browser. Review text is sent directly from your browser to <strong>api.groq.com</strong> &mdash; no other server sees it. All analysis logs are stored locally and can be cleared any time.</p>
   </div>
 
 </div>
@@ -558,7 +558,7 @@ if(stored) ki.value=stored;
 document.getElementById('saveBtn').addEventListener('click',function(){
   var k=ki.value.trim();
   if(!k){st.className='key-st err';st.textContent='Please enter an API key.';return;}
-  if(!k.startsWith('sk-ant-')){st.className='key-st err';st.textContent='Key should start with "sk-ant-". Check and try again.';return;}
+  if(!k.startsWith('gsk_')){st.className='key-st err';st.textContent='Key should start with "gsk_". Check and try again.';return;}
   localStorage.setItem('dart_api_key',k);
   st.className='key-st ok';st.textContent='\u2705 API key saved successfully.';
 });

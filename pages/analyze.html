@@ -303,6 +303,7 @@ button,input,textarea,select{font-family:var(--font);}
 if(!DART.getKey()){document.getElementById('keyWarn').classList.add('show');}
 
 // Helpers
+function levelColor(l){return l==='HIGH'?'var(--red)':l==='MEDIUM'?'var(--amber)':'var(--green)';}
 function bannerClass(l){return 'risk-banner '+(l==='HIGH'?'rb-high':l==='MEDIUM'?'rb-med':'rb-low');}
 function fillClass(l){return 'score-fill '+(l==='HIGH'?'sf-high':l==='MEDIUM'?'sf-med':'sf-low');}
 function chipClass(l){return 'chip '+(l==='HIGH'?'chip-high':l==='MEDIUM'?'chip-med':'chip-low');}

@@ -1,5 +1,5 @@
 /**
- * DART v3 – Groq API Client (with Multi-Image Vision support)
+ * DART v3 – Groq API Client (Multi-Image Vision)
  */
 const DART = (function () {
   const getKey = () => localStorage.getItem('dart_api_key') || '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';
@@ -38,46 +38,33 @@ const DART = (function () {
     return parseJSON(data.choices[0].message.content);
   }
 
-  async function callGroqVision(images, maxTokens) {
+  // Resize image to max 800px and compress to reduce base64 size
+  async function compressImage(base64, mediaType) {
+    return new Promise(function(resolve) {
+      var img = new Image();
+      img.onload = function() {
+        var maxSize = 800;
+        var w = img.width, h = img.height;
+        if (w > maxSize || h > maxSize) {
+          if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; }
+          else { w = Math.round(w * maxSize / h); h = maxSize; }
+        }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        var compressed = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
+        resolve(compressed);
+      };
+      img.onerror = function() { resolve(base64); };
+      img.src = 'data:' + mediaType + ';base64,' + base64;
+    });
+  }
+
+  // Analyze a single image via Groq vision
+  async function callGroqVisionSingle(base64Image, mediaType, imgIndex, totalImgs) {
     const apiKey = getKey();
     if (!apiKey) throw new Error('NO_API_KEY');
-
-    // Build content array: all images first, then the prompt text
-    const content = images.map(function(img) {
-      return {
-        type: 'image_url',
-        image_url: { url: 'data:' + img.mediaType + ';base64,' + img.base64 }
-      };
-    });
-
-    content.push({
-      type: 'text',
-      text: `You are DART (Deceptive Assessment and Review Tracking), an expert at detecting fake and deceptive product reviews.
-
-Analyze all ${images.length} screenshot(s) of product review pages. Extract ALL visible reviews across all images and analyze them for deception patterns.
-
-Return ONLY valid JSON (no markdown, no explanation):
-{
-  "productName": "product name or Unknown",
-  "platform": "detected platform or Unknown",
-  "overallRiskLevel": "LOW" or "MEDIUM" or "HIGH",
-  "overallDeceptionScore": 0-100,
-  "suspiciousCount": number,
-  "authenticCount": number,
-  "verdict": "one sentence summary",
-  "patternsSummary": "2-3 sentences about patterns found",
-  "signals": ["signal1", "signal2", "signal3"],
-  "findings": {
-    "sentimentManipulation": "LOW|MEDIUM|HIGH – reason",
-    "aiGeneratedLikelihood": "LOW|MEDIUM|HIGH – reason",
-    "keywordStuffing": "LOW|MEDIUM|HIGH – reason",
-    "linguisticUniformity": "LOW|MEDIUM|HIGH – reason"
-  },
-  "perReview": [{"index":1,"riskLevel":"LOW|MEDIUM|HIGH","deceptionScore":0-100,"text":"review text","flags":["flag"]}],
-  "recommendation": "actionable advice for the consumer"
-}`
-    });
-
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -86,8 +73,37 @@ Return ONLY valid JSON (no markdown, no explanation):
       },
       body: JSON.stringify({
         model: 'meta-llama/llama-4-scout-17b-16e-instruct',
-        max_tokens: maxTokens || 2000,
-        messages: [{ role: 'user', content: content }]
+        max_tokens: 1500,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'image_url',
+              image_url: { url: 'data:image/jpeg;base64,' + base64Image }
+            },
+            {
+              type: 'text',
+              text: `You are DART (Deceptive Assessment and Review Tracking). This is screenshot ${imgIndex} of ${totalImgs} from a product review page.
+
+Extract ALL visible customer reviews from this screenshot. For each review include the text, star rating if visible, and any suspicious patterns.
+
+Return ONLY valid JSON:
+{
+  "productName": "product name or Unknown",
+  "platform": "detected platform (Shopee/Lazada/Amazon/etc) or Unknown",
+  "reviews": [
+    {
+      "index": 1,
+      "text": "full review text",
+      "stars": 5,
+      "author": "reviewer name or Anonymous",
+      "flags": ["any suspicious patterns noticed"]
+    }
+  ]
+}`
+            }
+          ]
+        }]
       })
     });
     if (!res.ok) {
@@ -109,22 +125,59 @@ Return ONLY valid JSON (no markdown, no explanation):
     }
   }
 
-  async function analyzeImages(images) {
+  async function analyzeImages(images, onProgress) {
     if (!getKey()) throw new Error('NO_API_KEY');
-    const result = await callGroqVision(images);
-    addLog({ mode:'image', platform: result.platform||'Unknown', product: result.productName||'Unknown', riskLevel: result.overallRiskLevel, score: result.overallDeceptionScore, verdict: result.verdict });
-    return result;
+
+    // Step 1: Extract reviews from each image one by one
+    var allReviews = [];
+    var productName = 'Unknown';
+    var platform = 'Unknown';
+
+    for (var i = 0; i < images.length; i++) {
+      if (onProgress) onProgress('Compressing image ' + (i+1) + ' of ' + images.length + '...');
+      var compressed = await compressImage(images[i].base64, images[i].mediaType);
+
+      if (onProgress) onProgress('Reading screenshot ' + (i+1) + ' of ' + images.length + '...');
+      try {
+        var extracted = await callGroqVisionSingle(compressed, 'image/jpeg', i+1, images.length);
+        if (extracted.productName && extracted.productName !== 'Unknown') productName = extracted.productName;
+        if (extracted.platform && extracted.platform !== 'Unknown') platform = extracted.platform;
+        if (extracted.reviews && extracted.reviews.length) {
+          extracted.reviews.forEach(function(r) { allReviews.push(r); });
+        }
+      } catch(e) {
+        console.warn('Failed to extract from image ' + (i+1) + ':', e.message);
+      }
+    }
+
+    if (allReviews.length === 0) {
+      throw new Error('No reviews could be extracted from the screenshots. Make sure the screenshots clearly show review text.');
+    }
+
+    // Step 2: Analyze all extracted reviews together
+    if (onProgress) onProgress('Analyzing ' + allReviews.length + ' reviews for deception...');
+    var analysis = await analyzeReviews(allReviews, platform, productName);
+
+    addLog({ mode:'image', platform: platform, product: productName, riskLevel: analysis.overallRiskLevel, score: analysis.overallDeceptionScore, verdict: analysis.verdict });
+
+    return { productName, platform, analysis };
   }
 
   async function analyzeReviews(reviews, platform, productName) {
-    const block = reviews.map((r,i)=>`Review ${i+1} [${r.stars||'?'}★] by "${r.author||'Anonymous'}": "${r.text}"`).join('\n\n');
-    const result = await callGroq(`You are DART (Deceptive Assessment and Review Tracking). Analyze these ${reviews.length} reviews from ${platform} for "${productName||'this product'}".
+    const block = reviews.map((r,i) => {
+      var text = r.text || (typeof r === 'string' ? r : JSON.stringify(r));
+      var stars = r.stars || r.star || '?';
+      var author = r.author || 'Anonymous';
+      return 'Review ' + (i+1) + ' [' + stars + '★] by "' + author + '": "' + text + '"';
+    }).join('\n\n');
+
+    const result = await callGroq(`You are DART (Deceptive Assessment and Review Tracking). Analyze these ${reviews.length} reviews from ${platform||'Unknown'} for "${productName||'this product'}".
 
 ${block}
 
 Return ONLY valid JSON:
 {
-  "overallRiskLevel": "LOW"|"MEDIUM"|"HIGH",
+  "overallRiskLevel": "LOW" or "MEDIUM" or "HIGH",
   "overallDeceptionScore": 0-100,
   "suspiciousCount": number,
   "authenticCount": number,
@@ -140,31 +193,6 @@ Return ONLY valid JSON:
   "perReview": [{"index":1,"riskLevel":"LOW|MEDIUM|HIGH","deceptionScore":0-100,"flags":["flag"]}],
   "recommendation": "actionable advice"
 }`, 1500);
-    return result;
-  }
-
-  async function analyzeSingle(opts) {
-    const result = await callGroq(`You are DART. Analyze this single product review:
-Platform: ${opts.platform||'Unknown'}
-Stars: ${opts.stars||'?'}
-Reviewer: ${opts.reviewer||'Unknown'}
-Text: """${opts.text}"""
-
-Return ONLY valid JSON:
-{
-  "riskLevel": "LOW"|"MEDIUM"|"HIGH",
-  "deceptionScore": 0-100,
-  "verdict": "one sentence",
-  "findings": {
-    "sentimentManipulation": "LOW|MEDIUM|HIGH – reason",
-    "aiGeneratedLikelihood": "LOW|MEDIUM|HIGH – reason",
-    "keywordStuffing": "LOW|MEDIUM|HIGH – reason",
-    "linguisticUniformity": "LOW|MEDIUM|HIGH – reason"
-  },
-  "signals": ["signal1","signal2","signal3"],
-  "summary": "2-3 sentences",
-  "recommendation": "actionable advice"
-}`, 1000);
     return result;
   }
 
@@ -188,5 +216,5 @@ Return ONLY valid JSON:
     return { id:'generic', name:'Unknown Platform' };
   }
 
-  return { getKey, analyzeImages, analyzeReviews, analyzeSingle, addLog, getLogs, detectPlatform };
+  return { getKey, analyzeImages, analyzeReviews, addLog, getLogs, detectPlatform };
 })();

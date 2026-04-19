@@ -256,7 +256,7 @@ button,input,textarea,select{font-family:var(--font);}
 
     <button class="btn btn-green btn-full" id="imgBtn" disabled>&#x1F50D; Analyze Screenshots</button>
 
-    <div class="spinner-wrap" id="imgSpin"><div class="spin"></div><span>Reading screenshots with AI&hellip;</span></div>
+    <div class="spinner-wrap" id="imgSpin"><div class="spin"></div><span id="imgSpinMsg">Processing screenshots&hellip;</span></div>
     <div class="err-msg" id="imgErr"></div>
 
     <div class="result-box" id="imgRes">
@@ -443,10 +443,13 @@ document.getElementById('imgBtn').addEventListener('click', async function(){
   showSpin('imgSpin');
   try{
     var images = uploadedImages.map(function(img){return {base64:img.base64, mediaType:img.mediaType};});
-    var result = await DART.analyzeImages(images);
+    var result = await DART.analyzeImages(images, function(msg){
+      var el = document.getElementById('imgSpinMsg');
+      if(el) el.textContent = msg;
+    });
     hideSpin('imgSpin');
     document.getElementById('imgDetected').textContent = (result.platform||'Unknown') + ' — ' + (result.productName||'Unknown product');
-    applyResult('img', result);
+    applyResult('img', result.analysis);
   }catch(err){
     hideSpin('imgSpin');
     var msg = err.message==='NO_API_KEY'||err.message==='INVALID_API_KEY'

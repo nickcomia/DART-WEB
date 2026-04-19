@@ -231,19 +231,15 @@ button,input,textarea,select{font-family:var(--font);}
   </nav>
 
   <h1 class="page-title">Analyze Reviews</h1>
-  <p class="page-sub">Upload up to 5 screenshots of any product review page, or paste review text manually.</p>
+  <p class="page-sub">Upload up to 5 screenshots of any product review page for AI-powered deception analysis.</p>
 
   <div class="warn-bar" id="keyWarn">
     &#9888; No API key configured. <a href="settings.html">Set your Groq API key &rarr;</a>
   </div>
 
-  <div class="tabs">
-    <button class="tab-btn on" data-tab="img">&#x1F4F8; Screenshot</button>
-    <button class="tab-btn" data-tab="manual">&#x270F; Manual Review</button>
-  </div>
 
-  <!-- IMAGE TAB -->
-  <div class="tab-panel on" id="tab-img">
+  <!-- IMAGE UPLOAD -->
+  <div id="tab-img">
 
     <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">
       Take screenshots of any product review page — Shopee, Lazada, Amazon, TikTok Shop, Facebook, etc. Upload up to <strong style="color:var(--text)">5 screenshots</strong> for a more complete analysis.
@@ -282,66 +278,6 @@ button,input,textarea,select{font-family:var(--font);}
       <div class="rs"><div class="rs-title">Detection Signals</div><ul class="sig-list" id="imgSigs"></ul></div>
       <div class="rs"><div class="rs-title">Consumer Recommendation</div><p class="rs-text" id="imgRec"></p></div>
     </div>
-  </div>
-
-  <!-- MANUAL TAB -->
-  <div class="tab-panel" id="tab-manual">
-    <div class="two-col" style="margin-bottom:18px">
-      <div class="fg" style="margin-bottom:0">
-        <label class="fl">Platform</label>
-        <select class="fs" id="manPlat">
-          <option value="">Select&hellip;</option>
-          <option>Amazon</option><option>Shopee</option><option>Lazada</option>
-          <option>Zalora</option><option>eBay</option><option>Temu</option>
-          <option>AliExpress</option><option>Walmart</option><option>TikTok Shop</option>
-          <option>Google Reviews</option><option>Yelp</option><option>TripAdvisor</option><option>Other</option>
-        </select>
-      </div>
-      <div class="fg" style="margin-bottom:0">
-        <label class="fl">Product / Business Name (optional)</label>
-        <input class="fi" id="manProd" placeholder="e.g. Sony WH-1000XM5">
-      </div>
-    </div>
-
-    <label class="fl" style="margin-bottom:8px;">
-      Reviews to Analyze <span style="color:var(--dim);font-weight:400" id="manCount">&mdash; add at least 1</span>
-    </label>
-    <div class="rev-list" id="revList"></div>
-
-    <div class="add-box">
-      <div class="add-box-title">Add a Review</div>
-      <div class="fg"><textarea class="ft" id="newTxt" placeholder="Paste the review text here&hellip;" style="min-height:80px"></textarea></div>
-      <div class="add-row">
-        <div style="width:88px"><label class="fl">Stars</label>
-          <select class="fs" id="newStars"><option value="">?</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
-        </div>
-        <div style="flex:1"><label class="fl">Author (optional)</label>
-          <input class="fi" id="newAuthor" placeholder="Reviewer name&hellip;">
-        </div>
-        <button class="btn btn-outline btn-sm" id="addBtn" style="margin-top:20px">+ Add</button>
-      </div>
-    </div>
-
-    <button class="btn btn-green btn-full" id="manBtn" disabled>&#x1F50D; Analyze Reviews</button>
-    <div class="spinner-wrap" id="manSpin"><div class="spin"></div><span>Analyzing with DART AI&hellip;</span></div>
-    <div class="err-msg" id="manErr"></div>
-
-    <div class="result-box" id="manRes">
-      <div class="risk-banner" id="manBanner">
-        <span class="rb-emoji" id="manEmoji"></span>
-        <div><div class="rb-level" id="manLevel"></div><div class="rb-verdict" id="manVerdict"></div></div>
-      </div>
-      <div class="score-wrap">
-        <div class="score-hd"><span>Overall Deception Score</span><span id="manScoreN"></span></div>
-        <div class="score-bar"><div class="score-fill" id="manFill" style="width:0%"></div></div>
-      </div>
-      <div class="findings-grid" id="manFindings"></div>
-      <div class="rs"><div class="rs-title">Pattern Analysis</div><p class="rs-text" id="manPatterns"></p></div>
-      <div class="rs"><div class="rs-title">Per-Review Breakdown</div><div class="pr-list" id="manPR"></div></div>
-      <div class="rs"><div class="rs-title">Detection Signals</div><ul class="sig-list" id="manSigs"></ul></div>
-      <div class="rs"><div class="rs-title">Consumer Recommendation</div><p class="rs-text" id="manRec"></p></div>
-    </div>
-  </div>
 
 </div>
 </div>
@@ -366,18 +302,7 @@ button,input,textarea,select{font-family:var(--font);}
 <script>
 if(!DART.getKey()){document.getElementById('keyWarn').classList.add('show');}
 
-// Tabs
-document.querySelectorAll('.tab-btn').forEach(function(b){
-  b.addEventListener('click',function(){
-    document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('on');});
-    document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.remove('on');});
-    b.classList.add('on');
-    document.getElementById('tab-'+b.dataset.tab).classList.add('on');
-  });
-});
-
 // Helpers
-function levelColor(l){return l==='HIGH'?'var(--red)':l==='MEDIUM'?'var(--amber)':'var(--green)';}
 function bannerClass(l){return 'risk-banner '+(l==='HIGH'?'rb-high':l==='MEDIUM'?'rb-med':'rb-low');}
 function fillClass(l){return 'score-fill '+(l==='HIGH'?'sf-high':l==='MEDIUM'?'sf-med':'sf-low');}
 function chipClass(l){return 'chip '+(l==='HIGH'?'chip-high':l==='MEDIUM'?'chip-med':'chip-low');}
@@ -531,57 +456,7 @@ document.getElementById('imgBtn').addEventListener('click', async function(){
   }finally{this.disabled = uploadedImages.length === 0;}
 });
 
-// ── MANUAL REVIEWS ──
-var manRevs=[];
-function renderManList(){
-  var list=document.getElementById('revList');
-  var countEl=document.getElementById('manCount');
-  var btn=document.getElementById('manBtn');
-  list.innerHTML=manRevs.map(function(r,i){
-    return '<div class="rev-item"><span class="rev-n">#'+(i+1)+'</span><div class="rev-body">'+(r.author?'<div class="rev-author">'+r.author+'</div>':'')+'<div class="rev-preview">'+(r.text.length>100?r.text.slice(0,100)+'&hellip;':r.text)+'</div></div><span class="rev-stars-badge">'+(r.stars?r.stars+'&#9733;':'?')+'</span><button class="rev-rm" data-i="'+i+'">&times;</button></div>';
-  }).join('');
-  list.querySelectorAll('.rev-rm').forEach(function(b){
-    b.addEventListener('click',function(){manRevs.splice(parseInt(b.dataset.i),1);renderManList();});
-  });
-  var n=manRevs.length;
-  countEl.textContent=n===0?'— add at least 1':'('+n+' review'+(n>1?'s':'')+' added)';
-  btn.disabled=n===0;
-}
-renderManList();
 
-document.getElementById('addBtn').addEventListener('click',function(){
-  var txt=document.getElementById('newTxt').value.trim();
-  if(!txt){alert('Please enter review text.');return;}
-  if(manRevs.length>=10){alert('Maximum 10 reviews per analysis.');return;}
-  manRevs.push({text:txt,stars:document.getElementById('newStars').value,author:document.getElementById('newAuthor').value.trim()});
-  document.getElementById('newTxt').value='';
-  document.getElementById('newStars').value='';
-  document.getElementById('newAuthor').value='';
-  renderManList();
-});
-
-document.getElementById('manBtn').addEventListener('click',async function(){
-  if(!DART.getKey()){showErr('manErr','No API key. <a href="settings.html">Set it here &rarr;</a>');return;}
-  if(manRevs.length===0)return;
-  hideErr('manErr');
-  document.getElementById('manRes').classList.remove('show');
-  this.disabled=true;
-  showSpin('manSpin');
-  try{
-    var platform=document.getElementById('manPlat').value||'Unknown';
-    var product=document.getElementById('manProd').value||'Unknown Product';
-    var analysis=await DART.analyzeReviews(manRevs,platform,product);
-    DART.addLog({mode:'manual',platform:platform,product:product,riskLevel:analysis.overallRiskLevel,score:analysis.overallDeceptionScore,verdict:analysis.verdict});
-    hideSpin('manSpin');
-    applyResult('man',analysis);
-  }catch(err){
-    hideSpin('manSpin');
-    var msg=err.message==='NO_API_KEY'||err.message==='INVALID_API_KEY'
-      ?'Invalid or missing API key. <a href="settings.html">Update here &rarr;</a>'
-      :'&#x274C; '+err.message;
-    showErr('manErr',msg);
-  }finally{this.disabled=manRevs.length===0;}
-});
 </script>
 </body>
 </html>

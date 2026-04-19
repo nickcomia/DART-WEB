@@ -500,7 +500,7 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
   <div class="hero-inner">
     <div class="badge"><span class="badge-dot"></span>AI-Powered Detection System</div>
     <h1 class="hero-title">Exposing fake reviews<br><em>before they cost you.</em></h1>
-    <p class="hero-desc">DART analyzes product reviews from any e-commerce platform using NLP, behavioral analytics, and multi-layer AI to surface deceptive content in real time.</p>
+    <p class="hero-desc">DART detects fake and deceptive product reviews from any e-commerce platform using NLP text analysis, Groq API-powered vision LLM image analysis, and behavioral analytics — no scraping required.</p>
     <div class="hero-btns">
       <a href="pages/analyze.html" class="btn btn-green">Start Analyzing &rarr;</a>
       <a href="#platforms" class="btn btn-outline">Supported Platforms</a>
@@ -508,7 +508,7 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
     <div class="hero-stats">
       <div class="hstat"><span class="hstat-n">30%</span><span class="hstat-l">of online reviews estimated fake</span></div>
       <div class="hstat"><span class="hstat-n">$152B</span><span class="hstat-l">in spending influenced yearly</span></div>
-      <div class="hstat"><span class="hstat-n">3-Layer</span><span class="hstat-l">NLP &middot; Behavioral &middot; AI scoring</span></div>
+      <div class="hstat"><span class="hstat-n">3-Layer</span><span class="hstat-l">NLP &middot; Vision AI &middot; Behavioral</span></div>
     </div>
   </div>
 </section>
@@ -519,9 +519,9 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
     <h2 class="s-title">Paste a link. Get the truth.</h2>
     <p class="s-desc">Simply paste a product URL from any supported shopping platform. DART fetches the product, extracts the reviews, and runs them through multi-layer AI analysis.</p>
     <div class="steps">
-      <div class="step"><div class="step-num">01</div><div class="step-t">Paste the URL</div><p class="step-d">Copy the product page link from any supported e-commerce platform and paste it into DART.</p></div>
+      <div class="step"><div class="step-num">01</div><div class="step-t">Upload a Screenshot</div><p class="step-d">Take a screenshot of any product review page from Shopee, Lazada, Amazon, TikTok Shop, or any platform and upload it to DART.</p></div>
       <div class="step-arr">&rarr;</div>
-      <div class="step"><div class="step-num">02</div><div class="step-t">AI Analyzes</div><p class="step-d">DART fetches reviews and runs NLP, behavioral, and linguistic analysis powered by Claude AI.</p></div>
+      <div class="step"><div class="step-num">02</div><div class="step-t">AI Analyzes</div><p class="step-d">DART processes the screenshot through the Groq API vision LLM (LLaMA 4 Scout), extracting review content and evaluating deceptive indicators in real time.</p></div>
       <div class="step-arr">&rarr;</div>
       <div class="step"><div class="step-num">03</div><div class="step-t">See Results</div><p class="step-d">Get a risk score, per-review breakdown, detected signals, and a consumer recommendation.</p></div>
     </div>
@@ -556,9 +556,10 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
     <p class="eyebrow">Detection Engine</p>
     <h2 class="s-title">Three layers of AI intelligence</h2>
     <div class="layers">
-      <div class="layer"><div class="layer-icon">&#x1F524;</div><div><h3>NLP Text Analysis</h3><p>Transformer-based models detect sentiment manipulation, AI-generated phrasing, keyword stuffing, and unnatural linguistic uniformity across review text.</p></div></div>
-      <div class="layer"><div class="layer-icon">&#x1F4CA;</div><div><h3>Behavioral Analytics</h3><p>Reviewer credibility profiles built from posting frequency, temporal clusters, rating distribution asymmetry, and cross-account behavioral similarities.</p></div></div>
-      <div class="layer"><div class="layer-icon">&#x1F6E1;&#xFE0F;</div><div><h3>Unified Risk Scoring</h3><p>All signals synthesized into a single 0&ndash;100 deception score &mdash; LOW, MEDIUM, or HIGH &mdash; with human-readable justifications and consumer guidance.</p></div></div>
+      <div class="layer"><div class="layer-icon">&#x1F524;</div><div><h3>NLP Text Analysis</h3><p>Transformer-based language models detect manipulated sentiment polarity, AI-generated phrasing, keyword stuffing, cosine similarity duplication, and unnatural linguistic uniformity across review text.</p></div></div>
+      <div class="layer"><div class="layer-icon">&#x1F4F8;</div><div><h3>AI-Powered Image Analysis</h3><p>Review screenshots are processed through the Groq API (LLaMA 4 Scout) which performs OCR, extracts structured review data, and evaluates deceptive indicators — works on any platform without scraping or API access.</p></div></div>
+      <div class="layer"><div class="layer-icon">&#x1F4CA;</div><div><h3>Behavioral Analytics</h3><p>Reviewer credibility profiles built from posting frequency, temporal clustering, rating distribution asymmetry, account age, and cross-account behavioral similarities indicative of coordinated manipulation.</p></div></div>
+      <div class="layer"><div class="layer-icon">&#x1F6E1;&#xFE0F;</div><div><h3>Unified Risk Scoring</h3><p>All signals synthesized into a single 0&ndash;100 deception score &mdash; LOW, MEDIUM, or HIGH &mdash; with interpretable justifications and prescriptive consumer recommendations.</p></div></div>
     </div>
   </div>
 </section>

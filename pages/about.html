@@ -513,9 +513,10 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
   <h2>What DART Does</h2>
   <p>DART operates through a unified, multi-layered detection framework that simultaneously evaluates three distinct dimensions of review authenticity:</p>
   <ul>
-    <li><strong>NLP Text Analysis</strong> &ndash; Transformer-based models detect manipulated sentiment, AI-generated content, keyword stuffing, and unnatural linguistic uniformity.</li>
-    <li><strong>Behavioral Analytics</strong> &ndash; Reviewer credibility profiles built from posting frequency, temporal clustering, rating distribution asymmetry, account age, and cross-account similarities.</li>
-    <li><strong>Unified Risk Scoring</strong> &ndash; All signals synthesized into a 0&ndash;100 deception score &mdash; LOW, MEDIUM, or HIGH &mdash; with human-readable justifications and consumer recommendations.</li>
+    <li><strong>NLP Text Analysis</strong> &ndash; Transformer-based language models perform deep linguistic analysis detecting manipulated sentiment polarity, statistically improbable language uniformity, keyword stuffing, and structural patterns consistent with AI-generated content.</li>
+    <li><strong>AI-Powered Image Analysis</strong> &ndash; User-submitted review screenshots are routed through the <strong>Groq API</strong> (LLaMA 4 Scout / LLaMA 4 Maverick) which performs OCR, extracts structured review data including star ratings, reviewer identity, and post dates, then evaluates the content for deceptive indicators — all without requiring platform APIs or web scraping.</li>
+    <li><strong>Behavioral Analytics</strong> &ndash; Reviewer credibility profiles built from posting frequency, temporal clustering of submissions, rating distribution asymmetry, account age, and cross-account behavioral similarities indicative of coordinated manipulation.</li>
+    <li><strong>Unified Risk Scoring</strong> &ndash; All three layers are synthesized into a 0&ndash;100 deception score classified as LOW, MEDIUM, or HIGH, with interpretable justifications and prescriptive consumer recommendations.</li>
   </ul>
 
   <h2>General Objective</h2>
@@ -524,13 +525,13 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
   <h2>Specific Objectives</h2>
   <ul>
     <li>Develop an NLP-based text analysis module using transformer models for deceptive and AI-generated review detection</li>
-    <li>Design a consumer-facing review analysis module for real-time URL-based credibility analysis</li>
+    <li>Design a consumer-facing review analysis module enabling users to submit screenshots of product reviews for real-time Groq API vision LLM credibility analysis</li>
     <li>Implement behavioral analytics for reviewer credibility assessment</li>
     <li>Develop and evaluate a unified risk scoring framework (precision, recall, F1-score, accuracy)</li>
   </ul>
 
   <h2>Research Methodology</h2>
-  <p>This study uses a <strong>developmental research design</strong> with the <strong>Agile Software Development Methodology</strong>. The AI engine is built through an iterative Machine Learning lifecycle using transformer-based NLP models and anomaly detection for behavioral analysis. System evaluation uses precision, recall, F1-score, and accuracy, validated through unit testing, integration testing, and UAT.</p>
+  <p>This study uses a <strong>developmental research design</strong> with the <strong>Agile Software Development Methodology</strong>. The AI engine is built through an iterative Machine Learning lifecycle using transformer-based NLP models for text analysis and the <strong>Groq API</strong> — leveraging vision-capable large language models (<strong>LLaMA 4 Scout / LLaMA 4 Maverick</strong>) — for image-based review analysis. When a user uploads a screenshot, the image is transmitted to the Groq API where the vision LLM performs OCR, extracts structured review data, and evaluates deceptive indicators. Behavioral analytics uses anomaly detection on posting frequency, rating history, and account-level signals. System evaluation uses precision, recall, F1-score, and accuracy, validated through unit testing, integration testing, and UAT.</p>
 
   <h2>Proponents</h2>
   <div class="prop-grid">

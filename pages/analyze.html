@@ -206,14 +206,14 @@ button,input,textarea,select{font-family:var(--font);}
   </nav>
 
   <h1 class="page-title">Analyze a Review</h1>
-  <p class="page-sub">Paste the review text and upload the photos attached to the review. DART checks both for signs of deception.</p>
+  <p class="page-sub">Upload photos from a product review for AI-powered fake detection. Optionally paste the review text for deeper NLP analysis.</p>
 
   <div class="warn-bar" id="keyWarn">
     &#9888; No API key configured. <a href="settings.html">Set your Groq API key &rarr;</a>
   </div>
 
   <div class="info-bar">
-    <strong>How to use:</strong> Find a product review on any platform (Shopee, Lazada, Amazon, TikTok Shop, etc.). Copy the review text and upload the photos that reviewer attached. DART will analyze the text using NLP and check the photos using Groq AI vision to detect fake or misleading images.
+    <strong>How to use:</strong> Find a product review on any platform (Shopee, Lazada, Amazon, TikTok Shop, etc.) and upload the photos attached to that review. The Groq API vision AI (LLaMA 4 Scout) will check each photo for AI-generated images, stock photos, or misleading visuals. You can also paste the review text for additional NLP analysis — this is optional.
   </div>
 
   <!-- REVIEW DETAILS -->
@@ -235,22 +235,22 @@ button,input,textarea,select{font-family:var(--font);}
     </div>
   </div>
 
-  <!-- REVIEW TEXT -->
+  <!-- REVIEW PHOTOS (required) -->
   <div class="scard">
-    <div class="scard-title"><span>&#x1F4DD;</span> Review Text <span style="font-size:11px;color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0">(required)</span></div>
-    <div class="fg" style="margin-bottom:0">
-      <textarea class="ft" id="reviewText" placeholder="Paste the full review text here&hellip;" style="min-height:150px"></textarea>
-      <p class="fhint">Copy and paste the customer review text exactly as it appears on the product page.</p>
-    </div>
-  </div>
-
-  <!-- REVIEW PHOTOS -->
-  <div class="scard">
-    <div class="scard-title"><span>&#x1F4F8;</span> Review Photos <span style="font-size:11px;color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0">(optional — up to 5)</span></div>
+    <div class="scard-title"><span>&#x1F4F8;</span> Review Photos <span style="font-size:11px;color:var(--red);font-weight:600;text-transform:none;letter-spacing:0">(required — up to 5)</span></div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Upload the photos that the reviewer attached to their review. The Groq API vision AI (LLaMA 4 Scout) will check each photo for AI-generated images, stock photos, or misleading visuals.</p>
     <div class="photo-counter"><span id="photoCount">0</span> / 5 photos uploaded</div>
     <div class="photo-grid" id="photoGrid"></div>
     <p class="fhint">Supports JPG, PNG, WEBP. Drag &amp; drop or click the + slot to add photos.</p>
+  </div>
+
+  <!-- REVIEW TEXT (optional) -->
+  <div class="scard">
+    <div class="scard-title"><span>&#x1F4DD;</span> Review Text <span style="font-size:11px;color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0">(optional — for deeper NLP analysis)</span></div>
+    <div class="fg" style="margin-bottom:0">
+      <textarea class="ft" id="reviewText" placeholder="Paste the review text here for additional NLP analysis&hellip;" style="min-height:120px"></textarea>
+      <p class="fhint">If you paste the review text, DART will also check it for fake writing patterns, forced emotions, keyword stuffing, and AI-generated language.</p>
+    </div>
   </div>
 
   <button class="btn btn-green btn-full" id="analyzeBtn" disabled>&#x1F50D; Analyze Review</button>
@@ -345,8 +345,7 @@ var MAX_PHOTOS = 5;
 var uploadedPhotos = [];
 
 function updateAnalyzeBtn(){
-  var txt = document.getElementById('reviewText').value.trim();
-  document.getElementById('analyzeBtn').disabled = !txt;
+  document.getElementById('analyzeBtn').disabled = uploadedPhotos.length === 0;
 }
 
 document.getElementById('reviewText').addEventListener('input', updateAnalyzeBtn);
@@ -369,6 +368,7 @@ function renderPhotoGrid(){
       e.stopPropagation();
       uploadedPhotos.splice(i, 1);
       renderPhotoGrid();
+      updateAnalyzeBtn();
     });
     grid.appendChild(slot);
   });
@@ -399,6 +399,7 @@ function loadPhoto(file){
   reader.onload = function(e){
     uploadedPhotos.push({base64:e.target.result.split(',')[1], mediaType:file.type, dataUrl:e.target.result, name:file.name});
     renderPhotoGrid();
+    updateAnalyzeBtn();
   };
   reader.readAsDataURL(file);
 }
@@ -408,8 +409,7 @@ renderPhotoGrid();
 // ── ANALYZE ──
 document.getElementById('analyzeBtn').addEventListener('click', async function(){
   if(!DART.getKey()){showErr('No API key. <a href="settings.html">Set it here &rarr;</a>');return;}
-  var reviewText = document.getElementById('reviewText').value.trim();
-  if(!reviewText){showErr('Please paste the review text first.');return;}
+  if(uploadedPhotos.length === 0){showErr('Please upload at least one review photo.');return;}
 
   hideErr();
   document.getElementById('resultBox').classList.remove('show');
@@ -418,7 +418,7 @@ document.getElementById('analyzeBtn').addEventListener('click', async function()
 
   try{
     var opts = {
-      reviewText: reviewText,
+      reviewText: document.getElementById('reviewText').value.trim(),
       platform: document.getElementById('platSelect').value || 'Unknown',
       productName: document.getElementById('productName').value || 'Unknown',
       photos: uploadedPhotos.map(function(p){return {base64:p.base64, mediaType:p.mediaType};})

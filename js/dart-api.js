@@ -143,32 +143,33 @@ Return ONLY valid JSON:
     }
   }
 
-  // Main analysis: text + photos combined
+  // Main analysis: photos required, text optional
   async function analyzeReview(opts, onProgress) {
-    // opts: { reviewText, platform, productName, photos: [{base64, mediaType}] }
+    // opts: { reviewText (optional), platform, productName, photos: [{base64, mediaType}] }
     if (!getKey()) throw new Error('NO_API_KEY');
+    if (!opts.photos || opts.photos.length === 0) throw new Error('Please upload at least one review photo.');
 
     var textResult = null;
     var photoResults = [];
 
-    // Step 1: Analyze text
+    // Step 1: Analyze text only if provided
     if (opts.reviewText && opts.reviewText.trim()) {
       if (onProgress) onProgress('Analyzing review text...');
       textResult = await analyzeText(opts.reviewText, opts.platform, opts.productName);
     }
 
     // Step 2: Analyze each photo
-    if (opts.photos && opts.photos.length > 0) {
-      for (var i = 0; i < opts.photos.length; i++) {
-        if (onProgress) onProgress('Analyzing photo ' + (i+1) + ' of ' + opts.photos.length + '...');
-        try {
-          var pr = await analyzePhoto(opts.photos[i].base64, opts.photos[i].mediaType, i+1, opts.photos.length);
-          photoResults.push(pr);
-        } catch(e) {
-          console.warn('Photo ' + (i+1) + ' failed:', e.message);
-        }
+    for (var i = 0; i < opts.photos.length; i++) {
+      if (onProgress) onProgress('Analyzing photo ' + (i+1) + ' of ' + opts.photos.length + '...');
+      try {
+        var pr = await analyzePhoto(opts.photos[i].base64, opts.photos[i].mediaType, i+1, opts.photos.length);
+        photoResults.push(pr);
+      } catch(e) {
+        console.warn('Photo ' + (i+1) + ' failed:', e.message);
       }
     }
+
+    if (photoResults.length === 0) throw new Error('Could not analyze the photos. Please try again with clearer images.');
 
     // Step 3: Combine scores
     if (onProgress) onProgress('Combining results...');

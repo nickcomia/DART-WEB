@@ -153,9 +153,6 @@ button,input,textarea,select{font-family:var(--font);}
 @keyframes spin{to{transform:rotate(360deg)}}
 .err-msg{display:none;background:var(--rdim);border:1px solid rgba(255,79,109,0.25);border-radius:var(--rsm);padding:12px 16px;font-size:14px;color:var(--red);margin-top:14px;line-height:1.5;}
 .err-msg.show{display:block;}
-.warn-bar{display:none;background:var(--adim);border:1px solid rgba(245,166,35,0.25);border-radius:var(--rsm);padding:12px 16px;font-size:14px;color:var(--amber);margin-bottom:20px;}
-.warn-bar.show{display:block;}
-.warn-bar a{color:var(--amber);text-decoration:underline;}
 .info-bar{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--rsm);padding:12px 16px;font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6;}
 .info-bar strong{color:var(--text);}
 
@@ -208,8 +205,6 @@ button,input,textarea,select{font-family:var(--font);}
   <h1 class="page-title">Analyze a Review</h1>
   <p class="page-sub">Upload photos from a product review for AI-powered fake detection. Optionally paste the review text for deeper NLP analysis.</p>
 
-  <div class="warn-bar" id="keyWarn">
-    &#9888; No API key configured. <a href="settings.html">Set your Groq API key &rarr;</a>
   </div>
 
   <div class="info-bar">
@@ -318,7 +313,6 @@ button,input,textarea,select{font-family:var(--font);}
       <a href="../index.html">Home</a>
       <a href="about.html">About</a>
       <a href="analyze.html">Analyze</a>
-      <a href="settings.html">Settings</a>
     </div>
   </div>
 </footer>
@@ -326,7 +320,6 @@ button,input,textarea,select{font-family:var(--font);}
 <script>(function(){var T=document.getElementById('T'),M=document.getElementById('M');if(T&&M)T.addEventListener('click',function(){M.classList.toggle('open');});})();</script>
 <script src="../js/dart-api.js"></script>
 <script>
-if(!DART.getKey()){document.getElementById('keyWarn').classList.add('show');}
 
 // Helpers
 function levelColor(l){return l==='HIGH'?'var(--red)':l==='MEDIUM'?'var(--amber)':'var(--green)';}
@@ -408,7 +401,7 @@ renderPhotoGrid();
 
 // ── ANALYZE ──
 document.getElementById('analyzeBtn').addEventListener('click', async function(){
-  if(!DART.getKey()){showErr('No API key. <a href="settings.html">Set it here &rarr;</a>');return;}
+  if(!DART.getKey()){showErr('API key error. Please contact the system administrator.');return;}
   if(uploadedPhotos.length === 0){showErr('Please upload at least one review photo.');return;}
 
   hideErr();
@@ -430,7 +423,7 @@ document.getElementById('analyzeBtn').addEventListener('click', async function()
   }catch(err){
     hideSpin();
     var msg = err.message === 'NO_API_KEY' || err.message === 'INVALID_API_KEY'
-      ? 'Invalid or missing API key. <a href="settings.html">Update here &rarr;</a>'
+      ? 'Invalid API key. Please contact the system administrator.'
       : '&#x274C; ' + err.message;
     showErr(msg);
   }finally{

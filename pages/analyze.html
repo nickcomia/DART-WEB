@@ -41,8 +41,6 @@ button,input,textarea,select{font-family:var(--font);}
 .btn{display:inline-flex;align-items:center;gap:7px;padding:12px 24px;border-radius:var(--rsm);font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all 0.18s;text-decoration:none;white-space:nowrap;}
 .btn-green{background:var(--green);color:#0c0e12;}
 .btn-green:hover{background:#3fffa8;box-shadow:0 0 22px var(--gglow);transform:translateY(-1px);}
-.btn-outline{background:transparent;color:var(--text);border:1px solid var(--bord2);}
-.btn-outline:hover{background:rgba(255,255,255,0.05);}
 .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
 .btn-ghost:hover{background:var(--bg2);color:var(--text);}
 .btn-sm{padding:8px 16px;font-size:13px;}
@@ -58,87 +56,60 @@ button,input,textarea,select{font-family:var(--font);}
 .bread a:hover{color:var(--green);}
 .bread-sep{color:var(--dim);}
 
-.tabs{display:flex;gap:3px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rsm);padding:4px;width:fit-content;margin-bottom:28px;}
-.tab-btn{padding:8px 20px;border-radius:6px;border:none;background:transparent;color:var(--muted);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.15s;}
-.tab-btn.on{background:var(--bg3);color:var(--text);}
-.tab-panel{display:none;}
-.tab-panel.on{display:block;}
-
+/* FORM */
 .fg{margin-bottom:18px;}
 .fl{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:7px;letter-spacing:0.3px;text-transform:uppercase;}
 .fi,.ft,.fs{width:100%;background:var(--bg2);border:1px solid var(--bord2);border-radius:var(--rsm);padding:11px 14px;color:var(--text);font-size:14px;transition:border-color 0.15s,box-shadow 0.15s;outline:none;appearance:none;}
 .fi:focus,.ft:focus,.fs:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--gdim);}
 .fi::placeholder,.ft::placeholder{color:var(--dim);}
-.ft{resize:vertical;min-height:110px;line-height:1.6;}
+.ft{resize:vertical;min-height:130px;line-height:1.6;}
 .fhint{font-size:12px;color:var(--dim);margin-top:5px;line-height:1.5;}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 
-/* MULTI IMAGE UPLOAD */
-.upload-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.upload-counter{font-size:13px;color:var(--muted);}
-.upload-counter span{color:var(--green);font-weight:700;}
+/* SECTION CARD */
+.scard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:18px;}
+.scard-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.scard-title span{font-size:16px;}
 
-.img-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px;}
-
-.img-slot{
-  aspect-ratio:1;border-radius:var(--rsm);overflow:hidden;position:relative;
-  background:var(--bg2);border:2px dashed var(--bord2);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all 0.18s;
-}
-.img-slot:hover,.img-slot.drag{border-color:var(--green);background:var(--gdim);}
-.img-slot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.img-slot-empty{text-align:center;pointer-events:none;}
-.img-slot-empty span{font-size:24px;display:block;margin-bottom:4px;}
-.img-slot-empty p{font-size:11px;color:var(--dim);}
-.img-slot-filled{position:relative;width:100%;height:100%;}
-.img-slot-filled img{width:100%;height:100%;object-fit:cover;display:block;}
-.img-slot-rm{
-  position:absolute;top:4px;right:4px;
-  width:22px;height:22px;border-radius:50%;
-  background:rgba(0,0,0,0.75);border:none;
-  color:#fff;font-size:14px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  line-height:1;transition:background 0.15s;
-}
-.img-slot-rm:hover{background:var(--red);}
-.img-slot-num{
-  position:absolute;bottom:4px;left:4px;
-  background:rgba(0,0,0,0.65);color:#fff;
-  font-size:10px;font-weight:700;
-  padding:2px 6px;border-radius:4px;
-}
-
-/* REVIEW ITEMS */
-.rev-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
-.rev-item{display:flex;gap:10px;align-items:flex-start;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rsm);padding:12px 14px;}
-.rev-n{font-size:11px;color:var(--dim);font-weight:600;padding-top:2px;flex-shrink:0;width:22px;}
-.rev-body{flex:1;min-width:0;}
-.rev-author{font-size:13px;font-weight:600;margin-bottom:2px;}
-.rev-preview{font-size:13px;color:var(--muted);}
-.rev-stars-badge{font-size:12px;color:var(--amber);flex-shrink:0;}
-.rev-rm{background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:0 2px;line-height:1;transition:color 0.15s;}
-.rev-rm:hover{color:var(--red);}
-.add-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:18px;}
-.add-box-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
-.add-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
-.add-row>div{min-width:0;}
-.add-row .btn{flex-shrink:0;height:42px;}
+/* PHOTO UPLOAD GRID */
+.photo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px;}
+.photo-slot{aspect-ratio:1;border-radius:var(--rsm);overflow:hidden;position:relative;background:var(--bg3);border:2px dashed var(--bord2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.18s;}
+.photo-slot:hover,.photo-slot.drag{border-color:var(--green);background:var(--gdim);}
+.photo-slot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.photo-slot-empty{text-align:center;pointer-events:none;}
+.photo-slot-empty span{font-size:22px;display:block;margin-bottom:4px;}
+.photo-slot-empty p{font-size:10px;color:var(--dim);}
+.photo-slot-filled{position:relative;width:100%;height:100%;}
+.photo-slot-filled img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-rm{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,0.75);border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;}
+.photo-rm:hover{background:var(--red);}
+.photo-num{position:absolute;bottom:3px;left:4px;background:rgba(0,0,0,0.65);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;}
+.photo-counter{font-size:12px;color:var(--dim);margin-bottom:4px;}
+.photo-counter span{color:var(--green);font-weight:700;}
 
 /* RESULT */
 .result-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:28px;margin-top:28px;display:none;animation:fadeup 0.3s ease;}
 .result-box.show{display:block;}
 @keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Score summary at top */
+.score-summary{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
+.score-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rsm);padding:16px 18px;}
+.score-card-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin-bottom:8px;}
+.score-card-val{font-size:26px;font-weight:800;margin-bottom:4px;}
+.score-card-sub{font-size:12px;color:var(--muted);}
+
 .risk-banner{display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:var(--rsm);border:1px solid;margin-bottom:22px;}
 .rb-low{background:var(--gdim);border-color:rgba(31,217,138,0.25);}
 .rb-med{background:var(--adim);border-color:rgba(245,166,35,0.25);}
 .rb-high{background:var(--rdim);border-color:rgba(255,79,109,0.25);}
 .rb-emoji{font-size:26px;flex-shrink:0;}
 .rb-level{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px;}
-.rb-verdict{font-size:14px;font-weight:600;}
+.rb-verdict{font-size:13px;font-weight:600;line-height:1.5;}
 .col-green{color:var(--green);}
 .col-amber{color:var(--amber);}
 .col-red{color:var(--red);}
+
 .score-wrap{margin-bottom:22px;}
 .score-hd{display:flex;justify-content:space-between;margin-bottom:7px;font-size:13px;}
 .score-hd span:first-child{color:var(--muted);font-weight:500;}
@@ -148,11 +119,21 @@ button,input,textarea,select{font-family:var(--font);}
 .sf-low{background:var(--green);}
 .sf-med{background:var(--amber);}
 .sf-high{background:var(--red);}
+
 .findings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin-bottom:22px;}
 .fc{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rsm);padding:12px 14px;}
 .fc-name{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:5px;}
 .fc-level{font-size:13px;font-weight:700;}
 .fc-note{font-size:11px;color:var(--dim);margin-top:3px;line-height:1.4;}
+
+.photo-results{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
+.photo-res-item{display:flex;gap:14px;align-items:flex-start;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rsm);padding:14px;}
+.photo-res-img{width:56px;height:56px;flex-shrink:0;border-radius:6px;object-fit:cover;background:var(--bg2);}
+.photo-res-body{flex:1;min-width:0;}
+.photo-res-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+.photo-res-verdict{font-size:13px;color:var(--text);margin-bottom:6px;}
+.photo-res-signals{display:flex;flex-wrap:wrap;gap:5px;}
+
 .rs{margin-bottom:20px;}
 .rs:last-child{margin-bottom:0;}
 .rs-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--dim);margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--border);}
@@ -160,18 +141,11 @@ button,input,textarea,select{font-family:var(--font);}
 .sig-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
 .sig-list li{font-size:13px;color:var(--muted);padding-left:16px;position:relative;line-height:1.5;}
 .sig-list li::before{content:'▸';position:absolute;left:0;color:var(--green);font-size:10px;top:3px;}
-.pr-list{display:flex;flex-direction:column;gap:8px;}
-.pr-item{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--bg3);border-radius:var(--rsm);border:1px solid var(--border);}
-.pr-n{font-size:11px;color:var(--dim);font-weight:600;flex-shrink:0;padding-top:2px;}
-.pr-body{flex:1;min-width:0;}
-.pr-meta{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;}
-.pr-preview{font-size:12px;color:var(--dim);}
-.pr-flags{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;}
-.flag{font-size:11px;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:2px 8px;}
 .chip{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:2px 9px;border-radius:100px;}
 .chip-low{background:var(--gdim);color:var(--green);border:1px solid rgba(31,217,138,0.22);}
 .chip-med{background:var(--adim);color:var(--amber);border:1px solid rgba(245,166,35,0.22);}
 .chip-high{background:var(--rdim);color:var(--red);border:1px solid rgba(255,79,109,0.22);}
+.flag{font-size:11px;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:2px 8px;}
 
 .spinner-wrap{display:none;align-items:center;gap:12px;padding:16px 0;color:var(--muted);font-size:14px;}
 .spinner-wrap.show{display:flex;}
@@ -182,6 +156,8 @@ button,input,textarea,select{font-family:var(--font);}
 .warn-bar{display:none;background:var(--adim);border:1px solid rgba(245,166,35,0.25);border-radius:var(--rsm);padding:12px 16px;font-size:14px;color:var(--amber);margin-bottom:20px;}
 .warn-bar.show{display:block;}
 .warn-bar a{color:var(--amber);text-decoration:underline;}
+.info-bar{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--rsm);padding:12px 16px;font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6;}
+.info-bar strong{color:var(--text);}
 
 .footer{border-top:1px solid var(--border);padding:24px 28px;}
 .footer-in{max-width:1140px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
@@ -194,9 +170,8 @@ button,input,textarea,select{font-family:var(--font);}
   .nav-crumbs{display:none;}
   .nav-toggle{display:flex;}
   .two-col{grid-template-columns:1fr;}
-  .img-grid{grid-template-columns:repeat(3,1fr);}
-  .add-row{flex-direction:column;}
-  .add-row .btn{width:100%;}
+  .photo-grid{grid-template-columns:repeat(3,1fr);}
+  .score-summary{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -230,54 +205,105 @@ button,input,textarea,select{font-family:var(--font);}
     <span>Analyze</span>
   </nav>
 
-  <h1 class="page-title">Analyze Reviews</h1>
-  <p class="page-sub">Upload up to 5 screenshots of any product review page for AI-powered deception analysis.</p>
+  <h1 class="page-title">Analyze a Review</h1>
+  <p class="page-sub">Paste the review text and upload the photos attached to the review. DART checks both for signs of deception.</p>
 
   <div class="warn-bar" id="keyWarn">
     &#9888; No API key configured. <a href="settings.html">Set your Groq API key &rarr;</a>
   </div>
 
+  <div class="info-bar">
+    <strong>How to use:</strong> Find a product review on any platform (Shopee, Lazada, Amazon, TikTok Shop, etc.). Copy the review text and upload the photos that reviewer attached. DART will analyze the text using NLP and check the photos using Groq AI vision to detect fake or misleading images.
+  </div>
 
-  <!-- IMAGE UPLOAD -->
-  <div id="tab-img">
+  <!-- REVIEW DETAILS -->
+  <div class="two-col" style="margin-bottom:18px">
+    <div class="fg" style="margin-bottom:0">
+      <label class="fl">Platform</label>
+      <select class="fs" id="platSelect">
+        <option value="">Select platform&hellip;</option>
+        <option>Shopee</option><option>Lazada</option><option>Amazon</option>
+        <option>TikTok Shop</option><option>Zalora</option><option>eBay</option>
+        <option>Temu</option><option>AliExpress</option><option>Walmart</option>
+        <option>Google Reviews</option><option>Yelp</option><option>TripAdvisor</option>
+        <option>Facebook</option><option>Other</option>
+      </select>
+    </div>
+    <div class="fg" style="margin-bottom:0">
+      <label class="fl">Product Name (optional)</label>
+      <input class="fi" id="productName" placeholder="e.g. Sony WH-1000XM5">
+    </div>
+  </div>
 
-    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">
-      Take screenshots of any product review page — Shopee, Lazada, Amazon, TikTok Shop, Facebook, etc. Upload up to <strong style="color:var(--text)">5 screenshots</strong> for a more complete analysis.
-    </p>
+  <!-- REVIEW TEXT -->
+  <div class="scard">
+    <div class="scard-title"><span>&#x1F4DD;</span> Review Text <span style="font-size:11px;color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0">(required)</span></div>
+    <div class="fg" style="margin-bottom:0">
+      <textarea class="ft" id="reviewText" placeholder="Paste the full review text here&hellip;" style="min-height:150px"></textarea>
+      <p class="fhint">Copy and paste the customer review text exactly as it appears on the product page.</p>
+    </div>
+  </div>
 
-    <div class="upload-header">
-      <span class="fl" style="margin:0">Screenshots</span>
-      <span class="upload-counter"><span id="imgCount">0</span> / 5 uploaded</span>
+  <!-- REVIEW PHOTOS -->
+  <div class="scard">
+    <div class="scard-title"><span>&#x1F4F8;</span> Review Photos <span style="font-size:11px;color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0">(optional — up to 5)</span></div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Upload the photos that the reviewer attached to their review. The Groq API vision AI (LLaMA 4 Scout) will check each photo for AI-generated images, stock photos, or misleading visuals.</p>
+    <div class="photo-counter"><span id="photoCount">0</span> / 5 photos uploaded</div>
+    <div class="photo-grid" id="photoGrid"></div>
+    <p class="fhint">Supports JPG, PNG, WEBP. Drag &amp; drop or click the + slot to add photos.</p>
+  </div>
+
+  <button class="btn btn-green btn-full" id="analyzeBtn" disabled>&#x1F50D; Analyze Review</button>
+
+  <div class="spinner-wrap" id="mainSpin"><div class="spin"></div><span id="spinMsg">Analyzing&hellip;</span></div>
+  <div class="err-msg" id="mainErr"></div>
+
+  <!-- RESULTS -->
+  <div class="result-box" id="resultBox">
+
+    <!-- Overall risk banner -->
+    <div class="risk-banner" id="riskBanner">
+      <span class="rb-emoji" id="riskEmoji"></span>
+      <div>
+        <div class="rb-level" id="riskLevel"></div>
+        <div class="rb-verdict" id="riskVerdict"></div>
+      </div>
     </div>
 
-    <div class="img-grid" id="imgGrid">
-      <!-- slots rendered by JS -->
+    <!-- Combined score bar -->
+    <div class="score-wrap">
+      <div class="score-hd"><span>Combined Deception Score</span><span id="combinedScoreN"></span></div>
+      <div class="score-bar"><div class="score-fill" id="combinedFill" style="width:0%"></div></div>
     </div>
 
-    <button class="btn btn-green btn-full" id="imgBtn" disabled>&#x1F50D; Analyze Screenshots</button>
+    <!-- Text + Photo score cards -->
+    <div class="score-summary" id="scoreSummary"></div>
 
-    <div class="spinner-wrap" id="imgSpin"><div class="spin"></div><span id="imgSpinMsg">Processing screenshots&hellip;</span></div>
-    <div class="err-msg" id="imgErr"></div>
-
-    <div class="result-box" id="imgRes">
-      <div style="margin-bottom:16px;">
-        <span style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:700;">Detected:</span>
-        <span id="imgDetected" style="font-size:13px;color:var(--muted);margin-left:8px;"></span>
-      </div>
-      <div class="risk-banner" id="imgBanner">
-        <span class="rb-emoji" id="imgEmoji"></span>
-        <div><div class="rb-level" id="imgLevel"></div><div class="rb-verdict" id="imgVerdict"></div></div>
-      </div>
-      <div class="score-wrap">
-        <div class="score-hd"><span>Overall Deception Score</span><span id="imgScoreN"></span></div>
-        <div class="score-bar"><div class="score-fill" id="imgFill" style="width:0%"></div></div>
-      </div>
-      <div class="findings-grid" id="imgFindings"></div>
-      <div class="rs"><div class="rs-title">Pattern Analysis</div><p class="rs-text" id="imgPatterns"></p></div>
-      <div class="rs"><div class="rs-title">Per-Review Breakdown</div><div class="pr-list" id="imgPR"></div></div>
-      <div class="rs"><div class="rs-title">Detection Signals</div><ul class="sig-list" id="imgSigs"></ul></div>
-      <div class="rs"><div class="rs-title">Consumer Recommendation</div><p class="rs-text" id="imgRec"></p></div>
+    <!-- Text analysis findings -->
+    <div id="textFindingsWrap" style="display:none">
+      <div class="rs-title" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--dim);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--border);">Text Analysis Findings</div>
+      <div class="findings-grid" id="textFindings"></div>
     </div>
+
+    <!-- Photo analysis results -->
+    <div id="photoResultsWrap" style="display:none">
+      <div class="rs-title" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--dim);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--border);">Photo Analysis Results</div>
+      <div class="photo-results" id="photoResultsList"></div>
+    </div>
+
+    <!-- Signals -->
+    <div class="rs">
+      <div class="rs-title">Detection Signals</div>
+      <ul class="sig-list" id="sigList"></ul>
+    </div>
+
+    <!-- Recommendation -->
+    <div class="rs">
+      <div class="rs-title">Consumer Recommendation</div>
+      <p class="rs-text" id="recText"></p>
+    </div>
+
+  </div>
 
 </div>
 </div>
@@ -309,158 +335,199 @@ function fillClass(l){return 'score-fill '+(l==='HIGH'?'sf-high':l==='MEDIUM'?'s
 function chipClass(l){return 'chip '+(l==='HIGH'?'chip-high':l==='MEDIUM'?'chip-med':'chip-low');}
 function emoji(l){return l==='HIGH'?'&#x1F6A8;':l==='MEDIUM'?'&#x26A0;&#xFE0F;':'&#x2705;';}
 function levelClass(l){return l==='HIGH'?'col-red':l==='MEDIUM'?'col-amber':'col-green';}
-function showErr(id,msg){var e=document.getElementById(id);e.innerHTML=msg;e.classList.add('show');}
-function hideErr(id){document.getElementById(id).classList.remove('show');}
-function showSpin(id){document.getElementById(id).classList.add('show');}
-function hideSpin(id){document.getElementById(id).classList.remove('show');}
+function showErr(msg){var e=document.getElementById('mainErr');e.innerHTML=msg;e.classList.add('show');}
+function hideErr(){document.getElementById('mainErr').classList.remove('show');}
+function showSpin(msg){document.getElementById('mainSpin').classList.add('show');document.getElementById('spinMsg').textContent=msg||'Analyzing...';}
+function hideSpin(){document.getElementById('mainSpin').classList.remove('show');}
 
-function renderFindings(id,f){
-  var g=document.getElementById(id);g.innerHTML='';if(!f)return;
-  var labels={sentimentManipulation:'Sentiment Manipulation',aiGeneratedLikelihood:'AI-Generated Likelihood',keywordStuffing:'Keyword Stuffing',linguisticUniformity:'Linguistic Uniformity'};
-  Object.entries(f).forEach(function(kv){
-    var parts=(kv[1]||'').split(' – ');
-    var lvl=(parts[0]||'').trim().toUpperCase();
-    var note=parts[1]||kv[1]||'';
-    g.innerHTML+='<div class="fc"><div class="fc-name">'+(labels[kv[0]]||kv[0])+'</div><div class="fc-level" style="color:'+levelColor(lvl)+'">'+lvl+'</div><div class="fc-note">'+note+'</div></div>';
-  });
-}
-function renderPR(id,arr){
-  var w=document.getElementById(id);w.innerHTML='';
-  (arr||[]).forEach(function(r){
-    var l=(r.riskLevel||'LOW').toUpperCase();
-    var prev=r.text?(r.text.length>80?r.text.slice(0,80)+'&hellip;':r.text):'';
-    var flags=(r.flags||[]).map(function(f){return '<span class="flag">'+f+'</span>';}).join('');
-    w.innerHTML+='<div class="pr-item"><span class="pr-n">#'+r.index+'</span><div class="pr-body"><div class="pr-meta"><span class="'+chipClass(l)+'">'+l+'</span><span style="font-size:12px;color:var(--dim)">'+r.deceptionScore+'/100</span></div>'+(prev?'<div class="pr-preview">'+prev+'</div>':'')+(flags?'<div class="pr-flags">'+flags+'</div>':'')+'</div></div>';
-  });
-}
-function renderSigs(id,sigs){
-  var ul=document.getElementById(id);ul.innerHTML='';
-  (sigs||[]).forEach(function(s){ul.innerHTML+='<li>'+s+'</li>';});
-}
-function applyResult(prefix,analysis){
-  var l=(analysis.overallRiskLevel||analysis.riskLevel||'LOW').toUpperCase();
-  var score=Math.max(0,Math.min(100,analysis.overallDeceptionScore||analysis.deceptionScore||0));
-  document.getElementById(prefix+'Banner').className=bannerClass(l);
-  document.getElementById(prefix+'Emoji').innerHTML=emoji(l);
-  document.getElementById(prefix+'Level').className='rb-level '+levelClass(l);
-  document.getElementById(prefix+'Level').textContent=l+' RISK';
-  document.getElementById(prefix+'Verdict').textContent=analysis.verdict||'';
-  document.getElementById(prefix+'ScoreN').textContent=score+' / 100';
-  var fill=document.getElementById(prefix+'Fill');
-  fill.className=fillClass(l);
-  setTimeout(function(){fill.style.width=score+'%';},80);
-  renderFindings(prefix+'Findings',analysis.findings);
-  var pEl=document.getElementById(prefix+'Patterns');
-  if(pEl)pEl.textContent=analysis.patternsSummary||analysis.summary||'';
-  renderPR(prefix+'PR',analysis.perReview);
-  renderSigs(prefix+'Sigs',analysis.signals);
-  document.getElementById(prefix+'Rec').textContent=analysis.recommendation||'';
-  document.getElementById(prefix+'Res').classList.add('show');
+// ── PHOTO UPLOAD ──
+var MAX_PHOTOS = 5;
+var uploadedPhotos = [];
+
+function updateAnalyzeBtn(){
+  var txt = document.getElementById('reviewText').value.trim();
+  document.getElementById('analyzeBtn').disabled = !txt;
 }
 
-// ── MULTI IMAGE UPLOAD ──
-var MAX_IMGS = 5;
-var uploadedImages = []; // {base64, mediaType, dataUrl, name}
+document.getElementById('reviewText').addEventListener('input', updateAnalyzeBtn);
 
-function updateCounter(){
-  document.getElementById('imgCount').textContent = uploadedImages.length;
-  document.getElementById('imgBtn').disabled = uploadedImages.length === 0;
-}
-
-function renderGrid(){
-  var grid = document.getElementById('imgGrid');
+function renderPhotoGrid(){
+  var grid = document.getElementById('photoGrid');
   grid.innerHTML = '';
-  // Filled slots
-  uploadedImages.forEach(function(img, i){
+  document.getElementById('photoCount').textContent = uploadedPhotos.length;
+
+  uploadedPhotos.forEach(function(photo, i){
     var slot = document.createElement('div');
-    slot.className = 'img-slot';
+    slot.className = 'photo-slot';
     slot.innerHTML =
-      '<div class="img-slot-filled">' +
-        '<img src="'+img.dataUrl+'" alt="Screenshot '+(i+1)+'">' +
-        '<button class="img-slot-rm" data-i="'+i+'" title="Remove">&times;</button>' +
-        '<span class="img-slot-num">'+(i+1)+'</span>' +
+      '<div class="photo-slot-filled">' +
+        '<img src="'+photo.dataUrl+'" alt="Photo '+(i+1)+'">' +
+        '<button class="photo-rm" data-i="'+i+'" title="Remove">&times;</button>' +
+        '<span class="photo-num">'+(i+1)+'</span>' +
       '</div>';
-    slot.querySelector('.img-slot-rm').addEventListener('click', function(e){
+    slot.querySelector('.photo-rm').addEventListener('click', function(e){
       e.stopPropagation();
-      uploadedImages.splice(i, 1);
-      renderGrid();
-      updateCounter();
-      document.getElementById('imgRes').classList.remove('show');
-      hideErr('imgErr');
+      uploadedPhotos.splice(i, 1);
+      renderPhotoGrid();
     });
     grid.appendChild(slot);
   });
-  // Empty add slot (if under max)
-  if(uploadedImages.length < MAX_IMGS){
+
+  if(uploadedPhotos.length < MAX_PHOTOS){
     var addSlot = document.createElement('div');
-    addSlot.className = 'img-slot';
+    addSlot.className = 'photo-slot';
     addSlot.innerHTML =
-      '<input type="file" accept="image/*" id="imgFileInput">' +
-      '<div class="img-slot-empty">' +
-        '<span>+</span>' +
-        '<p>Add screenshot</p>' +
-      '</div>';
+      '<input type="file" accept="image/*">' +
+      '<div class="photo-slot-empty"><span>+</span><p>Add photo</p></div>';
     addSlot.querySelector('input').addEventListener('change', function(){
-      if(this.files[0]) handleFile(this.files[0]);
+      if(this.files[0]) loadPhoto(this.files[0]);
     });
-    // Drag and drop on add slot
     addSlot.addEventListener('dragover', function(e){e.preventDefault();addSlot.classList.add('drag');});
     addSlot.addEventListener('dragleave', function(){addSlot.classList.remove('drag');});
     addSlot.addEventListener('drop', function(e){
       e.preventDefault();addSlot.classList.remove('drag');
-      if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+      if(e.dataTransfer.files[0]) loadPhoto(e.dataTransfer.files[0]);
     });
     grid.appendChild(addSlot);
   }
-  updateCounter();
 }
 
-function handleFile(file){
+function loadPhoto(file){
   if(!file.type.startsWith('image/')){alert('Please upload an image file.');return;}
-  if(uploadedImages.length >= MAX_IMGS){alert('Maximum 5 screenshots allowed.');return;}
+  if(uploadedPhotos.length >= MAX_PHOTOS){alert('Maximum 5 photos allowed.');return;}
   var reader = new FileReader();
   reader.onload = function(e){
-    uploadedImages.push({
-      base64: e.target.result.split(',')[1],
-      mediaType: file.type,
-      dataUrl: e.target.result,
-      name: file.name
-    });
-    renderGrid();
-    document.getElementById('imgRes').classList.remove('show');
-    hideErr('imgErr');
+    uploadedPhotos.push({base64:e.target.result.split(',')[1], mediaType:file.type, dataUrl:e.target.result, name:file.name});
+    renderPhotoGrid();
   };
   reader.readAsDataURL(file);
 }
 
-renderGrid();
+renderPhotoGrid();
 
-document.getElementById('imgBtn').addEventListener('click', async function(){
-  if(!DART.getKey()){showErr('imgErr','No API key. <a href="settings.html">Set it here &rarr;</a>');return;}
-  if(uploadedImages.length === 0){showErr('imgErr','Please upload at least one screenshot.');return;}
-  hideErr('imgErr');
-  document.getElementById('imgRes').classList.remove('show');
+// ── ANALYZE ──
+document.getElementById('analyzeBtn').addEventListener('click', async function(){
+  if(!DART.getKey()){showErr('No API key. <a href="settings.html">Set it here &rarr;</a>');return;}
+  var reviewText = document.getElementById('reviewText').value.trim();
+  if(!reviewText){showErr('Please paste the review text first.');return;}
+
+  hideErr();
+  document.getElementById('resultBox').classList.remove('show');
   this.disabled = true;
-  showSpin('imgSpin');
+  showSpin('Starting analysis...');
+
   try{
-    var images = uploadedImages.map(function(img){return {base64:img.base64, mediaType:img.mediaType};});
-    var result = await DART.analyzeImages(images, function(msg){
-      var el = document.getElementById('imgSpinMsg');
-      if(el) el.textContent = msg;
-    });
-    hideSpin('imgSpin');
-    document.getElementById('imgDetected').textContent = (result.platform||'Unknown') + ' — ' + (result.productName||'Unknown product');
-    applyResult('img', result.analysis);
+    var opts = {
+      reviewText: reviewText,
+      platform: document.getElementById('platSelect').value || 'Unknown',
+      productName: document.getElementById('productName').value || 'Unknown',
+      photos: uploadedPhotos.map(function(p){return {base64:p.base64, mediaType:p.mediaType};})
+    };
+
+    var result = await DART.analyzeReview(opts, function(msg){showSpin(msg);});
+    hideSpin();
+    renderResult(result);
   }catch(err){
-    hideSpin('imgSpin');
-    var msg = err.message==='NO_API_KEY'||err.message==='INVALID_API_KEY'
+    hideSpin();
+    var msg = err.message === 'NO_API_KEY' || err.message === 'INVALID_API_KEY'
       ? 'Invalid or missing API key. <a href="settings.html">Update here &rarr;</a>'
       : '&#x274C; ' + err.message;
-    showErr('imgErr', msg);
-  }finally{this.disabled = uploadedImages.length === 0;}
+    showErr(msg);
+  }finally{
+    document.getElementById('analyzeBtn').disabled = false;
+  }
 });
 
+function renderResult(result){
+  var c = result.combined;
+  var t = result.textResult;
+  var photos = result.photoResults;
+  var l = (c.overallRiskLevel || 'LOW').toUpperCase();
+  var score = Math.max(0, Math.min(100, c.overallDeceptionScore || 0));
 
+  // Risk banner
+  document.getElementById('riskBanner').className = bannerClass(l);
+  document.getElementById('riskEmoji').innerHTML = emoji(l);
+  document.getElementById('riskLevel').className = 'rb-level ' + levelClass(l);
+  document.getElementById('riskLevel').textContent = l + ' RISK';
+  document.getElementById('riskVerdict').textContent = c.verdict || '';
+
+  // Combined score bar
+  document.getElementById('combinedScoreN').textContent = score + ' / 100';
+  var fill = document.getElementById('combinedFill');
+  fill.className = fillClass(l);
+  setTimeout(function(){fill.style.width = score + '%';}, 80);
+
+  // Score summary cards
+  var summary = document.getElementById('scoreSummary');
+  summary.innerHTML = '';
+  if(t){
+    var ts = t.textDeceptionScore || 0;
+    var tl = (t.textRiskLevel || 'LOW').toUpperCase();
+    summary.innerHTML += '<div class="score-card"><div class="score-card-label">&#x1F4DD; Text Analysis Score</div><div class="score-card-val" style="color:'+levelColor(tl)+'">'+ts+' / 100</div><div class="score-card-sub">'+tl+' RISK &mdash; '+( t.textVerdict||'')+'</div></div>';
+  }
+  if(photos && photos.length > 0){
+    var avgPhoto = Math.round(photos.reduce(function(a,p){return a+(p.photoDeceptionScore||0);},0)/photos.length);
+    var maxPhoto = Math.max.apply(null, photos.map(function(p){return p.photoDeceptionScore||0;}));
+    var pl = maxPhoto >= 65 ? 'HIGH' : maxPhoto >= 35 ? 'MEDIUM' : 'LOW';
+    summary.innerHTML += '<div class="score-card"><div class="score-card-label">&#x1F4F8; Photo Analysis Score</div><div class="score-card-val" style="color:'+levelColor(pl)+'">'+avgPhoto+' / 100</div><div class="score-card-sub">'+pl+' RISK &mdash; '+photos.length+' photo'+(photos.length>1?'s':'')+' checked</div></div>';
+  }
+
+  // Text findings
+  if(t && t.findings){
+    document.getElementById('textFindingsWrap').style.display = 'block';
+    var fg = document.getElementById('textFindings');
+    fg.innerHTML = '';
+    var labels = {sentimentManipulation:'Sentiment Manipulation',aiGeneratedLikelihood:'AI-Generated Likelihood',keywordStuffing:'Keyword Stuffing',linguisticUniformity:'Linguistic Uniformity'};
+    Object.entries(t.findings).forEach(function(kv){
+      var parts = (kv[1]||'').split(' – ');
+      var lvl = (parts[0]||'').trim().toUpperCase();
+      var note = parts[1]||kv[1]||'';
+      fg.innerHTML += '<div class="fc"><div class="fc-name">'+(labels[kv[0]]||kv[0])+'</div><div class="fc-level" style="color:'+levelColor(lvl)+'">'+lvl+'</div><div class="fc-note">'+note+'</div></div>';
+    });
+  }
+
+  // Photo results
+  if(photos && photos.length > 0){
+    document.getElementById('photoResultsWrap').style.display = 'block';
+    var prl = document.getElementById('photoResultsList');
+    prl.innerHTML = '';
+    photos.forEach(function(pr, i){
+      var pl2 = (pr.photoRiskLevel || 'LOW').toUpperCase();
+      var photoDataUrl = uploadedPhotos[i] ? uploadedPhotos[i].dataUrl : '';
+      var flags = (pr.photoSignals || []).map(function(s){return '<span class="flag">'+s+'</span>';}).join('');
+      prl.innerHTML +=
+        '<div class="photo-res-item">' +
+          (photoDataUrl ? '<img class="photo-res-img" src="'+photoDataUrl+'" alt="Photo '+(i+1)+'">' : '') +
+          '<div class="photo-res-body">' +
+            '<div class="photo-res-title">Photo '+(i+1)+' &nbsp;<span class="'+chipClass(pl2)+'">'+pl2+'</span>&nbsp;<span style="font-size:12px;color:var(--dim)">'+(pr.photoDeceptionScore||0)+'/100</span></div>' +
+            '<div class="photo-res-verdict">'+(pr.photoVerdict||'')+'</div>' +
+            (flags ? '<div class="photo-res-signals">'+flags+'</div>' : '') +
+          '</div>' +
+        '</div>';
+    });
+  }
+
+  // Signals
+  var sigs = c.signals || [];
+  if(t && t.textSignals) sigs = sigs.concat(t.textSignals);
+  var sigUl = document.getElementById('sigList');
+  sigUl.innerHTML = '';
+  var seen = {};
+  sigs.forEach(function(s){
+    if(!seen[s]){seen[s]=1;sigUl.innerHTML += '<li>'+s+'</li>';}
+  });
+
+  // Recommendation
+  var rec = '';
+  if(l === 'HIGH') rec = 'This review shows strong signs of being fake. Be very cautious about trusting it when making a purchase decision. Consider looking at other reviews or checking the product from a different source.';
+  else if(l === 'MEDIUM') rec = 'This review shows some suspicious signs. It may not be entirely reliable. Cross-check with other reviews before making a purchase decision.';
+  else rec = 'This review appears to be genuine based on the text and photo analysis. You can likely trust it, but always consider multiple reviews before purchasing.';
+  document.getElementById('recText').textContent = rec;
+
+  document.getElementById('resultBox').classList.add('show');
+  document.getElementById('resultBox').scrollIntoView({behavior:'smooth', block:'start'});
+}
 </script>
 </body>
 </html>

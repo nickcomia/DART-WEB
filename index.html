@@ -500,7 +500,7 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
   <div class="hero-inner">
     <div class="badge"><span class="badge-dot"></span>AI-Powered Detection System</div>
     <h1 class="hero-title">Exposing fake reviews<br><em>before they cost you.</em></h1>
-    <p class="hero-desc">DART detects fake and deceptive product reviews from any e-commerce platform using NLP text analysis, Groq API-powered vision LLM image analysis, and behavioral analytics — no scraping required.</p>
+    <p class="hero-desc">DART detects fake product reviews by analyzing review text using NLP and checking review photos using Groq API vision AI — catching fakes that text-only systems miss.</p>
     <div class="hero-btns">
       <a href="pages/analyze.html" class="btn btn-green">Start Analyzing &rarr;</a>
       <a href="#platforms" class="btn btn-outline">Supported Platforms</a>
@@ -508,7 +508,7 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
     <div class="hero-stats">
       <div class="hstat"><span class="hstat-n">30%</span><span class="hstat-l">of online reviews estimated fake</span></div>
       <div class="hstat"><span class="hstat-n">$152B</span><span class="hstat-l">in spending influenced yearly</span></div>
-      <div class="hstat"><span class="hstat-n">3-Layer</span><span class="hstat-l">NLP &middot; Vision AI &middot; Behavioral</span></div>
+      <div class="hstat"><span class="hstat-n">3-Layer</span><span class="hstat-l">NLP &middot; Photo AI &middot; Risk Score</span></div>
     </div>
   </div>
 </section>
@@ -516,14 +516,14 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
 <section class="section">
   <div class="container">
     <p class="eyebrow">How It Works</p>
-    <h2 class="s-title">Upload a screenshot. Get the truth.</h2>
-    <p class="s-desc">Take a screenshot of any product review page from any e-commerce platform. DART's Groq-powered vision AI reads the reviews and runs them through multi-layer deception analysis.</p>
+    <h2 class="s-title">Submit a review. Get the truth.</h2>
+    <p class="s-desc">Paste review text and upload the review photos. DART analyzes the text for fake writing patterns and the photos for AI-generated or misleading images — then combines both into a single risk score.</p>
     <div class="steps">
-      <div class="step"><div class="step-num">01</div><div class="step-t">Upload a Screenshot</div><p class="step-d">Take a screenshot of any product review page from Shopee, Lazada, Amazon, TikTok Shop, or any platform and upload it to DART.</p></div>
+      <div class="step"><div class="step-num">01</div><div class="step-t">Submit Review</div><p class="step-d">Paste the review text and upload the product photos attached to the review from any e-commerce platform.</p></div>
       <div class="step-arr">&rarr;</div>
-      <div class="step"><div class="step-num">02</div><div class="step-t">AI Analyzes</div><p class="step-d">DART processes the screenshot through the Groq API vision LLM (LLaMA 4 Scout), extracting review content and evaluating deceptive indicators in real time.</p></div>
+      <div class="step"><div class="step-num">02</div><div class="step-t">AI Analyzes</div><p class="step-d">DART checks the review text for fake writing patterns using NLP, and sends the photos to the Groq API vision AI (LLaMA 4 Scout) to detect AI-generated or misleading images.</p></div>
       <div class="step-arr">&rarr;</div>
-      <div class="step"><div class="step-num">03</div><div class="step-t">See Results</div><p class="step-d">Get a risk score, per-review breakdown, detected signals, and a consumer recommendation.</p></div>
+      <div class="step"><div class="step-num">03</div><div class="step-t">See Results</div><p class="step-d">Get a combined risk score from both text and photo analysis, with clear explanations and a recommendation to help you decide if the review is trustworthy.</p></div>
     </div>
   </div>
 </section>
@@ -532,7 +532,7 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
   <div class="container">
     <p class="eyebrow">Supported Platforms</p>
     <h2 class="s-title">Works across all major marketplaces</h2>
-    <p class="s-desc">Upload a screenshot or manually enter review text from any platform — no scraping or API access needed.</p>
+    <p class="s-desc">Submit review text and photos from any e-commerce platform. DART works with content from any source.</p>
     <div class="plat-grid">
       <div class="plat-card"><span class="plat-icon">&#x1F6D2;</span><span class="plat-name">Amazon</span></div>
       <div class="plat-card"><span class="plat-icon">&#x1F6CD;&#xFE0F;</span><span class="plat-name">Shopee</span></div>
@@ -547,19 +547,18 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
       <div class="plat-card"><span class="plat-icon">&#x2708;&#xFE0F;</span><span class="plat-name">TripAdvisor</span></div>
       <div class="plat-card"><span class="plat-icon">+</span><span class="plat-name">Any Platform</span></div>
     </div>
-    <div class="plat-note"><strong>Note:</strong> Due to browser security (CORS), direct URL scraping works best with open platforms. The Analyze page also has a <strong>Manual Review tab</strong> where you paste review text directly &mdash; always works.</div>
+    <div class="plat-note"><strong>How to use:</strong> On the Analyze page, paste the review text and upload the photos attached to that review. DART will check both the text and the photos for signs of deception.</div>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
     <p class="eyebrow">Detection Engine</p>
-    <h2 class="s-title">Three layers of AI intelligence</h2>
+    <h2 class="s-title">Two-layer AI detection system</h2>
     <div class="layers">
-      <div class="layer"><div class="layer-icon">&#x1F524;</div><div><h3>NLP Text Analysis</h3><p>Transformer-based language models detect manipulated sentiment polarity, AI-generated phrasing, keyword stuffing, cosine similarity duplication, and unnatural linguistic uniformity across review text.</p></div></div>
-      <div class="layer"><div class="layer-icon">&#x1F4F8;</div><div><h3>AI-Powered Image Analysis</h3><p>Review screenshots are processed through the Groq API (LLaMA 4 Scout) which performs OCR, extracts structured review data, and evaluates deceptive indicators — works on any platform without scraping or API access.</p></div></div>
-      <div class="layer"><div class="layer-icon">&#x1F4CA;</div><div><h3>Behavioral Analytics</h3><p>Reviewer credibility profiles built from posting frequency, temporal clustering, rating distribution asymmetry, account age, and cross-account behavioral similarities indicative of coordinated manipulation.</p></div></div>
-      <div class="layer"><div class="layer-icon">&#x1F6E1;&#xFE0F;</div><div><h3>Unified Risk Scoring</h3><p>All signals synthesized into a single 0&ndash;100 deception score &mdash; LOW, MEDIUM, or HIGH &mdash; with interpretable justifications and prescriptive consumer recommendations.</p></div></div>
+      <div class="layer"><div class="layer-icon">&#x1F524;</div><div><h3>NLP Text Analysis</h3><p>AI language models analyze the review text for fake or forced emotions, unnaturally similar writing patterns, overused product keywords, unusual sentence structures, and content that looks AI-generated.</p></div></div>
+      <div class="layer"><div class="layer-icon">&#x1F4F8;</div><div><h3>Photo Analysis (Groq API)</h3><p>Review photos are sent to the Groq API where LLaMA 4 Scout vision AI checks for AI-generated images, stock photos, and visuals that do not look like they came from a real buyer — catching fakes that text analysis alone would miss.</p></div></div>
+      <div class="layer"><div class="layer-icon">&#x1F6E1;&#xFE0F;</div><div><h3>Unified Risk Scoring</h3><p>Results from text and photo analysis are combined into a single 0&ndash;100 deception score classified as LOW, MEDIUM, or HIGH, with clear explanations and actionable buying recommendations.</p></div></div>
     </div>
   </div>
 </section>

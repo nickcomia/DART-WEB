@@ -1,111 +1,547 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DART - Deceptive Assessment & Review Tracking</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DART &ndash; Deceptive Assessment and Review Tracking</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple:#7c3aed;
+  --purple2:#9d5cf6;
+  --purple3:#6d28d9;
+  --pink:#ec4899;
+  --light:#f8f4ff;
+  --white:#ffffff;
+  --dark:#1e1b4b;
+  --gray:#6b7280;
+  --gray2:#f3f0ff;
+  --text:#374151;
+  --grad: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%);
+  --grad2: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
+  --shadow: 0 20px 60px rgba(124,58,237,0.25);
+  --shadow2: 0 8px 30px rgba(124,58,237,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito',sans-serif;background:var(--white);color:var(--text);line-height:1.6;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  height:70px;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(12px);
+  box-shadow:0 2px 20px rgba(124,58,237,0.08);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo .logo-icon{
+  width:38px;height:38px;border-radius:10px;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-weight:900;font-size:16px;color:#fff;
+  box-shadow:0 4px 15px rgba(124,58,237,0.4);
+}
+.nav-logo .logo-text{font-family:'Poppins',sans-serif;font-weight:800;font-size:18px;color:var(--dark);}
+.nav-links{display:flex;align-items:center;gap:8px;}
+.nav-links a{
+  padding:8px 18px;border-radius:50px;
+  font-weight:600;font-size:14px;color:var(--gray);
+  transition:all 0.2s;
+}
+.nav-links a:hover{color:var(--purple);background:var(--gray2);}
+.nav-links a.active{color:var(--white);background:var(--grad);box-shadow:0 4px 15px rgba(124,58,237,0.35);}
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:4px;}
+.nav-toggle span{display:block;width:24px;height:2px;background:var(--dark);border-radius:2px;margin:5px 0;transition:0.3s;}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  background:var(--grad);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;
+  padding:100px 5% 60px;
+}
+.hero::before{
+  content:'';position:absolute;
+  width:600px;height:600px;border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  top:-100px;right:-100px;
+}
+.hero::after{
+  content:'';position:absolute;
+  width:400px;height:400px;border-radius:50%;
+  background:rgba(255,255,255,0.04);
+  bottom:-50px;left:10%;
+}
+.hero-wave{
+  position:absolute;bottom:0;left:0;right:0;
+}
+.hero-inner{
+  max-width:1200px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+  position:relative;z-index:1;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.3);
+  padding:6px 16px;border-radius:50px;
+  font-size:12px;font-weight:700;color:#fff;letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:24px;
+}
+.hero-badge-dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:blink 1.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.hero h1{
+  font-family:'Poppins',sans-serif;
+  font-size:clamp(32px,5vw,56px);
+  font-weight:900;line-height:1.1;
+  color:#fff;letter-spacing:-1px;
+  margin-bottom:20px;
+}
+.hero h1 em{font-style:normal;color:rgba(255,255,255,0.7);}
+.hero-desc{font-size:16px;color:rgba(255,255,255,0.85);line-height:1.75;margin-bottom:36px;max-width:480px;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-white{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:50px;
+  background:#fff;color:var(--purple);
+  font-weight:700;font-size:15px;font-family:'Poppins',sans-serif;
+  box-shadow:0 8px 25px rgba(0,0,0,0.15);
+  transition:all 0.2s;border:none;cursor:pointer;
+}
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 12px 35px rgba(0,0,0,0.2);}
+.btn-outline-white{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:50px;
+  background:transparent;color:#fff;
+  font-weight:700;font-size:15px;font-family:'Poppins',sans-serif;
+  border:2px solid rgba(255,255,255,0.5);
+  transition:all 0.2s;cursor:pointer;
+}
+.btn-outline-white:hover{background:rgba(255,255,255,0.1);border-color:#fff;}
+
+.hero-visual{
+  display:flex;justify-content:center;align-items:center;
+  position:relative;
+}
+.hero-card{
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.25);
+  border-radius:24px;padding:32px;
+  color:#fff;width:100%;max-width:380px;
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+.hero-card-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;opacity:0.7;margin-bottom:16px;}
+.hero-card-score{font-family:'Poppins',sans-serif;font-size:52px;font-weight:900;line-height:1;margin-bottom:4px;}
+.hero-card-sub{font-size:13px;opacity:0.7;margin-bottom:24px;}
+.hero-card-bar{height:8px;background:rgba(255,255,255,0.2);border-radius:50px;overflow:hidden;margin-bottom:20px;}
+.hero-card-fill{height:100%;width:72%;background:#fff;border-radius:50px;animation:grow 2s ease-out forwards;}
+@keyframes grow{from{width:0;}to{width:72%;}}
+.hero-card-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-tag{font-size:11px;font-weight:700;padding:4px 12px;border-radius:50px;background:rgba(255,255,255,0.15);color:#fff;}
+.hero-tag.red{background:rgba(239,68,68,0.3);}
+.hero-tag.amber{background:rgba(245,158,11,0.3);}
+.hero-tag.green{background:rgba(16,185,129,0.3);}
+
+/* STATS */
+.stats-section{
+  padding:60px 5%;
+  background:var(--white);
+}
+.stats-inner{max-width:1100px;margin:0 auto;}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  background:var(--white);
+  border-radius:20px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transform:translateY(-40px);
+}
+.stat-item{
+  padding:36px 28px;text-align:center;
+  border-right:1px solid rgba(124,58,237,0.08);
+}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;}
+.stat-label{font-size:13px;color:var(--gray);font-weight:600;}
+
+/* ABOUT */
+.about-section{padding:80px 5%;background:var(--white);}
+.about-inner{max-width:1100px;margin:0 auto;text-align:center;}
+.section-eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.section-title{font-family:'Poppins',sans-serif;font-size:clamp(26px,4vw,40px);font-weight:800;color:var(--dark);margin-bottom:16px;letter-spacing:-0.5px;}
+.section-desc{font-size:15px;color:var(--gray);max-width:640px;margin:0 auto 52px;line-height:1.8;}
+
+.about-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.about-card{
+  background:var(--gray2);border-radius:20px;padding:32px 24px;
+  text-align:center;transition:all 0.3s;border:2px solid transparent;
+}
+.about-card:hover{background:#fff;border-color:rgba(124,58,237,0.15);box-shadow:var(--shadow2);transform:translateY(-4px);}
+.about-icon{
+  width:64px;height:64px;border-radius:18px;
+  background:var(--grad);margin:0 auto 18px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;box-shadow:0 8px 20px rgba(124,58,237,0.3);
+}
+.about-card h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:17px;color:var(--dark);margin-bottom:10px;}
+.about-card p{font-size:13px;color:var(--gray);line-height:1.7;}
+
+/* FEATURES (purple bg) */
+.features-section{
+  padding:80px 5%;
+  background:var(--grad);
+  position:relative;overflow:hidden;
+}
+.features-section::before{
+  content:'';position:absolute;
+  width:500px;height:500px;border-radius:50%;
+  background:rgba(255,255,255,0.05);
+  top:-100px;left:-100px;pointer-events:none;
+}
+.features-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.features-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.feat-card{
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:18px;padding:24px;
+  transition:all 0.3s;
+}
+.feat-card:hover{background:rgba(255,255,255,0.18);transform:translateY(-3px);}
+.feat-icon{font-size:28px;margin-bottom:12px;display:block;}
+.feat-card h4{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;color:#fff;margin-bottom:8px;}
+.feat-card p{font-size:12px;color:rgba(255,255,255,0.75);line-height:1.65;}
+.features-text .section-eyebrow{color:rgba(255,255,255,0.7);}
+.features-text .section-title{color:#fff;text-align:left;margin-bottom:16px;}
+.features-text p{color:rgba(255,255,255,0.8);font-size:15px;line-height:1.8;margin-bottom:28px;}
+.btn-purple{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:50px;
+  background:#fff;color:var(--purple);
+  font-weight:700;font-size:14px;font-family:'Poppins',sans-serif;
+  box-shadow:0 8px 25px rgba(0,0,0,0.15);
+  transition:all 0.2s;border:none;cursor:pointer;
+}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 12px 35px rgba(0,0,0,0.2);}
+
+/* HOW IT WORKS */
+.how-section{padding:80px 5%;background:var(--white);}
+.how-inner{max-width:1100px;margin:0 auto;}
+.how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:52px;}
+.how-step{text-align:center;position:relative;}
+.how-step:not(:last-child)::after{
+  content:'→';position:absolute;
+  top:32px;right:-16px;
+  font-size:24px;color:rgba(124,58,237,0.25);
+}
+.how-num{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:#fff;
+  margin:0 auto 20px;
+  box-shadow:0 8px 25px rgba(124,58,237,0.35);
+}
+.how-step h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:17px;color:var(--dark);margin-bottom:10px;}
+.how-step p{font-size:13px;color:var(--gray);line-height:1.7;}
+
+/* PLATFORMS */
+.plat-section{padding:80px 5%;background:var(--gray2);}
+.plat-inner{max-width:1100px;margin:0 auto;text-align:center;}
+.plat-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:14px;
+  margin-top:48px;margin-bottom:24px;
+}
+.plat-card{
+  background:#fff;border-radius:16px;padding:20px 12px;
+  text-align:center;transition:all 0.3s;
+  border:2px solid transparent;
+  box-shadow:0 4px 15px rgba(0,0,0,0.04);
+}
+.plat-card:hover{border-color:var(--purple);box-shadow:var(--shadow2);transform:translateY(-3px);}
+.plat-emoji{font-size:26px;margin-bottom:8px;display:block;}
+.plat-name{font-size:12px;font-weight:700;color:var(--dark);}
+.plat-note{
+  background:#fff;border-radius:14px;padding:14px 20px;
+  font-size:13px;color:var(--gray);line-height:1.6;
+  border-left:4px solid var(--purple);
+  text-align:left;box-shadow:0 4px 15px rgba(0,0,0,0.04);
+}
+.plat-note strong{color:var(--purple);}
+
+/* CTA */
+.cta-section{
+  padding:80px 5%;
+  background:var(--grad);
+  text-align:center;position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;
+  width:400px;height:400px;border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  bottom:-100px;right:-50px;pointer-events:none;
+}
+.cta-section h2{font-family:'Poppins',sans-serif;font-size:clamp(24px,4vw,40px);font-weight:900;color:#fff;margin-bottom:14px;letter-spacing:-0.5px;}
+.cta-section p{font-size:15px;color:rgba(255,255,255,0.8);max-width:480px;margin:0 auto 32px;line-height:1.75;}
+
+/* FOOTER */
+.footer{background:var(--dark);padding:32px 5%;}
+.footer-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-logo{display:flex;align-items:center;gap:10px;}
+.footer-logo .logo-icon{width:34px;height:34px;border-radius:8px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:900;font-size:14px;color:#fff;}
+.footer-logo span{font-family:'Poppins',sans-serif;font-weight:700;font-size:15px;color:#fff;}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.35);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.5);font-weight:600;transition:color 0.2s;}
+.footer-links a:hover{color:#fff;}
+
+/* MOBILE NAV */
+.nav-mobile{display:none;flex-direction:column;position:fixed;top:70px;left:0;right:0;background:#fff;padding:16px 20px;border-top:1px solid rgba(124,58,237,0.1);z-index:99;box-shadow:0 10px 30px rgba(0,0,0,0.1);}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{padding:12px 16px;font-weight:600;color:var(--dark);border-radius:10px;transition:all 0.2s;font-size:15px;}
+.nav-mobile a:hover{background:var(--gray2);color:var(--purple);}
+.nav-mobile a.active{background:var(--grad);color:#fff;}
+
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .nav-toggle{display:block;}
+  .hero-inner{grid-template-columns:1fr;gap:40px;text-align:center;}
+  .hero-desc{margin:0 auto 36px;}
+  .hero-btns{justify-content:center;}
+  .hero-card{max-width:320px;margin:0 auto;}
+  .stats-grid{grid-template-columns:1fr;}
+  .about-grid{grid-template-columns:1fr;}
+  .features-inner{grid-template-columns:1fr;}
+  .features-cards{grid-template-columns:1fr 1fr;}
+  .features-text .section-title{text-align:center;}
+  .how-steps{grid-template-columns:1fr;}
+  .how-step::after{display:none;}
+  .plat-grid{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:480px){
+  .plat-grid{grid-template-columns:repeat(2,1fr);}
+  .features-cards{grid-template-columns:1fr;}
+  .stats-grid{transform:translateY(-20px);}
+}
+</style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">DART</div>
-            <div class="nav-links">
-                <a href="/index.html" class="active">Home</a>
-                <a href="/pages/analyze.html">Analyze Review</a>
-                <a href="/pages/about.html">About</a>
-                <a href="/pages/settings.html">Settings</a>
-            </div>
-        </div>
-    </nav>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Detect Fake Reviews<br>Before You Buy</h1>
-            <p>DART uses advanced AI to analyze product reviews, photos, and behavioral patterns to identify deceptive content in real-time.</p>
-            <button class="btn-primary" onclick="location.href='/pages/analyze.html'">Start Analyzing →</button>
-            <div class="hero-stats">
-                <div class="stat-item">
-                    <div class="stat-number">23K+</div>
-                    <div>Reviews Analyzed</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">11K+</div>
-                    <div>Fake Detected</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">98%</div>
-                    <div>Accuracy</div>
-                </div>
-            </div>
-        </div>
-        <div class="hero-image">
-            <i class="fas fa-shield-alt" style="font-size: 4rem; color: var(--accent); margin-bottom: 1rem;"></i>
-            <h3>Real-time Protection</h3>
-            <p>AI-powered deception detection</p>
-        </div>
-    </section>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-logo">
+    <div class="logo-icon">D</div>
+    <span class="logo-text">DART</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Home</a>
+    <a href="pages/about.html">About</a>
+    <a href="pages/analyze.html">Analyze</a>
+  </div>
+  <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="navMobile">
+  <a href="index.html" class="active">Home</a>
+  <a href="pages/about.html">About</a>
+  <a href="pages/analyze.html">Analyze</a>
+</div>
 
-    <section class="features">
-        <h2 class="section-title">How DART Works</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-language"></i></div>
-                <h3>Text Analysis</h3>
-                <p>NLP-powered detection of unnatural writing patterns, forced emotions, and AI-generated content.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-image"></i></div>
-                <h3>Image Verification</h3>
-                <p>AI vision models identify stock photos, AI-generated images, and misleading visuals.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-                <h3>Behavioral Analytics</h3>
-                <p>Detect rating inconsistencies, suspicious patterns, and review anomalies.</p>
-            </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge"><span class="hero-badge-dot"></span>AI-Powered Detection System</div>
+      <h1>Exposing fake reviews <em>before they cost you.</em></h1>
+      <p class="hero-desc">DART detects fake product reviews by analyzing review photos using Groq API vision AI and review text using NLP — catching fakes that text-only systems miss.</p>
+      <div class="hero-btns">
+        <a href="pages/analyze.html" class="btn-white">&#x1F50D; Start Analyzing</a>
+        <a href="pages/about.html" class="btn-outline-white">Learn More</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div class="hero-card-title">&#x1F6A8; Deception Score</div>
+        <div class="hero-card-score">72</div>
+        <div class="hero-card-sub">out of 100 &mdash; HIGH RISK</div>
+        <div class="hero-card-bar"><div class="hero-card-fill"></div></div>
+        <div class="hero-card-tags">
+          <span class="hero-tag red">AI-Generated Photo</span>
+          <span class="hero-tag amber">Keyword Stuffing</span>
+          <span class="hero-tag red">Fake Sentiment</span>
+          <span class="hero-tag green">Text: Suspicious</span>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+  <svg class="hero-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
+  </svg>
+</section>
 
-    <section class="testimonials">
-        <h2 class="section-title">Trusted by Shoppers</h2>
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <p>"DART saved me from buying a fake-reviewed product. The analysis was spot on!"</p>
-                <h4>- Maria R.</h4>
-            </div>
-            <div class="testimonial-card">
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <p>"Finally a tool that helps me make informed decisions on Shopee and Lazada."</p>
-                <h4>- James C.</h4>
-            </div>
-            <div class="testimonial-card">
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <i class="fas fa-star" style="color: #f59e0b;"></i>
-                <p>"Accurate, fast, and easy to use. Highly recommended for online shoppers."</p>
-                <h4>- Patricia L.</h4>
-            </div>
-        </div>
-    </section>
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stats-inner">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">30%</div>
+        <div class="stat-label">of online reviews estimated fake</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">$152B</div>
+        <div class="stat-label">in consumer spending influenced yearly</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2-Layer</div>
+        <div class="stat-label">NLP Text &middot; Vision AI Photo</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <footer class="footer">
-        <p>DART - Detection, Analysis & Real-Time Tracking of Deceptive Product Reviews</p>
-        <p style="margin-top: 0.5rem; font-size: 0.875rem;">© 2025 Batangas State University</p>
-    </footer>
+<!-- ABOUT -->
+<section class="about-section">
+  <div class="about-inner">
+    <div class="section-eyebrow">About DART</div>
+    <h2 class="section-title">What is DART?</h2>
+    <p class="section-desc">DART (Deceptive Assessment and Review Tracking) is an AI-powered system that detects fake product reviews by analyzing both review text and review photos — giving you a reliable deception score before you buy.</p>
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="about-icon">&#x1F4DD;</div>
+        <h3>NLP Text Analysis</h3>
+        <p>AI language models check the review text for fake emotions, keyword stuffing, unnatural writing patterns, and AI-generated language that signals a fake review.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">&#x1F4F8;</div>
+        <h3>Photo Analysis</h3>
+        <p>The Groq API vision AI (LLaMA 4 Scout) checks photos attached to reviews for AI-generated images, stock photos, and misleading visuals — catching fakes text analysis misses.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">&#x1F6E1;</div>
+        <h3>Unified Risk Score</h3>
+        <p>Both text and photo results are combined into a single 0–100 deception score rated LOW, MEDIUM, or HIGH with clear explanations and a buying recommendation.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script src="/js/nav.js"></script>
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="features-inner">
+    <div class="features-cards">
+      <div class="feat-card">
+        <span class="feat-icon">&#x1F916;</span>
+        <h4>AI-Generated Detection</h4>
+        <p>Identifies photos and text created by AI tools rather than real buyers.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#x1F4CA;</span>
+        <h4>Sentiment Analysis</h4>
+        <p>Detects forced or manipulated emotions in review text patterns.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#x1F5BC;</span>
+        <h4>Stock Photo Detection</h4>
+        <p>Flags professional or stock photos used instead of real buyer images.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#x26A1;</span>
+        <h4>Real-Time Analysis</h4>
+        <p>Fast results powered by Groq's high-speed LLM inference API.</p>
+      </div>
+    </div>
+    <div class="features-text">
+      <div class="section-eyebrow">DART Features</div>
+      <h2 class="section-title">Why DART works better</h2>
+      <p>Most fake review detectors only analyze text. DART goes further by also analyzing the photos attached to reviews using Groq's vision AI — because fake reviewers often use real-sounding text but attach AI-generated or stock photos.</p>
+      <a href="pages/analyze.html" class="btn-purple">Try It Now &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <div style="text-align:center">
+      <div class="section-eyebrow">How It Works</div>
+      <h2 class="section-title">Three simple steps</h2>
+      <p class="section-desc">Submit a review and get a deception score in seconds.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-num">01</div>
+        <h3>Upload Review Photos</h3>
+        <p>Upload up to 5 photos that the reviewer attached to their review from any platform — Shopee, Lazada, Amazon, TikTok Shop, and more.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">02</div>
+        <h3>AI Analyzes</h3>
+        <p>DART checks photos using Groq vision AI for fake or misleading images. Optionally paste the review text for additional NLP analysis.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">03</div>
+        <h3>See Results</h3>
+        <p>Get a combined deception score, per-photo breakdown, detected signals, and a clear recommendation to help you decide.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<section class="plat-section" id="platforms">
+  <div class="plat-inner">
+    <div class="section-eyebrow">Supported Platforms</div>
+    <h2 class="section-title">Works across all major marketplaces</h2>
+    <p class="section-desc">Upload review photos from any platform. DART works with content from any source.</p>
+    <div class="plat-grid">
+      <div class="plat-card"><span class="plat-emoji">&#x1F6CD;</span><div class="plat-name">Shopee</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F4E6;</span><div class="plat-name">Lazada</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F30E;</span><div class="plat-name">Amazon</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F3A5;</span><div class="plat-name">TikTok Shop</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F6D2;</span><div class="plat-name">Zalora</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F4B0;</span><div class="plat-name">eBay</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F4B3;</span><div class="plat-name">Temu</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F6F8;</span><div class="plat-name">AliExpress</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F3EA;</span><div class="plat-name">Walmart</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F4CD;</span><div class="plat-name">Any Platform</div></div>
+    </div>
+    <div class="plat-note"><strong>How to use:</strong> On the Analyze page, upload the photos attached to a review. You can also paste the review text for additional NLP text analysis. DART works with any platform — no URL or API access needed.</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Don&rsquo;t get fooled by fake reviews</h2>
+  <p>Start using DART today to make smarter, safer purchase decisions backed by AI.</p>
+  <a href="pages/analyze.html" class="btn-white">&#x1F50D; Analyze a Review Now</a>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-in">
+    <div class="footer-logo">
+      <div class="logo-icon">D</div>
+      <span>DART &mdash; Review Intelligence</span>
+    </div>
+    <div class="footer-copy">Deceptive Assessment and Review Tracking &middot; BatStateU CICS &middot; 2026</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="pages/about.html">About</a>
+      <a href="pages/analyze.html">Analyze</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+var toggle = document.getElementById('navToggle');
+var mobile = document.getElementById('navMobile');
+toggle.addEventListener('click', function(){mobile.classList.toggle('open');});
+</script>
 </body>
 </html>

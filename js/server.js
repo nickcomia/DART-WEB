@@ -1,73 +1,112 @@
-// js/server.js
-require('dotenv').config({ path: './env' });
-const express = require('express');
-const cors = require('cors');
-const Groq = require('groq-sdk');
+/**
+ * DART Proxy Server
+ * Keeps the Groq API key hidden in .env
+ * Run: node server.js
+ * Access: http://localhost:3000
+ */
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-app.use(cors());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.static(path.join(__dirname, '..'))); // Serve from root
+if (!GROQ_API_KEY) {
+  console.error('ERROR: GROQ_API_KEY not found in .env file');
+  process.exit(1);
+}
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+// MIME types
+const MIME = {
+  '.html': 'text/html',
+  '.js': 'application/javascript',
+  '.css': 'text/css',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.ico': 'image/x-icon',
+  '.svg': 'image/svg+xml',
+};
 
-app.post('/api/analyze', async (req, res) => {
-    try {
-        const { reviewText, rating, imageBase64 } = req.body;
-        if (!reviewText || reviewText.trim().length === 0) {
-            return res.status(400).json({ error: 'Review text is required' });
-        }
+const server = http.createServer((req, res) => {
+  // CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-        const messages = [
-            {
-                role: 'system',
-                content: `You are DART (Deceptive Assessment and Review Tracking), an expert AI system for detecting fake product reviews.
-                Analyze the provided review and determine if it's likely fake or genuine.
-                Consider: unnatural writing patterns, forced emotions, keyword stuffing, AI-generation, rating mismatch, vagueness, and excessive positivity/negativity.
-                Return ONLY valid JSON with this exact structure:
-                {
-                    "riskScore": number (0-100, higher = more fake),
-                    "riskLevel": "Low" | "Medium" | "High",
-                    "explanation": "detailed analysis",
-                    "flags": ["flag1", "flag2"],
-                    "textAnalysis": "brief analysis of text quality",
-                    "behavioralAnalysis": "rating consistency and pattern analysis"
-                }`
-            },
-            {
-                role: 'user',
-                content: `Review Text: "${reviewText}"\nStar Rating: ${rating || 'Not provided'} out of 5 stars\n\nAnalyze authenticity and return JSON.`
-            }
-        ];
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200);
+    res.end();
+    return;
+  }
 
-        if (imageBase64 && imageBase64.length > 0) {
-            messages.push({
-                role: 'user',
-                content: [
-                    { type: 'text', text: 'Also analyze this product image for authenticity (stock photo, AI-generated, irrelevant, or genuine user photo).' },
-                    { type: 'image_url', image_url: { url: imageBase64 } }
-                ]
-            });
-        }
+  // API proxy endpoint — keeps key hidden
+  if (req.method === 'POST' && req.url === '/api/groq') {
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', () => {
+      try {
+        const payload = JSON.parse(body);
+        const postData = JSON.stringify(payload);
 
-        const completion = await groq.chat.completions.create({
-            messages: messages,
-            model: 'llama-3.3-70b-versatile',
-            temperature: 0.3,
-            response_format: { type: 'json_object' }
+        const options = {
+          hostname: 'api.groq.com',
+          path: '/openai/v1/chat/completions',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + GROQ_API_KEY,
+            'Content-Length': Buffer.byteLength(postData)
+          }
+        };
+
+        const groqReq = https.request(options, (groqRes) => {
+          let data = '';
+          groqRes.on('data', chunk => { data += chunk; });
+          groqRes.on('end', () => {
+            res.writeHead(groqRes.statusCode, { 'Content-Type': 'application/json' });
+            res.end(data);
+          });
         });
 
-        const result = JSON.parse(completion.choices[0].message.content);
-        res.json(result);
-    } catch (error) {
-        console.error('Analysis error:', error);
-        res.status(500).json({ error: 'Analysis failed. Please try again.' });
+        groqReq.on('error', (e) => {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: e.message }));
+        });
+
+        groqReq.write(postData);
+        groqReq.end();
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid request body' }));
+      }
+    });
+    return;
+  }
+
+  // Serve static files
+  let filePath = req.url === '/' ? '/index.html' : req.url;
+  // Handle pages/ directory
+  const fullPath = path.join(__dirname, filePath);
+
+  fs.readFile(fullPath, (err, data) => {
+    if (err) {
+      res.writeHead(404);
+      res.end('Not found');
+      return;
     }
+    const ext = path.extname(filePath);
+    res.writeHead(200, { 'Content-Type': MIME[ext] || 'text/plain' });
+    res.end(data);
+  });
 });
 
-app.listen(PORT, () => {
-    console.log(`DART server running on http://localhost:${PORT}`);
+server.listen(PORT, () => {
+  console.log('');
+  console.log('  DART Server running at http://localhost:' + PORT);
+  console.log('  API key loaded from .env — never exposed to browser');
+  console.log('');
 });

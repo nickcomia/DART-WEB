@@ -3,578 +3,535 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DART – Deceptive Assessment and Review Tracking</title>
+<title>DART &ndash; Deceptive Assessment and Review Tracking</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* DART v3 — Embedded CSS (self-contained per page) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
-
 :root {
-  --bg:       #0c0e12;
-  --bg2:      #13161c;
-  --bg3:      #1a1e27;
-  --border:   rgba(255,255,255,0.07);
-  --bord2:    rgba(255,255,255,0.13);
-  --text:     #eef0f5;
-  --muted:    #848aa0;
-  --dim:      #454960;
-  --green:    #1fd98a;
-  --gdim:     rgba(31,217,138,0.10);
-  --gglow:    rgba(31,217,138,0.30);
-  --red:      #ff4f6d;
-  --rdim:     rgba(255,79,109,0.10);
-  --amber:    #f5a623;
-  --adim:     rgba(245,166,35,0.10);
-  --font:     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --r:        12px;
-  --rsm:      8px;
+  --purple:#7c3aed;
+  --purple2:#9d5cf6;
+  --purple3:#6d28d9;
+  --pink:#ec4899;
+  --light:#f8f4ff;
+  --white:#ffffff;
+  --dark:#1e1b4b;
+  --gray:#6b7280;
+  --gray2:#f3f0ff;
+  --text:#374151;
+  --grad: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%);
+  --grad2: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
+  --shadow: 0 20px 60px rgba(124,58,237,0.25);
+  --shadow2: 0 8px 30px rgba(124,58,237,0.15);
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito',sans-serif;background:var(--white);color:var(--text);line-height:1.6;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-a { color: inherit; text-decoration: none; }
-button { font-family: var(--font); }
-input, textarea, select { font-family: var(--font); }
+/* NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  height:70px;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(12px);
+  box-shadow:0 2px 20px rgba(124,58,237,0.08);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo .logo-icon{
+  width:38px;height:38px;border-radius:10px;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-weight:900;font-size:16px;color:#fff;
+  box-shadow:0 4px 15px rgba(124,58,237,0.4);
+}
+.nav-logo .logo-text{font-family:'Poppins',sans-serif;font-weight:800;font-size:18px;color:var(--dark);}
+.nav-links{display:flex;align-items:center;gap:8px;}
+.nav-links a{
+  padding:8px 18px;border-radius:50px;
+  font-weight:600;font-size:14px;color:var(--gray);
+  transition:all 0.2s;
+}
+.nav-links a:hover{color:var(--purple);background:var(--gray2);}
+.nav-links a.active{color:var(--white);background:var(--grad);box-shadow:0 4px 15px rgba(124,58,237,0.35);}
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:4px;}
+.nav-toggle span{display:block;width:24px;height:2px;background:var(--dark);border-radius:2px;margin:5px 0;transition:0.3s;}
 
-/* ── NAVBAR ── */
-.navbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  height: 64px;
-  background: rgba(12,14,18,0.85);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center;
+/* HERO */
+.hero{
+  min-height:100vh;
+  background:var(--grad);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;
+  padding:100px 5% 60px;
 }
-.nav-inner {
-  width: 100%; max-width: 1140px; margin: 0 auto;
-  padding: 0 28px;
-  display: flex; align-items: center; gap: 12px;
+.hero::before{
+  content:'';position:absolute;
+  width:600px;height:600px;border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  top:-100px;right:-100px;
 }
-.nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.logo-mark {
-  width: 34px; height: 34px; border-radius: 8px;
-  background: var(--green);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 15px; color: #0c0e12; letter-spacing: 0.5px;
+.hero::after{
+  content:'';position:absolute;
+  width:400px;height:400px;border-radius:50%;
+  background:rgba(255,255,255,0.04);
+  bottom:-50px;left:10%;
 }
-.logo-name { font-size: 17px; font-weight: 800; letter-spacing: 1px; color: var(--text); }
-.logo-tag { font-size: 11px; color: var(--muted); font-weight: 400; margin-top: 1px; display: block; }
+.hero-wave{
+  position:absolute;bottom:0;left:0;right:0;
+}
+.hero-inner{
+  max-width:1200px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+  position:relative;z-index:1;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.3);
+  padding:6px 16px;border-radius:50px;
+  font-size:12px;font-weight:700;color:#fff;letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:24px;
+}
+.hero-badge-dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:blink 1.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.hero h1{
+  font-family:'Poppins',sans-serif;
+  font-size:clamp(32px,5vw,56px);
+  font-weight:900;line-height:1.1;
+  color:#fff;letter-spacing:-1px;
+  margin-bottom:20px;
+}
+.hero h1 em{font-style:normal;color:rgba(255,255,255,0.7);}
+.hero-desc{font-size:16px;color:rgba(255,255,255,0.85);line-height:1.75;margin-bottom:36px;max-width:480px;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-white{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:50px;
+  background:#fff;color:var(--purple);
+  font-weight:700;font-size:15px;font-family:'Poppins',sans-serif;
+  box-shadow:0 8px 25px rgba(0,0,0,0.15);
+  transition:all 0.2s;border:none;cursor:pointer;
+}
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 12px 35px rgba(0,0,0,0.2);}
+.btn-outline-white{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:50px;
+  background:transparent;color:#fff;
+  font-weight:700;font-size:15px;font-family:'Poppins',sans-serif;
+  border:2px solid rgba(255,255,255,0.5);
+  transition:all 0.2s;cursor:pointer;
+}
+.btn-outline-white:hover{background:rgba(255,255,255,0.1);border-color:#fff;}
 
-/* Breadcrumb nav pills */
-.nav-crumbs {
-  display: flex; align-items: center; gap: 4px;
-  margin-left: auto;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: 4px;
+.hero-visual{
+  display:flex;justify-content:center;align-items:center;
+  position:relative;
 }
-.crumb {
-  font-size: 13px; font-weight: 500;
-  padding: 5px 14px;
-  border-radius: 100px;
-  color: var(--muted);
-  transition: color 0.15s, background 0.15s;
-  white-space: nowrap;
+.hero-card{
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.25);
+  border-radius:24px;padding:32px;
+  color:#fff;width:100%;max-width:380px;
+  animation:float 4s ease-in-out infinite;
 }
-.crumb:hover { color: var(--text); background: var(--bg3); }
-.crumb.active { background: var(--green); color: #0c0e12; font-weight: 600; }
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+.hero-card-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;opacity:0.7;margin-bottom:16px;}
+.hero-card-score{font-family:'Poppins',sans-serif;font-size:52px;font-weight:900;line-height:1;margin-bottom:4px;}
+.hero-card-sub{font-size:13px;opacity:0.7;margin-bottom:24px;}
+.hero-card-bar{height:8px;background:rgba(255,255,255,0.2);border-radius:50px;overflow:hidden;margin-bottom:20px;}
+.hero-card-fill{height:100%;width:72%;background:#fff;border-radius:50px;animation:grow 2s ease-out forwards;}
+@keyframes grow{from{width:0;}to{width:72%;}}
+.hero-card-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-tag{font-size:11px;font-weight:700;padding:4px 12px;border-radius:50px;background:rgba(255,255,255,0.15);color:#fff;}
+.hero-tag.red{background:rgba(239,68,68,0.3);}
+.hero-tag.amber{background:rgba(245,158,11,0.3);}
+.hero-tag.green{background:rgba(16,185,129,0.3);}
 
-.nav-toggle {
-  display: none; flex-direction: column; gap: 5px;
-  background: none; border: none; cursor: pointer;
-  margin-left: auto; padding: 6px;
+/* STATS */
+.stats-section{
+  padding:60px 5%;
+  background:var(--white);
 }
-.nav-toggle span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.2s; }
-.nav-mobile {
-  display: none; flex-direction: column;
-  padding: 10px 20px 16px;
-  border-top: 1px solid var(--border);
-  background: var(--bg);
-  position: fixed; top: 64px; left: 0; right: 0; z-index: 199;
+.stats-inner{max-width:1100px;margin:0 auto;}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  background:var(--white);
+  border-radius:20px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transform:translateY(-40px);
 }
-.nav-mobile.open { display: flex; }
-.nav-mobile .crumb { width: 100%; border-radius: var(--rsm); margin-bottom: 2px; }
+.stat-item{
+  padding:36px 28px;text-align:center;
+  border-right:1px solid rgba(124,58,237,0.08);
+}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;}
+.stat-label{font-size:13px;color:var(--gray);font-weight:600;}
 
-/* ── HERO ── */
-.hero {
-  position: relative;
-  padding: 150px 28px 96px;
-  text-align: center;
-  overflow: hidden;
-}
-.hero::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background:
-    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(31,217,138,0.12) 0%, transparent 65%),
-    linear-gradient(180deg, var(--bg) 0%, var(--bg) 100%);
-  pointer-events: none;
-}
-.hero::after {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(31,217,138,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(31,217,138,0.04) 1px, transparent 1px);
-  background-size: 52px 52px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 75%);
-  pointer-events: none;
-}
-.hero-inner { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+/* ABOUT */
+.about-section{padding:80px 5%;background:var(--white);}
+.about-inner{max-width:1100px;margin:0 auto;text-align:center;}
+.section-eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.section-title{font-family:'Poppins',sans-serif;font-size:clamp(26px,4vw,40px);font-weight:800;color:var(--dark);margin-bottom:16px;letter-spacing:-0.5px;}
+.section-desc{font-size:15px;color:var(--gray);max-width:640px;margin:0 auto 52px;line-height:1.8;}
 
-.badge {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-size: 11px; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase;
-  color: var(--green);
-  background: var(--gdim);
-  border: 1px solid rgba(31,217,138,0.22);
-  padding: 5px 14px; border-radius: 100px;
-  margin-bottom: 28px;
+.about-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.about-card{
+  background:var(--gray2);border-radius:20px;padding:32px 24px;
+  text-align:center;transition:all 0.3s;border:2px solid transparent;
 }
-.badge-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-
-.hero-title {
-  font-size: clamp(36px, 6.5vw, 68px);
-  font-weight: 800; line-height: 1.1; letter-spacing: -2px;
-  margin-bottom: 20px;
+.about-card:hover{background:#fff;border-color:rgba(124,58,237,0.15);box-shadow:var(--shadow2);transform:translateY(-4px);}
+.about-icon{
+  width:64px;height:64px;border-radius:18px;
+  background:var(--grad);margin:0 auto 18px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;box-shadow:0 8px 20px rgba(124,58,237,0.3);
 }
-.hero-title em { font-style: normal; color: var(--green); }
-.hero-desc { font-size: 17px; color: var(--muted); max-width: 540px; margin: 0 auto 36px; line-height: 1.75; }
+.about-card h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:17px;color:var(--dark);margin-bottom:10px;}
+.about-card p{font-size:13px;color:var(--gray);line-height:1.7;}
 
-.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 56px; }
-
-.hero-stats {
-  display: inline-flex; align-items: stretch;
-  background: var(--bg2); border: 1px solid var(--bord2);
-  border-radius: var(--r); overflow: hidden;
+/* FEATURES (purple bg) */
+.features-section{
+  padding:80px 5%;
+  background:var(--grad);
+  position:relative;overflow:hidden;
 }
-.hstat { padding: 20px 32px; text-align: center; border-right: 1px solid var(--border); }
-.hstat:last-child { border-right: none; }
-.hstat-n { display: block; font-size: 26px; font-weight: 800; color: var(--green); letter-spacing: -0.5px; margin-bottom: 3px; }
-.hstat-l { font-size: 12px; color: var(--muted); line-height: 1.4; display: block; max-width: 100px; }
-
-/* ── BUTTONS ── */
-.btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 12px 24px; border-radius: var(--rsm);
-  font-size: 15px; font-weight: 600;
-  cursor: pointer; border: none; transition: all 0.18s;
-  text-decoration: none; white-space: nowrap;
+.features-section::before{
+  content:'';position:absolute;
+  width:500px;height:500px;border-radius:50%;
+  background:rgba(255,255,255,0.05);
+  top:-100px;left:-100px;pointer-events:none;
 }
-.btn-green { background: var(--green); color: #0c0e12; }
-.btn-green:hover { background: #3fffa8; box-shadow: 0 0 22px var(--gglow); transform: translateY(-1px); }
-.btn-outline { background: transparent; color: var(--text); border: 1px solid var(--bord2); }
-.btn-outline:hover { background: rgba(255,255,255,0.05); }
-.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
-.btn-ghost:hover { background: var(--bg2); color: var(--text); }
-.btn-sm { padding: 8px 16px; font-size: 13px; }
-.btn-full { width: 100%; justify-content: center; }
-.btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
-.btn-red { background: var(--red); color: #fff; }
-
-/* ── SECTIONS ── */
-.section { padding: 80px 28px; }
-.section-alt { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.container { max-width: 1100px; margin: 0 auto; }
-.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
-.s-title { font-size: clamp(24px, 4vw, 40px); font-weight: 800; letter-spacing: -0.8px; margin-bottom: 14px; }
-.s-desc { font-size: 16px; color: var(--muted); line-height: 1.75; max-width: 620px; margin-bottom: 48px; }
-
-/* Steps */
-.steps { display: flex; align-items: flex-start; gap: 0; }
-.step { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 28px; transition: border-color 0.2s; min-width: 0; }
-.step:hover { border-color: var(--bord2); }
-.step-num { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--green); margin-bottom: 12px; }
-.step-t { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-.step-d { font-size: 13px; color: var(--muted); line-height: 1.65; }
-.step-arr { display: flex; align-items: center; justify-content: center; padding: 0 10px; padding-top: 40px; color: var(--dim); font-size: 20px; flex-shrink: 0; }
-
-/* Platforms */
-.plat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 22px; }
-.plat-card {
-  background: var(--bg); border: 1px solid var(--border); border-radius: var(--rsm);
-  padding: 16px 12px; text-align: center; transition: all 0.18s; cursor: default;
+.features-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.features-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.feat-card{
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:18px;padding:24px;
+  transition:all 0.3s;
 }
-.plat-card:hover { border-color: var(--green); background: var(--gdim); }
-.plat-icon { font-size: 22px; display: block; margin-bottom: 6px; }
-.plat-name { font-size: 12px; color: var(--muted); font-weight: 500; }
-.plat-note {
-  font-size: 13px; color: var(--muted); line-height: 1.6;
-  background: var(--bg); border: 1px solid var(--border);
-  border-left: 3px solid var(--amber); border-radius: var(--rsm); padding: 12px 16px;
+.feat-card:hover{background:rgba(255,255,255,0.18);transform:translateY(-3px);}
+.feat-icon{font-size:28px;margin-bottom:12px;display:block;}
+.feat-card h4{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;color:#fff;margin-bottom:8px;}
+.feat-card p{font-size:12px;color:rgba(255,255,255,0.75);line-height:1.65;}
+.features-text .section-eyebrow{color:rgba(255,255,255,0.7);}
+.features-text .section-title{color:#fff;text-align:left;margin-bottom:16px;}
+.features-text p{color:rgba(255,255,255,0.8);font-size:15px;line-height:1.8;margin-bottom:28px;}
+.btn-purple{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:50px;
+  background:#fff;color:var(--purple);
+  font-weight:700;font-size:14px;font-family:'Poppins',sans-serif;
+  box-shadow:0 8px 25px rgba(0,0,0,0.15);
+  transition:all 0.2s;border:none;cursor:pointer;
 }
-.plat-note strong { color: var(--amber); }
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 12px 35px rgba(0,0,0,0.2);}
 
-/* Layers */
-.layers { display: flex; flex-direction: column; gap: 14px; }
-.layer {
-  display: flex; align-items: flex-start; gap: 20px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 24px 26px;
-  transition: border-color 0.2s;
+/* HOW IT WORKS */
+.how-section{padding:80px 5%;background:var(--white);}
+.how-inner{max-width:1100px;margin:0 auto;}
+.how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:52px;}
+.how-step{text-align:center;position:relative;}
+.how-step:not(:last-child)::after{
+  content:'→';position:absolute;
+  top:32px;right:-16px;
+  font-size:24px;color:rgba(124,58,237,0.25);
 }
-.layer:hover { border-color: var(--bord2); }
-.layer-icon {
-  width: 48px; height: 48px; flex-shrink: 0; border-radius: var(--rsm);
-  background: var(--bg); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center; font-size: 22px;
+.how-num{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:#fff;
+  margin:0 auto 20px;
+  box-shadow:0 8px 25px rgba(124,58,237,0.35);
 }
-.layer h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-.layer p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.how-step h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:17px;color:var(--dark);margin-bottom:10px;}
+.how-step p{font-size:13px;color:var(--gray);line-height:1.7;}
+
+/* PLATFORMS */
+.plat-section{padding:80px 5%;background:var(--gray2);}
+.plat-inner{max-width:1100px;margin:0 auto;text-align:center;}
+.plat-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:14px;
+  margin-top:48px;margin-bottom:24px;
+}
+.plat-card{
+  background:#fff;border-radius:16px;padding:20px 12px;
+  text-align:center;transition:all 0.3s;
+  border:2px solid transparent;
+  box-shadow:0 4px 15px rgba(0,0,0,0.04);
+}
+.plat-card:hover{border-color:var(--purple);box-shadow:var(--shadow2);transform:translateY(-3px);}
+.plat-emoji{font-size:26px;margin-bottom:8px;display:block;}
+.plat-name{font-size:12px;font-weight:700;color:var(--dark);}
+.plat-note{
+  background:#fff;border-radius:14px;padding:14px 20px;
+  font-size:13px;color:var(--gray);line-height:1.6;
+  border-left:4px solid var(--purple);
+  text-align:left;box-shadow:0 4px 15px rgba(0,0,0,0.04);
+}
+.plat-note strong{color:var(--purple);}
 
 /* CTA */
-.cta-section { text-align: center; }
-.cta-section h2 { font-size: clamp(22px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.6px; margin-bottom: 12px; }
-.cta-section p { color: var(--muted); margin-bottom: 28px; font-size: 15px; max-width: 480px; margin-left: auto; margin-right: auto; }
-
-/* ── FOOTER ── */
-.footer { border-top: 1px solid var(--border); padding: 24px 28px; }
-.footer-in {
-  max-width: 1140px; margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+.cta-section{
+  padding:80px 5%;
+  background:var(--grad);
+  text-align:center;position:relative;overflow:hidden;
 }
-.foot-logo { display: flex; align-items: center; gap: 10px; }
-.foot-copy { font-size: 12px; color: var(--dim); }
-.foot-links { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--muted); }
-.foot-links a:hover { color: var(--green); }
-
-/* ── PAGE SHELL (inner pages) ── */
-.page-shell { padding: 100px 28px 80px; }
-.page-wrap { max-width: 860px; margin: 0 auto; }
-.page-title { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; margin-bottom: 6px; }
-.page-sub { font-size: 15px; color: var(--muted); margin-bottom: 36px; }
-
-/* Breadcrumb trail */
-.bread {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 13px; color: var(--dim); margin-bottom: 24px;
+.cta-section::before{
+  content:'';position:absolute;
+  width:400px;height:400px;border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  bottom:-100px;right:-50px;pointer-events:none;
 }
-.bread a { color: var(--muted); }
-.bread a:hover { color: var(--green); }
-.bread-sep { color: var(--dim); }
+.cta-section h2{font-family:'Poppins',sans-serif;font-size:clamp(24px,4vw,40px);font-weight:900;color:#fff;margin-bottom:14px;letter-spacing:-0.5px;}
+.cta-section p{font-size:15px;color:rgba(255,255,255,0.8);max-width:480px;margin:0 auto 32px;line-height:1.75;}
 
-/* ── TABS ── */
-.tabs {
-  display: flex; gap: 3px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--rsm);
-  padding: 4px; width: fit-content; margin-bottom: 28px;
+/* FOOTER */
+.footer{background:var(--dark);padding:32px 5%;}
+.footer-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-logo{display:flex;align-items:center;gap:10px;}
+.footer-logo .logo-icon{width:34px;height:34px;border-radius:8px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:900;font-size:14px;color:#fff;}
+.footer-logo span{font-family:'Poppins',sans-serif;font-weight:700;font-size:15px;color:#fff;}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.35);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.5);font-weight:600;transition:color 0.2s;}
+.footer-links a:hover{color:#fff;}
+
+/* MOBILE NAV */
+.nav-mobile{display:none;flex-direction:column;position:fixed;top:70px;left:0;right:0;background:#fff;padding:16px 20px;border-top:1px solid rgba(124,58,237,0.1);z-index:99;box-shadow:0 10px 30px rgba(0,0,0,0.1);}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{padding:12px 16px;font-weight:600;color:var(--dark);border-radius:10px;transition:all 0.2s;font-size:15px;}
+.nav-mobile a:hover{background:var(--gray2);color:var(--purple);}
+.nav-mobile a.active{background:var(--grad);color:#fff;}
+
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .nav-toggle{display:block;}
+  .hero-inner{grid-template-columns:1fr;gap:40px;text-align:center;}
+  .hero-desc{margin:0 auto 36px;}
+  .hero-btns{justify-content:center;}
+  .hero-card{max-width:320px;margin:0 auto;}
+  .stats-grid{grid-template-columns:1fr;}
+  .about-grid{grid-template-columns:1fr;}
+  .features-inner{grid-template-columns:1fr;}
+  .features-cards{grid-template-columns:1fr 1fr;}
+  .features-text .section-title{text-align:center;}
+  .how-steps{grid-template-columns:1fr;}
+  .how-step::after{display:none;}
+  .plat-grid{grid-template-columns:repeat(3,1fr);}
 }
-.tab-btn {
-  padding: 8px 20px; border-radius: 6px; border: none;
-  background: transparent; color: var(--muted);
-  font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s;
+@media(max-width:480px){
+  .plat-grid{grid-template-columns:repeat(2,1fr);}
+  .features-cards{grid-template-columns:1fr;}
+  .stats-grid{transform:translateY(-20px);}
 }
-.tab-btn.on { background: var(--bg3); color: var(--text); }
-.tab-panel { display: none; }
-.tab-panel.on { display: block; }
-
-/* ── FORM ── */
-.fg { margin-bottom: 18px; }
-.fl { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 7px; letter-spacing: 0.3px; text-transform: uppercase; }
-.fi, .ft, .fs {
-  width: 100%;
-  background: var(--bg2); border: 1px solid var(--bord2); border-radius: var(--rsm);
-  padding: 11px 14px; color: var(--text); font-size: 14px;
-  transition: border-color 0.15s, box-shadow 0.15s; outline: none;
-  appearance: none;
-}
-.fi:focus, .ft:focus, .fs:focus {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px var(--gdim);
-}
-.fi::placeholder, .ft::placeholder { color: var(--dim); }
-.ft { resize: vertical; min-height: 110px; line-height: 1.6; }
-.fhint { font-size: 12px; color: var(--dim); margin-top: 5px; line-height: 1.5; }
-
-.url-row { display: flex; gap: 10px; }
-.url-row .fi { flex: 1; font-size: 14px; padding: 13px 16px; }
-.url-row .btn { flex-shrink: 0; }
-
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-
-/* ── PRODUCT CARD ── */
-.product-card {
-  display: flex; gap: 20px; align-items: flex-start;
-  background: var(--bg2); border: 1px solid var(--bord2); border-radius: var(--r);
-  padding: 20px; margin-bottom: 24px;
-}
-.prod-img {
-  width: 110px; height: 110px; flex-shrink: 0;
-  border-radius: var(--rsm); object-fit: cover;
-  background: var(--bg3); border: 1px solid var(--border);
-}
-.prod-img-ph {
-  width: 110px; height: 110px; flex-shrink: 0;
-  border-radius: var(--rsm); background: var(--bg3);
-  border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 32px;
-}
-.prod-plat {
-  display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
-  text-transform: uppercase; color: var(--green); background: var(--gdim);
-  border: 1px solid rgba(31,217,138,0.2); padding: 3px 10px; border-radius: 100px;
-  margin-bottom: 8px;
-}
-.prod-name { font-size: 16px; font-weight: 700; margin-bottom: 6px; line-height: 1.35; }
-.prod-meta { font-size: 13px; color: var(--muted); }
-.prod-stars { color: var(--amber); }
-
-/* ── REVIEW ITEMS (manual) ── */
-.rev-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-.rev-item {
-  display: flex; gap: 10px; align-items: flex-start;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--rsm); padding: 12px 14px;
-}
-.rev-n { font-size: 11px; color: var(--dim); font-weight: 600; padding-top: 2px; flex-shrink: 0; width: 22px; }
-.rev-body { flex: 1; min-width: 0; }
-.rev-author { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-.rev-preview { font-size: 13px; color: var(--muted); }
-.rev-stars-badge { font-size: 12px; color: var(--amber); flex-shrink: 0; }
-.rev-rm { background: none; border: none; color: var(--dim); font-size: 18px; cursor: pointer; padding: 0 2px; line-height: 1; transition: color 0.15s; }
-.rev-rm:hover { color: var(--red); }
-
-.add-box {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
-  padding: 18px; margin-bottom: 18px;
-}
-.add-box-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
-.add-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
-.add-row > div { min-width: 0; }
-.add-row .btn { flex-shrink: 0; height: 42px; }
-
-/* ── RESULT BOX ── */
-.result-box {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
-  padding: 28px; margin-top: 28px;
-  display: none; animation: fadeup 0.3s ease;
-}
-.result-box.show { display: block; }
-@keyframes fadeup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-
-.risk-banner {
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px 20px; border-radius: var(--rsm); border: 1px solid; margin-bottom: 22px;
-}
-.rb-low  { background: var(--gdim); border-color: rgba(31,217,138,0.25); }
-.rb-med  { background: var(--adim); border-color: rgba(245,166,35,0.25); }
-.rb-high { background: var(--rdim); border-color: rgba(255,79,109,0.25); }
-.rb-emoji { font-size: 26px; flex-shrink: 0; }
-.rb-level { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px; }
-.rb-verdict { font-size: 14px; font-weight: 600; }
-.col-green { color: var(--green); }
-.col-amber { color: var(--amber); }
-.col-red   { color: var(--red); }
-
-.score-wrap { margin-bottom: 22px; }
-.score-hd { display: flex; justify-content: space-between; margin-bottom: 7px; font-size: 13px; }
-.score-hd span:first-child { color: var(--muted); font-weight: 500; }
-.score-hd span:last-child { font-weight: 700; font-variant-numeric: tabular-nums; }
-.score-bar { height: 7px; background: var(--bg3); border-radius: 100px; overflow: hidden; }
-.score-fill { height: 100%; border-radius: 100px; transition: width 0.9s cubic-bezier(0.2,0.8,0.3,1); }
-.sf-low  { background: var(--green); }
-.sf-med  { background: var(--amber); }
-.sf-high { background: var(--red); }
-
-.findings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 10px; margin-bottom: 22px; }
-.fc { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--rsm); padding: 12px 14px; }
-.fc-name { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 5px; }
-.fc-level { font-size: 13px; font-weight: 700; }
-.fc-note { font-size: 11px; color: var(--dim); margin-top: 3px; line-height: 1.4; }
-
-.rs { margin-bottom: 20px; }
-.rs:last-child { margin-bottom: 0; }
-.rs-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--dim); margin-bottom: 9px; padding-bottom: 7px; border-bottom: 1px solid var(--border); }
-.rs-text { font-size: 14px; color: var(--muted); line-height: 1.75; }
-
-.sig-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-.sig-list li { font-size: 13px; color: var(--muted); padding-left: 16px; position: relative; line-height: 1.5; }
-.sig-list li::before { content: '▸'; position: absolute; left: 0; color: var(--green); font-size: 10px; top: 3px; }
-
-.pr-list { display: flex; flex-direction: column; gap: 8px; }
-.pr-item {
-  display: flex; gap: 12px; align-items: flex-start;
-  padding: 10px 14px; background: var(--bg3); border-radius: var(--rsm); border: 1px solid var(--border);
-}
-.pr-n { font-size: 11px; color: var(--dim); font-weight: 600; flex-shrink: 0; padding-top: 2px; }
-.pr-body { flex: 1; min-width: 0; }
-.pr-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
-.pr-preview { font-size: 12px; color: var(--dim); }
-.pr-flags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
-.flag { font-size: 11px; color: var(--muted); background: var(--bg2); border: 1px solid var(--border); border-radius: 100px; padding: 2px 8px; }
-
-.chip { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; padding: 2px 9px; border-radius: 100px; }
-.chip-low  { background: var(--gdim); color: var(--green); border: 1px solid rgba(31,217,138,0.22); }
-.chip-med  { background: var(--adim); color: var(--amber); border: 1px solid rgba(245,166,35,0.22); }
-.chip-high { background: var(--rdim); color: var(--red);   border: 1px solid rgba(255,79,109,0.22); }
-
-/* ── SPINNER / ERROR ── */
-.spinner-wrap { display: none; align-items: center; gap: 12px; padding: 16px 0; color: var(--muted); font-size: 14px; }
-.spinner-wrap.show { display: flex; }
-.spin { width: 20px; height: 20px; border: 2px solid var(--bord2); border-top-color: var(--green); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
-@keyframes spin { to{transform:rotate(360deg)} }
-
-.err-msg { display: none; background: var(--rdim); border: 1px solid rgba(255,79,109,0.25); border-radius: var(--rsm); padding: 12px 16px; font-size: 14px; color: var(--red); margin-top: 14px; line-height: 1.5; }
-.err-msg.show { display: block; }
-.err-msg a { color: var(--red); text-decoration: underline; }
-
-
-/* ── SETTINGS ── */
-.scard { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 26px; margin-bottom: 16px; }
-.scard h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
-.scard p { font-size: 14px; color: var(--muted); margin-bottom: 18px; line-height: 1.65; }
-.scard p:last-child { margin-bottom: 0; }
-.key-row { display: flex; gap: 10px; }
-.key-row .fi { flex: 1; font-size: 12px; letter-spacing: 0.5px; }
-.key-st { font-size: 13px; margin-top: 9px; display: none; }
-.key-st.ok { display: block; color: var(--green); }
-.key-st.err { display: block; color: var(--red); }
-.key-btns { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 12px; font-family: monospace; }
-
-/* ── ABOUT ── */
-.about-hero { text-align: center; padding: 110px 28px 56px; border-bottom: 1px solid var(--border); }
-.about-hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; }
-.about-hero p { font-size: 16px; color: var(--muted); max-width: 580px; margin: 0 auto; line-height: 1.7; }
-.about-body { max-width: 800px; margin: 0 auto; padding: 52px 28px 80px; }
-.about-body h2 { font-size: 20px; font-weight: 700; margin-top: 40px; margin-bottom: 12px; padding-top: 18px; border-top: 1px solid var(--border); }
-.about-body h2:first-child { margin-top: 0; border-top: none; padding-top: 0; }
-.about-body p { font-size: 15px; color: var(--muted); line-height: 1.78; margin-bottom: 12px; }
-.about-body ul { font-size: 15px; color: var(--muted); line-height: 1.85; padding-left: 20px; margin-bottom: 12px; }
-.prop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; margin-bottom: 12px; }
-.prop-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--rsm); padding: 14px 16px; }
-.prop-card strong { display: block; font-size: 14px; margin-bottom: 3px; }
-.prop-card span { font-size: 12px; color: var(--dim); }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 680px) {
-  .nav-crumbs { display: none; }
-  .nav-toggle { display: flex; }
-  .hero { padding: 120px 20px 72px; }
-  .hero-stats { flex-direction: column; border-radius: var(--r); }
-  .hstat { border-right: none; border-bottom: 1px solid var(--border); }
-  .hstat:last-child { border-bottom: none; }
-  .steps { flex-direction: column; }
-  .step-arr { display: none; }
-  .two-col { grid-template-columns: 1fr; }
-  .url-row { flex-direction: column; }
-  .url-row .btn { width: 100%; justify-content: center; }
-  .product-card { flex-direction: column; }
-  .prod-img, .prod-img-ph { width: 100%; height: 160px; }
-  .add-row { flex-direction: column; }
-  .add-row .btn { width: 100%; }
-}
-
 </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo">
-      <div class="logo-mark">D</div>
-      <div><span class="logo-name">DART</span><span class="logo-tag">Review Intelligence</span></div>
-    </a>
-    <nav class="nav-crumbs">
-      <a href="index.html" class="crumb active">Home</a>
-      <a href="pages/about.html" class="crumb">About</a>
-      <a href="pages/analyze.html" class="crumb">Analyze</a>
-    </nav>
-    <button class="nav-toggle" id="T"><span></span><span></span><span></span></button>
+  <div class="nav-logo">
+    <div class="logo-icon">D</div>
+    <span class="logo-text">DART</span>
   </div>
-  <div class="nav-mobile" id="M">
-    <a href="index.html" class="crumb active">Home</a>
-    <a href="pages/about.html" class="crumb">About</a>
-    <a href="pages/analyze.html" class="crumb">Analyze</a>
+  <div class="nav-links">
+    <a href="index.html" class="active">Home</a>
+    <a href="pages/about.html">About</a>
+    <a href="pages/analyze.html">Analyze</a>
   </div>
+  <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
 </nav>
+<div class="nav-mobile" id="navMobile">
+  <a href="index.html" class="active">Home</a>
+  <a href="pages/about.html">About</a>
+  <a href="pages/analyze.html">Analyze</a>
+</div>
 
+<!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="badge"><span class="badge-dot"></span>AI-Powered Detection System</div>
-    <h1 class="hero-title">Exposing fake reviews<br><em>before they cost you.</em></h1>
-    <p class="hero-desc">DART detects fake product reviews by analyzing review text using NLP and checking review photos using Groq API vision AI — catching fakes that text-only systems miss.</p>
-    <div class="hero-btns">
-      <a href="pages/analyze.html" class="btn btn-green">Start Analyzing &rarr;</a>
-      <a href="#platforms" class="btn btn-outline">Supported Platforms</a>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="hero-badge-dot"></span>AI-Powered Detection System</div>
+      <h1>Exposing fake reviews <em>before they cost you.</em></h1>
+      <p class="hero-desc">DART detects fake product reviews by analyzing review photos using Groq API vision AI and review text using NLP — catching fakes that text-only systems miss.</p>
+      <div class="hero-btns">
+        <a href="pages/analyze.html" class="btn-white">&#x1F50D; Start Analyzing</a>
+        <a href="pages/about.html" class="btn-outline-white">Learn More</a>
+      </div>
     </div>
-    <div class="hero-stats">
-      <div class="hstat"><span class="hstat-n">30%</span><span class="hstat-l">of online reviews estimated fake</span></div>
-      <div class="hstat"><span class="hstat-n">$152B</span><span class="hstat-l">in spending influenced yearly</span></div>
-      <div class="hstat"><span class="hstat-n">3-Layer</span><span class="hstat-l">NLP &middot; Photo AI &middot; Risk Score</span></div>
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div class="hero-card-title">&#x1F6A8; Deception Score</div>
+        <div class="hero-card-score">72</div>
+        <div class="hero-card-sub">out of 100 &mdash; HIGH RISK</div>
+        <div class="hero-card-bar"><div class="hero-card-fill"></div></div>
+        <div class="hero-card-tags">
+          <span class="hero-tag red">AI-Generated Photo</span>
+          <span class="hero-tag amber">Keyword Stuffing</span>
+          <span class="hero-tag red">Fake Sentiment</span>
+          <span class="hero-tag green">Text: Suspicious</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <svg class="hero-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
+  </svg>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stats-inner">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">30%</div>
+        <div class="stat-label">of online reviews estimated fake</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">$152B</div>
+        <div class="stat-label">in consumer spending influenced yearly</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2-Layer</div>
+        <div class="stat-label">NLP Text &middot; Vision AI Photo</div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="section">
-  <div class="container">
-    <p class="eyebrow">How It Works</p>
-    <h2 class="s-title">Submit a review. Get the truth.</h2>
-    <p class="s-desc">Paste review text and upload the review photos. DART analyzes the text for fake writing patterns and the photos for AI-generated or misleading images — then combines both into a single risk score.</p>
-    <div class="steps">
-      <div class="step"><div class="step-num">01</div><div class="step-t">Submit Review</div><p class="step-d">Paste the review text and upload the product photos attached to the review from any e-commerce platform.</p></div>
-      <div class="step-arr">&rarr;</div>
-      <div class="step"><div class="step-num">02</div><div class="step-t">AI Analyzes</div><p class="step-d">DART checks the review text for fake writing patterns using NLP, and sends the photos to the Groq API vision AI (LLaMA 4 Scout) to detect AI-generated or misleading images.</p></div>
-      <div class="step-arr">&rarr;</div>
-      <div class="step"><div class="step-num">03</div><div class="step-t">See Results</div><p class="step-d">Get a combined risk score from both text and photo analysis, with clear explanations and a recommendation to help you decide if the review is trustworthy.</p></div>
+<!-- ABOUT -->
+<section class="about-section">
+  <div class="about-inner">
+    <div class="section-eyebrow">About DART</div>
+    <h2 class="section-title">What is DART?</h2>
+    <p class="section-desc">DART (Deceptive Assessment and Review Tracking) is an AI-powered system that detects fake product reviews by analyzing both review text and review photos — giving you a reliable deception score before you buy.</p>
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="about-icon">&#x1F4DD;</div>
+        <h3>NLP Text Analysis</h3>
+        <p>AI language models check the review text for fake emotions, keyword stuffing, unnatural writing patterns, and AI-generated language that signals a fake review.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">&#x1F4F8;</div>
+        <h3>Photo Analysis</h3>
+        <p>The Groq API vision AI (LLaMA 4 Scout) checks photos attached to reviews for AI-generated images, stock photos, and misleading visuals — catching fakes text analysis misses.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">&#x1F6E1;</div>
+        <h3>Unified Risk Score</h3>
+        <p>Both text and photo results are combined into a single 0–100 deception score rated LOW, MEDIUM, or HIGH with clear explanations and a buying recommendation.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="section section-alt" id="platforms">
-  <div class="container">
-    <p class="eyebrow">Supported Platforms</p>
-    <h2 class="s-title">Works across all major marketplaces</h2>
-    <p class="s-desc">Submit review text and photos from any e-commerce platform. DART works with content from any source.</p>
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="features-inner">
+    <div class="features-cards">
+      <div class="feat-card">
+        <span class="feat-icon">&#x1F916;</span>
+        <h4>AI-Generated Detection</h4>
+        <p>Identifies photos and text created by AI tools rather than real buyers.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#x1F4CA;</span>
+        <h4>Sentiment Analysis</h4>
+        <p>Detects forced or manipulated emotions in review text patterns.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#x1F5BC;</span>
+        <h4>Stock Photo Detection</h4>
+        <p>Flags professional or stock photos used instead of real buyer images.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#x26A1;</span>
+        <h4>Real-Time Analysis</h4>
+        <p>Fast results powered by Groq's high-speed LLM inference API.</p>
+      </div>
+    </div>
+    <div class="features-text">
+      <div class="section-eyebrow">DART Features</div>
+      <h2 class="section-title">Why DART works better</h2>
+      <p>Most fake review detectors only analyze text. DART goes further by also analyzing the photos attached to reviews using Groq's vision AI — because fake reviewers often use real-sounding text but attach AI-generated or stock photos.</p>
+      <a href="pages/analyze.html" class="btn-purple">Try It Now &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <div style="text-align:center">
+      <div class="section-eyebrow">How It Works</div>
+      <h2 class="section-title">Three simple steps</h2>
+      <p class="section-desc">Submit a review and get a deception score in seconds.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-num">01</div>
+        <h3>Upload Review Photos</h3>
+        <p>Upload up to 5 photos that the reviewer attached to their review from any platform — Shopee, Lazada, Amazon, TikTok Shop, and more.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">02</div>
+        <h3>AI Analyzes</h3>
+        <p>DART checks photos using Groq vision AI for fake or misleading images. Optionally paste the review text for additional NLP analysis.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">03</div>
+        <h3>See Results</h3>
+        <p>Get a combined deception score, per-photo breakdown, detected signals, and a clear recommendation to help you decide.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<section class="plat-section" id="platforms">
+  <div class="plat-inner">
+    <div class="section-eyebrow">Supported Platforms</div>
+    <h2 class="section-title">Works across all major marketplaces</h2>
+    <p class="section-desc">Upload review photos from any platform. DART works with content from any source.</p>
     <div class="plat-grid">
-      <div class="plat-card"><span class="plat-icon">&#x1F6D2;</span><span class="plat-name">Amazon</span></div>
-      <div class="plat-card"><span class="plat-icon">&#x1F6CD;&#xFE0F;</span><span class="plat-name">Shopee</span></div>
-      <div class="plat-card"><span class="plat-icon">&#x1F4E6;</span><span class="plat-name">Lazada</span></div>
-      <div class="plat-card"><span class="plat-icon">&#x1F457;</span><span class="plat-name">Zalora</span></div>
-      <div class="plat-card"><span class="plat-icon">&#x1F3F7;&#xFE0F;</span><span class="plat-name">eBay</span></div>
-      <div class="plat-card"><span class="plat-icon">&#x1F4F1;</span><span class="plat-name">Temu</span></div>
-      <div class="plat-card"><span class="plat-icon">&#x1F310;</span><span class="plat-name">AliExpress</span></div>
-      <div class="plat-card"><span class="plat-icon">&#x1F3EA;</span><span class="plat-name">Walmart</span></div>
-      <div class="plat-card"><span class="plat-icon">&#x2B50;</span><span class="plat-name">Google Reviews</span></div>
-      <div class="plat-card"><span class="plat-icon">&#x1F37D;&#xFE0F;</span><span class="plat-name">Yelp</span></div>
-      <div class="plat-card"><span class="plat-icon">&#x2708;&#xFE0F;</span><span class="plat-name">TripAdvisor</span></div>
-      <div class="plat-card"><span class="plat-icon">+</span><span class="plat-name">Any Platform</span></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F6CD;</span><div class="plat-name">Shopee</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F4E6;</span><div class="plat-name">Lazada</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F30E;</span><div class="plat-name">Amazon</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F3A5;</span><div class="plat-name">TikTok Shop</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F6D2;</span><div class="plat-name">Zalora</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F4B0;</span><div class="plat-name">eBay</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F4B3;</span><div class="plat-name">Temu</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F6F8;</span><div class="plat-name">AliExpress</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F3EA;</span><div class="plat-name">Walmart</div></div>
+      <div class="plat-card"><span class="plat-emoji">&#x1F4CD;</span><div class="plat-name">Any Platform</div></div>
     </div>
-    <div class="plat-note"><strong>How to use:</strong> On the Analyze page, paste the review text and upload the photos attached to that review. DART will check both the text and the photos for signs of deception.</div>
+    <div class="plat-note"><strong>How to use:</strong> On the Analyze page, upload the photos attached to a review. You can also paste the review text for additional NLP text analysis. DART works with any platform — no URL or API access needed.</div>
   </div>
 </section>
 
-<section class="section">
-  <div class="container">
-    <p class="eyebrow">Detection Engine</p>
-    <h2 class="s-title">Two-layer AI detection system</h2>
-    <div class="layers">
-      <div class="layer"><div class="layer-icon">&#x1F524;</div><div><h3>NLP Text Analysis</h3><p>AI language models analyze the review text for fake or forced emotions, unnaturally similar writing patterns, overused product keywords, unusual sentence structures, and content that looks AI-generated.</p></div></div>
-      <div class="layer"><div class="layer-icon">&#x1F4F8;</div><div><h3>Photo Analysis (Groq API)</h3><p>Review photos are sent to the Groq API where LLaMA 4 Scout vision AI checks for AI-generated images, stock photos, and visuals that do not look like they came from a real buyer — catching fakes that text analysis alone would miss.</p></div></div>
-      <div class="layer"><div class="layer-icon">&#x1F6E1;&#xFE0F;</div><div><h3>Unified Risk Scoring</h3><p>Results from text and photo analysis are combined into a single 0&ndash;100 deception score classified as LOW, MEDIUM, or HIGH, with clear explanations and actionable buying recommendations.</p></div></div>
-    </div>
-  </div>
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Don&rsquo;t get fooled by fake reviews</h2>
+  <p>Start using DART today to make smarter, safer purchase decisions backed by AI.</p>
+  <a href="pages/analyze.html" class="btn-white">&#x1F50D; Analyze a Review Now</a>
 </section>
 
-<section class="section section-alt cta-section">
-  <div class="container">
-    <h2>Ready to detect deceptive reviews?</h2>
-    <p>Paste a product link or review text and get an instant AI-powered analysis &mdash; free, private, no account needed.</p>
-    <a href="pages/analyze.html" class="btn btn-green" style="padding:14px 32px;font-size:16px">Start Analyzing &rarr;</a>
-  </div>
-</section>
-
+<!-- FOOTER -->
 <footer class="footer">
   <div class="footer-in">
-    <div class="foot-logo">
-      <div class="logo-mark">D</div>
-      <span class="foot-copy">Deceptive Assessment and Review Tracking &middot; BatStateU CICS &middot; 2026</span>
+    <div class="footer-logo">
+      <div class="logo-icon">D</div>
+      <span>DART &mdash; Review Intelligence</span>
     </div>
-    <div class="foot-links">
+    <div class="footer-copy">Deceptive Assessment and Review Tracking &middot; BatStateU CICS &middot; 2026</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
       <a href="pages/about.html">About</a>
       <a href="pages/analyze.html">Analyze</a>
     </div>
@@ -582,10 +539,9 @@ code { background: var(--bg3); padding: 2px 7px; border-radius: 5px; font-size: 
 </footer>
 
 <script>
-(function(){
-  var T=document.getElementById('T'),M=document.getElementById('M');
-  if(T&&M) T.addEventListener('click',function(){ M.classList.toggle('open'); });
-})();
+var toggle = document.getElementById('navToggle');
+var mobile = document.getElementById('navMobile');
+toggle.addEventListener('click', function(){mobile.classList.toggle('open');});
 </script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 const DART = (function () {
 
   // API key — stored here for GitHub Pages deployment
-  const KEY = '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';
+  const KEY = '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';
   const ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
 
   function getLogs() {
@@ -119,16 +119,9 @@ Return ONLY valid JSON:
     }], 1000);
   }
 
-  // LAYER 2: Vision AI Photo Analysis
   async function analyzePhoto(base64, mediaType, idx, total) {
     const compressed = await compressImage(base64, mediaType);
-    return callVision([{
-      role: 'user',
-      content: [
-        { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + compressed } },
-        {
-          type: 'text',
-          text: `You are DART. Analyze this review photo (${idx} of ${total}).
+    const prompt = `You are DART. Analyze this review photo (${idx} of ${total}).
 
 Check: Is it AI-generated? Is it a stock photo? Does it look like a real buyer took it? Any visual inconsistencies?
 
@@ -138,10 +131,40 @@ Return ONLY valid JSON:
   "photoDeceptionScore": 0-100,
   "photoVerdict": "one sentence about this photo",
   "photoSignals": ["signal1","signal2"]
-}`
-        }
-      ]
-    }], 600);
+}`;
+
+    const visionModels = [
+      'meta-llama/llama-4-scout-17b-16e-instruct',
+      'llama-4-scout-17b-16e-instruct',
+      'llama-3.2-11b-vision-preview',
+      'llama-3.2-90b-vision-preview'
+    ];
+
+    for (var m = 0; m < visionModels.length; m++) {
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + KEY },
+          body: JSON.stringify({
+            model: visionModels[m],
+            max_tokens: 600,
+            messages: [{
+              role: 'user',
+              content: [
+                { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + compressed } },
+                { type: 'text', text: prompt }
+              ]
+            }]
+          })
+        });
+        if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message||'err'); }
+        const data = await res.json();
+        return parseJSON(data.choices[0].message.content);
+      } catch(e) {
+        console.warn('Model ' + visionModels[m] + ' failed:', e.message);
+        if (m === visionModels.length - 1) throw new Error('Photo analysis failed. All vision models unavailable.');
+      }
+    }
   }
 
   // LAYER 3: Behavioral Analytics

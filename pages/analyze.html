@@ -98,6 +98,110 @@ button,input,textarea,select{font-family:'Nunito',sans-serif;}
 .photo-rm:hover{background:var(--red);}
 .photo-num{position:absolute;bottom:4px;left:5px;background:rgba(124,58,237,0.85);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;}
 
+/* ── RESULTS DASHBOARD ── */
+.result-box{background:transparent;margin-top:24px;display:none;animation:fadeup 0.3s ease;}
+.result-box.show{display:block;}
+@keyframes fadeup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* Summary header */
+.res-header{background:#fff;border-radius:20px;padding:24px 28px;margin-bottom:16px;box-shadow:0 4px 20px rgba(124,58,237,0.07);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.res-header-left h2{font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:var(--dark);margin-bottom:4px;}
+.res-header-left p{font-size:13px;color:var(--gray);font-weight:600;}
+.res-risk-chip{display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:14px;font-family:'Poppins',sans-serif;font-weight:800;font-size:14px;}
+.res-risk-chip.low{background:rgba(16,185,129,0.1);color:#065f46;border:2px solid rgba(16,185,129,0.25);}
+.res-risk-chip.med{background:rgba(245,158,11,0.1);color:#92400e;border:2px solid rgba(245,158,11,0.25);}
+.res-risk-chip.high{background:rgba(239,68,68,0.1);color:#991b1b;border:2px solid rgba(239,68,68,0.25);}
+.res-risk-icon{font-size:22px;}
+.res-risk-text .res-risk-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:0.7;display:block;margin-bottom:2px;}
+.res-risk-text .res-risk-val{font-size:16px;font-weight:900;}
+
+/* Two column dashboard */
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.res-panel{background:#fff;border-radius:20px;padding:22px;box-shadow:0 4px 20px rgba(124,58,237,0.07);}
+.res-panel-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.res-panel-title span{font-size:14px;}
+
+/* Donut chart area */
+.donut-wrap{display:flex;align-items:center;gap:20px;}
+.donut-svg{flex-shrink:0;}
+.donut-legend{display:flex;flex-direction:column;gap:10px;flex:1;}
+.legend-item{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.legend-label{font-size:13px;color:var(--gray);font-weight:600;flex:1;}
+.legend-val{font-family:'Poppins',sans-serif;font-size:13px;font-weight:800;color:var(--dark);}
+
+/* Score bar */
+.score-bar-wrap{margin-bottom:0;}
+.score-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.score-lbl{font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;}
+.score-num{font-family:'Poppins',sans-serif;font-size:20px;font-weight:900;color:var(--dark);}
+.sbar{height:10px;background:var(--gray2);border-radius:50px;overflow:hidden;margin-bottom:14px;}
+.sfill{height:100%;border-radius:50px;transition:width 1s cubic-bezier(0.2,0.8,0.3,1);}
+.sf-low{background:linear-gradient(90deg,#10b981,#34d399);}
+.sf-med{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+.sf-high{background:linear-gradient(90deg,#ef4444,#f87171);}
+
+/* Layer score mini cards */
+.mini-layer-cards{display:flex;flex-direction:column;gap:8px;}
+.mini-layer{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--gray2);border-radius:10px;}
+.mini-layer-left{display:flex;align-items:center;gap:8px;}
+.mini-layer-name{font-size:12px;font-weight:800;color:var(--dark);}
+.mini-layer-score{font-family:'Poppins',sans-serif;font-size:15px;font-weight:900;}
+.mini-layer-risk{font-size:10px;font-weight:800;padding:2px 8px;border-radius:50px;}
+
+/* Individual photo cards */
+.photo-cards{display:flex;flex-direction:column;gap:12px;}
+.photo-card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 20px rgba(124,58,237,0.07);border-left:4px solid transparent;}
+.photo-card.low{border-left-color:var(--green);}
+.photo-card.med{border-left-color:var(--amber);}
+.photo-card.high{border-left-color:var(--red);}
+.photo-card-hd{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.photo-card-thumb{width:56px;height:56px;border-radius:10px;object-fit:cover;flex-shrink:0;}
+.photo-card-thumb-ph{width:56px;height:56px;border-radius:10px;background:var(--gray2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.photo-card-meta{flex:1;}
+.photo-card-title{font-family:'Poppins',sans-serif;font-size:14px;font-weight:800;color:var(--dark);margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.photo-card-score{font-size:12px;color:var(--gray);font-weight:700;}
+.photo-card-verdict{font-size:13px;color:var(--gray);line-height:1.65;margin-bottom:8px;}
+.photo-card-reason{background:var(--gray2);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--dark);line-height:1.65;font-weight:600;}
+.photo-card-reason strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray);margin-bottom:4px;font-weight:800;}
+.photo-card-signals{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+
+/* Text findings */
+.findings-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:0;}
+.fc{background:var(--gray2);border-radius:12px;padding:14px 16px;}
+.fc-name{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray);margin-bottom:5px;}
+.fc-level{font-size:14px;font-weight:800;margin-bottom:3px;}
+.fc-note{font-size:11px;color:var(--gray);line-height:1.5;}
+
+/* Behavioral */
+.beh-box{background:var(--gray2);border-radius:12px;padding:16px;}
+.beh-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.beh-lbl{font-size:12px;font-weight:800;color:var(--dark);text-transform:uppercase;letter-spacing:0.5px;}
+.beh-badge{font-size:11px;font-weight:800;padding:4px 12px;border-radius:50px;}
+.beh-consistent{background:rgba(16,185,129,0.1);color:var(--green);}
+.beh-inconsistent{background:var(--rdim);color:var(--red);}
+.beh-neutral{background:var(--adim);color:var(--amber);}
+.beh-signals{display:flex;flex-wrap:wrap;gap:5px;}
+
+/* Signals + Recommendation */
+.res-signals{background:#fff;border-radius:20px;padding:22px;box-shadow:0 4px 20px rgba(124,58,237,0.07);margin-bottom:16px;}
+.res-rec{background:var(--grad);border-radius:20px;padding:24px 28px;margin-bottom:16px;}
+.res-rec-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.7);margin-bottom:8px;}
+.res-rec-text{font-size:14px;color:#fff;line-height:1.75;font-weight:600;}
+
+.rs-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--gray2);}
+.sig-list{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.sig-list li{font-size:13px;color:var(--gray);padding-left:18px;position:relative;line-height:1.55;font-weight:600;}
+.sig-list li::before{content:'▸';position:absolute;left:0;color:var(--purple);font-size:11px;top:2px;}
+.chip{display:inline-block;font-size:10px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;padding:3px 10px;border-radius:50px;}
+.chip-low{background:rgba(16,185,129,0.1);color:var(--green);}
+.chip-med{background:var(--adim);color:var(--amber);}
+.chip-high{background:var(--rdim);color:var(--red);}
+.flag{font-size:11px;color:var(--gray);background:var(--gray2);border-radius:50px;padding:2px 9px;font-weight:600;}
+.col-green{color:var(--green);}
+.col-amber{color:var(--amber);}
+.col-red{color:var(--red);}
+
 /* Analyze button */
 .btn-analyze{width:100%;padding:16px;border-radius:14px;border:none;cursor:pointer;background:var(--grad);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:16px;box-shadow:0 8px 25px rgba(124,58,237,0.35);transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:10px;}
 .btn-analyze:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 35px rgba(124,58,237,0.45);}
@@ -198,7 +302,7 @@ button,input,textarea,select{font-family:'Nunito',sans-serif;}
 .footer-links a{font-size:13px;color:rgba(255,255,255,0.5);font-weight:600;}
 .footer-links a:hover{color:#fff;}
 
-@media(max-width:768px){
+@media(max-width:640px){
   .nav-links{display:none;}
   .nav-toggle{display:block;}
   .two-col,.three-col{grid-template-columns:1fr;}
@@ -333,65 +437,96 @@ button,input,textarea,select{font-family:'Nunito',sans-serif;}
   </div>
   <div class="err-msg" id="mainErr"></div>
 
-  <!-- RESULTS -->
+  <!-- RESULTS DASHBOARD -->
   <div class="result-box" id="resultBox">
 
-    <!-- Overall risk -->
-    <div class="risk-banner" id="riskBanner">
-      <span class="rb-emoji" id="riskEmoji"></span>
-      <div>
-        <div class="rb-label" id="riskLevel"></div>
-        <div class="rb-verdict" id="riskVerdict"></div>
+    <!-- Header: overall risk -->
+    <div class="res-header">
+      <div class="res-header-left">
+        <h2>&#x1F6E1; Review Risk Summary</h2>
+        <p id="resSubtitle">Analysis complete</p>
+      </div>
+      <div class="res-risk-chip" id="resRiskChip">
+        <span class="res-risk-icon" id="resRiskIcon"></span>
+        <div class="res-risk-text">
+          <span class="res-risk-label">Overall Risk</span>
+          <span class="res-risk-val" id="resRiskVal"></span>
+        </div>
       </div>
     </div>
 
-    <!-- Combined score bar -->
-    <div class="score-bar-wrap">
-      <div class="score-hd">
-        <span class="score-lbl">Combined Deception Score</span>
-        <span class="score-num" id="combinedScoreN"></span>
+    <!-- Two column: donut + score -->
+    <div class="res-grid">
+      <!-- Left: distribution donut -->
+      <div class="res-panel">
+        <div class="res-panel-title"><span>&#x1F4CA;</span> Review Distribution</div>
+        <div class="donut-wrap">
+          <svg class="donut-svg" width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#f3f0ff" stroke-width="14"/>
+            <circle id="donutHigh" cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="14" stroke-dasharray="0 239" stroke-dashoffset="0" transform="rotate(-90 50 50)" style="transition:stroke-dasharray 1s ease"/>
+            <circle id="donutMed" cx="50" cy="50" r="38" fill="none" stroke="#f59e0b" stroke-width="14" stroke-dasharray="0 239" stroke-dashoffset="0" transform="rotate(-90 50 50)" style="transition:stroke-dasharray 1s ease"/>
+            <circle id="donutLow" cx="50" cy="50" r="38" fill="none" stroke="#10b981" stroke-width="14" stroke-dasharray="0 239" stroke-dashoffset="0" transform="rotate(-90 50 50)" style="transition:stroke-dasharray 1s ease"/>
+            <text x="50" y="46" text-anchor="middle" font-family="Poppins,sans-serif" font-size="16" font-weight="900" fill="#1e1b4b" id="donutCenter">–</text>
+            <text x="50" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#6b7280">SCORE</text>
+          </svg>
+          <div class="donut-legend" id="donutLegend"></div>
+        </div>
       </div>
-      <div class="sbar"><div class="sfill" id="combinedFill" style="width:0%"></div></div>
+
+      <!-- Right: combined score + layer scores -->
+      <div class="res-panel">
+        <div class="res-panel-title"><span>&#x26A1;</span> Detection Scores</div>
+        <div class="score-bar-wrap">
+          <div class="score-hd">
+            <span class="score-lbl">Combined Score</span>
+            <span class="score-num" id="combinedScoreN"></span>
+          </div>
+          <div class="sbar"><div class="sfill" id="combinedFill" style="width:0%"></div></div>
+        </div>
+        <div class="mini-layer-cards" id="layerCards"></div>
+      </div>
     </div>
 
-    <!-- Layer score cards -->
-    <div class="rs-title">Layer Scores</div>
-    <div class="layer-cards" id="layerCards"></div>
+    <!-- Photo analysis: individual cards -->
+    <div id="photoResultsWrap" style="display:none;margin-bottom:16px;">
+      <div class="res-panel">
+        <div class="res-panel-title"><span>&#x1F4F8;</span> Layer 2 — Photo Analysis Results</div>
+        <div class="photo-cards" id="photoResultsList"></div>
+      </div>
+    </div>
 
     <!-- Text findings -->
-    <div id="textFindingsWrap" style="display:none">
-      <div class="rs-title">&#x1F4DD; Layer 1 — NLP Text Analysis Findings</div>
-      <div class="findings-grid" id="textFindings"></div>
-    </div>
-
-    <!-- Behavioral analytics -->
-    <div id="behavioralWrap" style="display:none">
-      <div class="rs-title">&#x1F4CA; Layer 3 — Behavioral Analytics</div>
-      <div class="behavioral-box">
-        <div class="beh-row">
-          <span class="beh-label">Rating vs Text Consistency</span>
-          <span class="beh-badge" id="ratingMatch"></span>
-        </div>
-        <div class="beh-signals" id="behavioralSignals"></div>
+    <div id="textFindingsWrap" style="display:none;margin-bottom:16px;">
+      <div class="res-panel">
+        <div class="res-panel-title"><span>&#x1F4DD;</span> Layer 1 — NLP Text Analysis Findings</div>
+        <div class="findings-grid" id="textFindings"></div>
       </div>
     </div>
 
-    <!-- Photo results -->
-    <div id="photoResultsWrap" style="display:none">
-      <div class="rs-title">&#x1F4F8; Layer 2 — Photo Analysis Results</div>
-      <div class="photo-results" id="photoResultsList"></div>
+    <!-- Behavioral -->
+    <div id="behavioralWrap" style="display:none;margin-bottom:16px;">
+      <div class="res-panel">
+        <div class="res-panel-title"><span>&#x1F4CA;</span> Layer 3 — Behavioral Analytics</div>
+        <div class="beh-box">
+          <div class="beh-row">
+            <span class="beh-lbl">Rating vs Text Consistency</span>
+            <span class="beh-badge" id="ratingMatch"></span>
+          </div>
+          <div class="beh-signals" id="behavioralSignals"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Signals -->
-    <div class="rs">
+    <div class="res-signals">
       <div class="rs-title">All Detection Signals</div>
       <ul class="sig-list" id="sigList"></ul>
     </div>
 
     <!-- Recommendation -->
-    <div class="rs">
-      <div class="rs-title">Consumer Recommendation</div>
-      <p class="rs-text" id="recText"></p>
+    <div class="res-rec">
+      <div class="res-rec-title">&#x1F6D2; Consumer Recommendation</div>
+      <p class="res-rec-text" id="recText"></p>
     </div>
 
   </div>
@@ -500,40 +635,107 @@ function renderResult(r){
   var l=(c.overallRiskLevel||'LOW').toUpperCase();
   var score=Math.max(0,Math.min(100,c.overallDeceptionScore||0));
 
-  // Banner
-  document.getElementById('riskBanner').className=bc(l);
-  document.getElementById('riskEmoji').innerHTML=em(l);
-  document.getElementById('riskLevel').className='rb-label '+clc(l);
-  document.getElementById('riskLevel').textContent=l+' RISK — Detection, Analysis, and Real-Time Tracking';
-  document.getElementById('riskVerdict').textContent=c.verdict||'';
+  // Header
+  var chip=document.getElementById('resRiskChip');
+  chip.className='res-risk-chip '+(l==='HIGH'?'high':l==='MEDIUM'?'med':'low');
+  document.getElementById('resRiskIcon').textContent=l==='HIGH'?'🚨':l==='MEDIUM'?'⚠️':'✅';
+  document.getElementById('resRiskVal').textContent=l+' RISK';
+  document.getElementById('resSubtitle').textContent=
+    (document.getElementById('platSelect').value||'Unknown')+' · '+
+    (document.getElementById('productName').value||'Review')+' · '+
+    new Date().toLocaleDateString();
+
+  // Donut — single photo case counts each photo as one "review"
+  var highCount=0,medCount=0,lowCount=0;
+  ph.forEach(function(pr){
+    var pl=(pr.photoRiskLevel||'LOW').toUpperCase();
+    if(pl==='HIGH')highCount++;else if(pl==='MEDIUM')medCount++;else lowCount++;
+  });
+  var total=ph.length||1;
+  var circ=2*Math.PI*38; // ~238.76
+  var highArc=Math.round((highCount/total)*circ*10)/10;
+  var medArc=Math.round((medCount/total)*circ*10)/10;
+  var lowArc=Math.round((lowCount/total)*circ*10)/10;
+
+  // Stack donut segments
+  document.getElementById('donutHigh').setAttribute('stroke-dasharray',highArc+' '+(circ-highArc));
+  document.getElementById('donutHigh').setAttribute('stroke-dashoffset','0');
+  var medOff=-(highArc);
+  document.getElementById('donutMed').setAttribute('stroke-dasharray',medArc+' '+(circ-medArc));
+  document.getElementById('donutMed').setAttribute('stroke-dashoffset',medOff);
+  var lowOff=-(highArc+medArc);
+  document.getElementById('donutLow').setAttribute('stroke-dasharray',lowArc+' '+(circ-lowArc));
+  document.getElementById('donutLow').setAttribute('stroke-dashoffset',lowOff);
+  document.getElementById('donutCenter').textContent=score;
+
+  var legend=document.getElementById('donutLegend');
+  legend.innerHTML=
+    '<div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span><span class="legend-label">High Risk</span><span class="legend-val">'+highCount+' photo'+(highCount!==1?'s':'')+'</span></div>'+
+    '<div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span><span class="legend-label">Moderate Risk</span><span class="legend-val">'+medCount+' photo'+(medCount!==1?'s':'')+'</span></div>'+
+    '<div class="legend-item"><span class="legend-dot" style="background:#10b981"></span><span class="legend-label">Low Risk</span><span class="legend-val">'+lowCount+' photo'+(lowCount!==1?'s':'')+'</span></div>';
 
   // Score bar
   document.getElementById('combinedScoreN').textContent=score+' / 100';
-  var fill=document.getElementById('combinedFill');fill.className=fc(l);
+  var fill=document.getElementById('combinedFill');
+  fill.className='sfill '+(l==='HIGH'?'sf-high':l==='MEDIUM'?'sf-med':'sf-low');
   setTimeout(function(){fill.style.width=score+'%';},80);
 
-  // Layer cards
-  var lc2=document.getElementById('layerCards');lc2.innerHTML='';
-  // Layer 1 - Text
+  // Layer mini cards
+  var lCards=document.getElementById('layerCards');lCards.innerHTML='';
   if(t){
-    var ts=(t.textDeceptionScore||0),tl=(t.textRiskLevel||'LOW').toUpperCase();
-    lc2.innerHTML+='<div class="layer-card"><div class="layer-card-header"><span class="layer-badge layer-1">&#x1F4DD; Layer 1</span></div><div class="layer-card-title">NLP Text Analysis</div><div class="layer-card-score" style="color:'+lc(tl)+'">'+ts+'<small style="font-size:14px;font-weight:600"> / 100</small></div><div class="layer-card-sub">'+tl+' RISK</div></div>';
+    var ts=t.textDeceptionScore||0,tl=(t.textRiskLevel||'LOW').toUpperCase();
+    lCards.innerHTML+='<div class="mini-layer"><div class="mini-layer-left"><span class="layer-badge layer-1">&#x1F4DD; Layer 1</span><span class="mini-layer-name">NLP Text</span></div><div style="display:flex;align-items:center;gap:8px"><span class="mini-layer-score" style="color:'+lc(tl)+'">'+ts+'/100</span><span class="mini-layer-risk chip chip-'+(tl==='HIGH'?'high':tl==='MEDIUM'?'med':'low')+'">'+tl+'</span></div></div>';
   } else {
-    lc2.innerHTML+='<div class="layer-card"><div class="layer-card-header"><span class="layer-badge layer-1">&#x1F4DD; Layer 1</span></div><div class="layer-card-title">NLP Text Analysis</div><div class="layer-na">No text provided</div></div>';
+    lCards.innerHTML+='<div class="mini-layer"><div class="mini-layer-left"><span class="layer-badge layer-1">&#x1F4DD; Layer 1</span><span class="mini-layer-name">NLP Text</span></div><span style="font-size:12px;color:var(--gray)">No text provided</span></div>';
   }
-  // Layer 2 - Photos
   if(ph&&ph.length>0){
     var avgP=Math.round(ph.reduce(function(a,p){return a+(p.photoDeceptionScore||0);},0)/ph.length);
     var maxP=Math.max.apply(null,ph.map(function(p){return p.photoDeceptionScore||0;}));
     var pl=maxP>=65?'HIGH':maxP>=35?'MEDIUM':'LOW';
-    lc2.innerHTML+='<div class="layer-card"><div class="layer-card-header"><span class="layer-badge layer-2">&#x1F4F8; Layer 2</span></div><div class="layer-card-title">Vision AI Photos</div><div class="layer-card-score" style="color:'+lc(pl)+'">'+avgP+'<small style="font-size:14px;font-weight:600"> / 100</small></div><div class="layer-card-sub">'+pl+' RISK &mdash; '+ph.length+' photo'+(ph.length>1?'s':'')+' checked</div></div>';
+    lCards.innerHTML+='<div class="mini-layer"><div class="mini-layer-left"><span class="layer-badge layer-2">&#x1F4F8; Layer 2</span><span class="mini-layer-name">Vision AI</span></div><div style="display:flex;align-items:center;gap:8px"><span class="mini-layer-score" style="color:'+lc(pl)+'">'+avgP+'/100</span><span class="mini-layer-risk chip chip-'+(pl==='HIGH'?'high':pl==='MEDIUM'?'med':'low')+'">'+pl+'</span></div></div>';
   }
-  // Layer 3 - Behavioral
   if(b){
-    var bs=(b.behavioralDeceptionScore||0),bl=(b.behavioralRiskLevel||'LOW').toUpperCase();
-    lc2.innerHTML+='<div class="layer-card"><div class="layer-card-header"><span class="layer-badge layer-3">&#x1F4CA; Layer 3</span></div><div class="layer-card-title">Behavioral Analytics</div><div class="layer-card-score" style="color:'+lc(bl)+'">'+bs+'<small style="font-size:14px;font-weight:600"> / 100</small></div><div class="layer-card-sub">'+bl+' RISK</div></div>';
+    var bs=b.behavioralDeceptionScore||0,bl=(b.behavioralRiskLevel||'LOW').toUpperCase();
+    lCards.innerHTML+='<div class="mini-layer"><div class="mini-layer-left"><span class="layer-badge layer-3">&#x1F4CA; Layer 3</span><span class="mini-layer-name">Behavioral</span></div><div style="display:flex;align-items:center;gap:8px"><span class="mini-layer-score" style="color:'+lc(bl)+'">'+bs+'/100</span><span class="mini-layer-risk chip chip-'+(bl==='HIGH'?'high':bl==='MEDIUM'?'med':'low')+'">'+bl+'</span></div></div>';
   } else {
-    lc2.innerHTML+='<div class="layer-card"><div class="layer-card-header"><span class="layer-badge layer-3">&#x1F4CA; Layer 3</span></div><div class="layer-card-title">Behavioral Analytics</div><div class="layer-na">No text/rating provided</div></div>';
+    lCards.innerHTML+='<div class="mini-layer"><div class="mini-layer-left"><span class="layer-badge layer-3">&#x1F4CA; Layer 3</span><span class="mini-layer-name">Behavioral</span></div><span style="font-size:12px;color:var(--gray)">No text/rating</span></div>';
+  }
+
+  // Photo cards — individual with reason
+  if(ph&&ph.length>0){
+    document.getElementById('photoResultsWrap').style.display='block';
+    var prl=document.getElementById('photoResultsList');prl.innerHTML='';
+    ph.forEach(function(pr,i){
+      var pl2=(pr.photoRiskLevel||'LOW').toUpperCase();
+      var cls=pl2==='HIGH'?'high':pl2==='MEDIUM'?'med':'low';
+      var du=photos[i]?photos[i].dataUrl:'';
+      var flags=(pr.photoSignals||[]).map(function(s){return'<span class="flag">'+s+'</span>';}).join('');
+      var reasonWhy=pl2==='HIGH'
+        ?'This photo shows strong signs of being fake or AI-generated. It does not look like it was taken by a real buyer.'
+        :pl2==='MEDIUM'
+        ?'This photo shows some suspicious characteristics. It may not have been taken by a genuine buyer.'
+        :'This photo appears to be genuine and consistent with a real buyer\'s product photo.';
+      prl.innerHTML+=
+        '<div class="photo-card '+cls+'">'+
+          '<div class="photo-card-hd">'+
+            (du?'<img class="photo-card-thumb" src="'+du+'" alt="Photo '+(i+1)+'">'
+               :'<div class="photo-card-thumb-ph">&#x1F4F7;</div>')+
+            '<div class="photo-card-meta">'+
+              '<div class="photo-card-title">Photo '+(i+1)+
+                ' &nbsp;<span class="chip chip-'+cls+'">'+pl2+'</span>'+
+                '&nbsp;<span style="font-size:12px;color:var(--gray);font-weight:700">'+(pr.photoDeceptionScore||0)+' / 100</span>'+
+              '</div>'+
+              '<div class="photo-card-score">Deception Score: '+(pr.photoDeceptionScore||0)+'/100</div>'+
+            '</div>'+
+          '</div>'+
+          '<div class="photo-card-verdict">'+(pr.photoVerdict||'')+'</div>'+
+          '<div class="photo-card-reason">'+
+            '<strong>Why this rating?</strong>'+
+            reasonWhy+
+          '</div>'+
+          (flags?'<div class="photo-card-signals" style="margin-top:8px">'+flags+'</div>':'')+
+        '</div>';
+    });
   }
 
   // Text findings
@@ -559,21 +761,6 @@ function renderResult(r){
     (b.behavioralSignals||[]).forEach(function(s){bsEl.innerHTML+='<span class="flag">'+s+'</span>';});
   }
 
-  // Photo results
-  if(ph&&ph.length>0){
-    document.getElementById('photoResultsWrap').style.display='block';
-    var prl=document.getElementById('photoResultsList');prl.innerHTML='';
-    ph.forEach(function(pr,i){
-      var pl2=(pr.photoRiskLevel||'LOW').toUpperCase();
-      var du=photos[i]?photos[i].dataUrl:'';
-      var flags=(pr.photoSignals||[]).map(function(s){return'<span class="flag">'+s+'</span>';}).join('');
-      prl.innerHTML+='<div class="photo-res-item">'+(du?'<img class="photo-res-img" src="'+du+'">':'')+
-        '<div class="photo-res-body"><div class="photo-res-hd"><span class="photo-res-title">Photo '+(i+1)+'</span><span class="'+cc(pl2)+'">'+pl2+'</span><span style="font-size:12px;color:var(--gray)">'+(pr.photoDeceptionScore||0)+'/100</span></div>'+
-        '<div class="photo-res-verdict">'+(pr.photoVerdict||'')+'</div>'+(flags?'<div class="photo-res-flags">'+flags+'</div>':'')+
-        '</div></div>';
-    });
-  }
-
   // Signals
   var sigs=c.signals||[];
   if(t&&t.textSignals)sigs=sigs.concat(t.textSignals);
@@ -583,9 +770,9 @@ function renderResult(r){
 
   // Recommendation
   var rec=l==='HIGH'
-    ?'This review shows strong signs of being fake across one or more detection layers. Be very cautious — do not rely on this review when making a purchase decision. Look for other verified reviews or check the product from a different source.'
+    ?'This review shows strong signs of being fake across one or more detection layers. Do not rely on this review when making a purchase decision. Look for other verified reviews or check the product on a different platform.'
     :l==='MEDIUM'
-    ?'This review shows some suspicious patterns. It may not be fully reliable. Cross-check with other reviews and consider the overall rating distribution before purchasing.'
+    ?'This review shows some suspicious patterns and may not be fully reliable. Cross-check with other reviews and consider the overall rating distribution before purchasing.'
     :'This review appears to be genuine based on all detection layers. You can likely trust it, but always consider multiple reviews before making any purchase.';
   document.getElementById('recText').textContent=rec;
 

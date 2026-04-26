@@ -1,10 +1,12 @@
 /**
  * DART v4 – Client API
  * Detection, Analysis, and Real-Time Tracking of Deceptive Product Reviews
- *
- * All calls go through /api/groq (local proxy) — API key never exposed
  */
 const DART = (function () {
+
+  // API key — stored here for GitHub Pages deployment
+  const KEY = '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';
+  const ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
 
   function getLogs() {
     try { return JSON.parse(localStorage.getItem('dart_logs') || '[]'); } catch(_){ return []; }
@@ -16,20 +18,20 @@ const DART = (function () {
     localStorage.setItem('dart_logs', JSON.stringify(logs));
   }
 
-  // All API calls go through local proxy — key stays in .env
-  async function callProxy(payload, maxTokens) {
-    const body = {
-      model: payload.model || 'llama-3.3-70b-versatile',
-      max_tokens: maxTokens || 1200,
-      messages: payload.messages
-    };
-
-    const res = await fetch('/api/groq', {
+  async function callText(messages, maxTokens) {
+    const res = await fetch(ENDPOINT, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + KEY,
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: maxTokens || 1200,
+        messages: messages
+      })
     });
-
     if (!res.ok) {
       const e = await res.json().catch(() => ({}));
       throw new Error(e.error?.message || 'API error ' + res.status);
@@ -38,7 +40,38 @@ const DART = (function () {
     return parseJSON(data.choices[0].message.content);
   }
 
-  // Compress image before sending
+  async function callVision(messages, maxTokens) {
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + KEY,
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        max_tokens: maxTokens || 800,
+        messages: messages
+      })
+    });
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      throw new Error(e.error?.message || 'Vision API error ' + res.status);
+    }
+    const data = await res.json();
+    return parseJSON(data.choices[0].message.content);
+  }
+
+  function parseJSON(text) {
+    const clean = text.replace(/^```json\s*/i,'').replace(/\s*```$/,'').replace(/^```/,'').replace(/```$/,'').trim();
+    try { return JSON.parse(clean); }
+    catch(_) {
+      const m = clean.match(/\{[\s\S]*\}/);
+      if (m) return JSON.parse(m[0]);
+      throw new Error('Could not parse AI response');
+    }
+  }
+
   async function compressImage(base64, mediaType) {
     return new Promise(function(resolve) {
       var img = new Image();
@@ -58,36 +91,17 @@ const DART = (function () {
     });
   }
 
-  function parseJSON(text) {
-    const clean = text.replace(/^```json\s*/i,'').replace(/\s*```$/,'').replace(/^```/,'').replace(/```$/,'').trim();
-    try { return JSON.parse(clean); }
-    catch(_) {
-      const m = clean.match(/\{[\s\S]*\}/);
-      if (m) return JSON.parse(m[0]);
-      throw new Error('Could not parse AI response');
-    }
-  }
-
   // LAYER 1: NLP Text Analysis
   async function analyzeText(reviewText, platform, productName) {
-    return callProxy({
-      model: 'llama-3.3-70b-versatile',
-      messages: [{
-        role: 'user',
-        content: `You are DART (Detection, Analysis, and Real-Time Tracking of Deceptive Product Reviews). Analyze this review text using NLP for signs of deception.
+    return callText([{
+      role: 'user',
+      content: `You are DART (Detection, Analysis, and Real-Time Tracking of Deceptive Product Reviews). Analyze this review text using NLP for signs of deception.
 
 Platform: ${platform || 'Unknown'}
 Product: ${productName || 'Unknown'}
 Review Text: """${reviewText}"""
 
-Check for:
-1. Unusual writing patterns
-2. Unnatural or forced emotions
-3. Suspiciously similar / templated language
-4. Unnatural sentence structures
-5. Excessive keyword repetition
-6. Duplicate or copied content indicators
-7. AI-generated language patterns
+Check for: fake or forced emotions, templated writing, keyword stuffing, unnatural sentence structures, AI-generated language patterns, copied content.
 
 Return ONLY valid JSON:
 {
@@ -100,73 +114,47 @@ Return ONLY valid JSON:
     "keywordStuffing": "LOW|MEDIUM|HIGH – reason",
     "linguisticUniformity": "LOW|MEDIUM|HIGH – reason"
   },
-  "textSignals": ["signal1", "signal2", "signal3"]
+  "textSignals": ["signal1","signal2","signal3"]
 }`
-      }]
-    }, 1000);
+    }], 1000);
   }
 
-  // LAYER 2: AI Vision Photo Analysis
-  async function analyzePhoto(base64, mediaType, photoIndex, totalPhotos) {
+  // LAYER 2: Vision AI Photo Analysis
+  async function analyzePhoto(base64, mediaType, idx, total) {
     const compressed = await compressImage(base64, mediaType);
-    const res = await fetch('/api/groq', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
-        max_tokens: 700,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + compressed } },
-            {
-              type: 'text',
-              text: `You are DART. Analyze this review photo (${photoIndex} of ${totalPhotos}).
+    return callVision([{
+      role: 'user',
+      content: [
+        { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + compressed } },
+        {
+          type: 'text',
+          text: `You are DART. Analyze this review photo (${idx} of ${total}).
 
-Check if this photo looks genuine or fake:
-- Is it AI-generated?
-- Is it a stock photo or professional image (not from a real buyer)?
-- Does it look like a real product photo taken by an actual customer?
-- Any visual inconsistencies or signs of manipulation?
+Check: Is it AI-generated? Is it a stock photo? Does it look like a real buyer took it? Any visual inconsistencies?
 
 Return ONLY valid JSON:
 {
   "photoRiskLevel": "LOW" or "MEDIUM" or "HIGH",
   "photoDeceptionScore": 0-100,
   "photoVerdict": "one sentence about this photo",
-  "photoSignals": ["signal1", "signal2"]
+  "photoSignals": ["signal1","signal2"]
 }`
-            }
-          ]
-        }]
-      })
-    });
-    if (!res.ok) {
-      const e = await res.json().catch(() => ({}));
-      throw new Error(e.error?.message || 'Photo API error ' + res.status);
-    }
-    const data = await res.json();
-    return parseJSON(data.choices[0].message.content);
+        }
+      ]
+    }], 600);
   }
 
   // LAYER 3: Behavioral Analytics
   async function analyzeBehavioral(reviewText, starRating, platform) {
-    return callProxy({
-      model: 'llama-3.3-70b-versatile',
-      messages: [{
-        role: 'user',
-        content: `You are DART. Perform behavioral analytics on this review submission.
+    return callText([{
+      role: 'user',
+      content: `You are DART. Perform behavioral analytics on this review.
 
 Platform: ${platform || 'Unknown'}
-Star Rating Given: ${starRating || 'Not provided'} out of 5
+Star Rating: ${starRating || 'Not provided'} / 5
 Review Text: """${reviewText}"""
 
-Check for behavioral signals of deception:
-1. Does the star rating match the tone/sentiment of the review text?
-2. Is the writing unusually vague, generic, or extreme?
-3. Is the sentiment consistent with what a genuine buyer would write?
-4. Are there signs the review was manufactured or incentivized?
-5. Does the review lack specific product details a real buyer would mention?
+Check: Does the star rating match the tone? Is the writing vague/generic/extreme? Does it feel manufactured or incentivized? Does it lack specific product details a real buyer would mention?
 
 Return ONLY valid JSON:
 {
@@ -174,108 +162,80 @@ Return ONLY valid JSON:
   "behavioralDeceptionScore": 0-100,
   "behavioralVerdict": "one sentence",
   "ratingTextMatch": "CONSISTENT" or "INCONSISTENT" or "NEUTRAL",
-  "behavioralSignals": ["signal1", "signal2"]
+  "behavioralSignals": ["signal1","signal2"]
 }`
-      }]
-    }, 800);
+    }], 700);
   }
 
-  // Combine all layer results
   function combineResults(textResult, photoResults, behavioralResult) {
     var scores = [];
     var signals = [];
-    var verdicts = [];
 
     if (textResult) {
       scores.push({ score: textResult.textDeceptionScore || 0, weight: 0.35 });
       if (textResult.textSignals) signals = signals.concat(textResult.textSignals);
-      if (textResult.textVerdict) verdicts.push('Text: ' + textResult.textVerdict);
     }
-
-    photoResults.forEach(function(pr, i) {
-      scores.push({ score: pr.photoDeceptionScore || 0, weight: 0.40 / Math.max(photoResults.length, 1) });
+    photoResults.forEach(function(pr) {
+      scores.push({ score: pr.photoDeceptionScore || 0, weight: 0.40 / photoResults.length });
       if (pr.photoSignals) signals = signals.concat(pr.photoSignals);
-      if (pr.photoVerdict) verdicts.push('Photo ' + (i+1) + ': ' + pr.photoVerdict);
     });
-
     if (behavioralResult) {
       scores.push({ score: behavioralResult.behavioralDeceptionScore || 0, weight: 0.25 });
       if (behavioralResult.behavioralSignals) signals = signals.concat(behavioralResult.behavioralSignals);
-      if (behavioralResult.behavioralVerdict) verdicts.push('Behavioral: ' + behavioralResult.behavioralVerdict);
     }
 
     var totalWeight = scores.reduce(function(a,s){return a+s.weight;}, 0) || 1;
-    var weightedScore = Math.round(scores.reduce(function(a,s){return a + s.score * s.weight;}, 0) / totalWeight);
-    var maxScore = scores.length > 0 ? Math.max.apply(null, scores.map(function(s){return s.score;})) : 0;
-    var finalScore = Math.round(weightedScore * 0.65 + maxScore * 0.35);
-    finalScore = Math.max(0, Math.min(100, finalScore));
+    var weighted = Math.round(scores.reduce(function(a,s){return a+s.score*s.weight;},0) / totalWeight);
+    var maxScore = scores.length ? Math.max.apply(null, scores.map(function(s){return s.score;})) : 0;
+    var final = Math.min(100, Math.max(0, Math.round(weighted * 0.65 + maxScore * 0.35)));
+    var risk = final >= 65 ? 'HIGH' : final >= 35 ? 'MEDIUM' : 'LOW';
 
-    var riskLevel = finalScore >= 65 ? 'HIGH' : finalScore >= 35 ? 'MEDIUM' : 'LOW';
+    var verdicts = [];
+    if (textResult && textResult.textVerdict) verdicts.push('Text: ' + textResult.textVerdict);
+    photoResults.forEach(function(pr, i){ if(pr.photoVerdict) verdicts.push('Photo '+(i+1)+': '+pr.photoVerdict); });
+    if (behavioralResult && behavioralResult.behavioralVerdict) verdicts.push('Behavioral: ' + behavioralResult.behavioralVerdict);
 
     return {
-      overallRiskLevel: riskLevel,
-      overallDeceptionScore: finalScore,
+      overallRiskLevel: risk,
+      overallDeceptionScore: final,
       verdict: verdicts.join(' | ') || 'Analysis complete.',
       signals: [...new Set(signals)]
     };
   }
 
-  // Main: run all 3 layers
   async function analyzeReview(opts, onProgress) {
-    // opts: { reviewText, starRating, platform, productName, photos }
-    if (!opts.photos || opts.photos.length === 0) {
-      throw new Error('Please upload at least one review photo.');
-    }
+    if (!opts.photos || opts.photos.length === 0) throw new Error('Please upload at least one review photo.');
 
-    var textResult = null;
-    var photoResults = [];
-    var behavioralResult = null;
+    var textResult = null, photoResults = [], behavioralResult = null;
 
-    // Layer 1: Text NLP (if text provided)
+    // Layer 1: NLP Text
     if (opts.reviewText && opts.reviewText.trim()) {
       if (onProgress) onProgress('Layer 1: Analyzing review text (NLP)...');
-      textResult = await analyzeText(opts.reviewText, opts.platform, opts.productName);
+      try { textResult = await analyzeText(opts.reviewText, opts.platform, opts.productName); }
+      catch(e) { console.warn('Text analysis failed:', e.message); }
     }
 
-    // Layer 2: Photo Vision AI
+    // Layer 2: Vision AI Photos
     for (var i = 0; i < opts.photos.length; i++) {
-      if (onProgress) onProgress('Layer 2: Analyzing photo ' + (i+1) + ' of ' + opts.photos.length + ' (Vision AI)...');
+      if (onProgress) onProgress('Layer 2: Analyzing photo ' + (i+1) + ' of ' + opts.photos.length + '...');
       try {
         var pr = await analyzePhoto(opts.photos[i].base64, opts.photos[i].mediaType, i+1, opts.photos.length);
         photoResults.push(pr);
-      } catch(e) {
-        console.warn('Photo ' + (i+1) + ' analysis failed:', e.message);
-      }
+      } catch(e) { console.warn('Photo ' + (i+1) + ' failed:', e.message); }
     }
 
-    if (photoResults.length === 0) {
-      throw new Error('Could not analyze the photos. Please try again with clearer images.');
-    }
+    if (photoResults.length === 0) throw new Error('Could not analyze the photos. Please check your internet connection and try again.');
 
-    // Layer 3: Behavioral Analytics (if text and/or star rating provided)
+    // Layer 3: Behavioral
     if (opts.reviewText || opts.starRating) {
       if (onProgress) onProgress('Layer 3: Running behavioral analytics...');
-      try {
-        behavioralResult = await analyzeBehavioral(
-          opts.reviewText || '(no text provided)',
-          opts.starRating,
-          opts.platform
-        );
-      } catch(e) {
-        console.warn('Behavioral analysis failed:', e.message);
-      }
+      try { behavioralResult = await analyzeBehavioral(opts.reviewText || '(no text)', opts.starRating, opts.platform); }
+      catch(e) { console.warn('Behavioral failed:', e.message); }
     }
 
     if (onProgress) onProgress('Combining all layer results...');
     var combined = combineResults(textResult, photoResults, behavioralResult);
-
-    addLog({
-      platform: opts.platform || 'Unknown',
-      product: opts.productName || 'Unknown',
-      riskLevel: combined.overallRiskLevel,
-      score: combined.overallDeceptionScore,
-      verdict: combined.verdict
-    });
+    addLog({ platform: opts.platform||'Unknown', product: opts.productName||'Unknown', riskLevel: combined.overallRiskLevel, score: combined.overallDeceptionScore, verdict: combined.verdict });
 
     return { textResult, photoResults, behavioralResult, combined };
   }

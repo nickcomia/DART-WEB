@@ -162,7 +162,7 @@ Return ONLY valid JSON:
         return parseJSON(data.choices[0].message.content);
       } catch(e) {
         console.warn('Model ' + visionModels[m] + ' failed:', e.message);
-        if (m === visionModels.length - 1) throw new Error('Photo analysis failed. All vision models unavailable.');
+        if (m === visionModels.length - 1) throw new Error('Photo analysis failed: ' + e.message);
       }
     }
   }
@@ -247,7 +247,7 @@ Return ONLY valid JSON:
       } catch(e) { console.warn('Photo ' + (i+1) + ' failed:', e.message); }
     }
 
-    if (photoResults.length === 0) throw new Error('Could not analyze the photos. Please check your internet connection and try again.');
+    if (photoResults.length === 0) throw new Error('Photo analysis failed — open browser console (F12) to see the exact error.');
 
     // Layer 3: Behavioral
     if (opts.reviewText || opts.starRating) {

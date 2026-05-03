@@ -4,9 +4,9 @@
  */
 const DART = (function () {
 
-  // API key — stored here for GitHub Pages deployment
-  const KEY = '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';
-  const ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
+  // All API calls go through /api/groq proxy — key is stored securely on the server
+  
+  
 
   function getLogs() {
     try { return JSON.parse(localStorage.getItem('dart_logs') || '[]'); } catch(_){ return []; }
@@ -18,19 +18,11 @@ const DART = (function () {
     localStorage.setItem('dart_logs', JSON.stringify(logs));
   }
 
-  async function callText(messages, maxTokens) {
-    const res = await fetch(ENDPOINT, {
+  async function callProxy(body) {
+    const res = await fetch('/api/groq', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + KEY,
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: maxTokens || 1200,
-        messages: messages
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
     });
     if (!res.ok) {
       const e = await res.json().catch(() => ({}));
@@ -40,26 +32,8 @@ const DART = (function () {
     return parseJSON(data.choices[0].message.content);
   }
 
-  async function callVision(messages, maxTokens) {
-    const res = await fetch(ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + KEY,
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
-        max_tokens: maxTokens || 800,
-        messages: messages
-      })
-    });
-    if (!res.ok) {
-      const e = await res.json().catch(() => ({}));
-      throw new Error(e.error?.message || 'Vision API error ' + res.status);
-    }
-    const data = await res.json();
-    return parseJSON(data.choices[0].message.content);
+  async function callText(messages, maxTokens) {
+    return callProxy({ model: 'llama-3.3-70b-versatile', max_tokens: maxTokens || 1200, messages: messages });
   }
 
   function parseJSON(text) {
@@ -142,24 +116,18 @@ Return ONLY valid JSON:
 
     for (var m = 0; m < visionModels.length; m++) {
       try {
-        const res = await fetch(ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + KEY },
-          body: JSON.stringify({
-            model: visionModels[m],
-            max_tokens: 600,
-            messages: [{
-              role: 'user',
-              content: [
-                { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + compressed } },
-                { type: 'text', text: prompt }
-              ]
-            }]
-          })
+        const result = await callProxy({
+          model: visionModels[m],
+          max_tokens: 600,
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + compressed } },
+              { type: 'text', text: prompt }
+            ]
+          }]
         });
-        if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message||'err'); }
-        const data = await res.json();
-        return parseJSON(data.choices[0].message.content);
+        return result;
       } catch(e) {
         console.warn('Model ' + visionModels[m] + ' failed:', e.message);
         if (m === visionModels.length - 1) throw new Error('Photo analysis failed: ' + e.message);

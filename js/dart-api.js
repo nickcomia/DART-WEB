@@ -5,7 +5,7 @@
 const DART = (function () {
 
   // API key — stored here for GitHub Pages deployment
-  const KEY = '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';
+  const KEY = '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';
   const ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
 
   function getLogs() {
